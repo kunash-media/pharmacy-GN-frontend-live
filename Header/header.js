@@ -331,14 +331,26 @@ if (document.readyState === 'interactive' || document.readyState === 'complete')
     setTimeout(initializeHeader, 0);
 }
 
-// Mobile menu toggle
-document.getElementById('mobile-menu-btn')?.addEventListener('click', function () {
+// Mobile Profile Dropdown
+document.getElementById('mobile-profile-btn')?.addEventListener('click', function(e) {
+  e.stopPropagation();
+  document.getElementById('mobile-profile-menu').classList.toggle('hidden');
+});
+
+// Close mobile profile dropdown when clicking outside
+document.addEventListener('click', function() {
+  document.getElementById('mobile-profile-menu')?.classList.add('hidden');
+});
+
+// Mobile Menu Toggle
+document.getElementById('mobile-menu-btn')?.addEventListener('click', function() {
   document.getElementById('mobile-menu').classList.toggle('hidden');
 });
 
-// Close mobile menu when clicking any link
+// Close mobile menu on link click
 document.querySelectorAll('#mobile-menu a').forEach(link => {
   link.addEventListener('click', () => {
-    document.getElementById('mobile-menu').classList.add('hidden');
+    document
+System: document.getElementById('mobile-menu').classList.add('hidden');
   });
 });
