@@ -470,6 +470,49 @@ suggestions.addEventListener('click', (e) => {
                 description: "Asthma Inhaler for quick relief from asthma symptoms."
             }
         ];
+
+        // Card template
+    function createHoverCard(product, isHighlight = false) {
+      return `
+        <div class="hover-card ${isHighlight ? 'highlight' : ''}">
+          <div class="card-inner">
+            <div class="card-front" data-title="${product.name.split(' ')[0]}">
+              <img src="${product.image}" alt="${product.name}">
+            </div>
+            <div class="card-back">
+              <h3>${product.name}</h3>
+              <p>${product.description}</p>
+              <a href="product-details.html?id=${product.id}" class="read-more">Read More</a>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    // Render cards
+    function renderCards(containerId, data) {
+      const container = document.getElementById(containerId);
+      if (!container) return;
+
+      const cardsHTML = data.map((item, index) => {
+        const isMiddle = index === Math.floor(data.length / 2);
+        return createHoverCard(item, isMiddle);
+      }).join('');
+
+      container.innerHTML = cardsHTML;
+    }
+
+    // Smooth scroll
+    function scrollSection(containerId, amount) {
+      const container = document.getElementById(containerId);
+      container.scrollBy({ left: amount, behavior: 'smooth' });
+    }
+
+    // Initialize
+    document.addEventListener('DOMContentLoaded', () => {
+      renderCards('feminine-cards', productsData);
+      renderCards('medicine-cards', medicinesData);
+    });
         // NEW: Dynamic data for Doctor Section (can be fetched from backend)
         let doctorData = [
             {
