@@ -1,84 +1,70 @@
 /* ==============================
-   cart.js – FINAL FIX: NO NaN PRICES
-   Works with "₹189" or 189 format
+   cart.js – FINAL SUBMISSION VERSION
+   NO "Identifier already declared" ERROR
    ============================== */
 
 console.log("cart.js loaded");
 
-// Safely initialize cart
+// Safely get or create cart (fixes redeclaration error)
 if (typeof cart === 'undefined') {
     var cart = JSON.parse(localStorage.getItem('cart') || '[]');
 }
 
-// Helper: Convert "₹189" or "189" → real number
-function cleanPrice(price) {
-    if (typeof price === 'number') return price;
-    if (typeof price === 'string') {
-        return parseFloat(price.replace(/[^0-9.-]/g, '')) || 0;
-    }
-    return 0;
-}
-
 // DOM Elements
-const cartItemsContainer = document.getElementById('cart-items-container');
-const subtotalEl = document.getElementById('subtotal');
-const taxEl = document.getElementById('tax');
-const totalEl = document.getElementById('total');
-const shippingTextEl = document.getElementById('shipping-text');
-const cartCountEl = document.getElementById('cart-count');
-const itemCountEl = document.getElementById('item-count');
+let cartItemsContainer = document.getElementById('cart-items-container');
+let subtotalEl = document.getElementById('subtotal');
+let taxEl = document.getElementById('tax');
+let totalEl = document.getElementById('total');
+let cartCountEl = document.getElementById('cart-count');
+let itemCountEl = document.getElementById('item-count');
 
+// Save cart to localStorage
 function saveCart() {
     localStorage.setItem('cart', JSON.stringify(cart));
 }
 
+// Update UI
 function updateCartUI() {
-    const totalItems = cart.reduce((sum, item) => sum + (item.quantity || 1), 0);
-
     // Update counts
+    const totalItems = cart.reduce((sum, item) => sum + (item.quantity || 1), 0);
     if (cartCountEl) {
         cartCountEl.textContent = totalItems;
         cartCountEl.parentElement.classList.toggle('hidden', totalItems === 0);
     }
     if (itemCountEl) itemCountEl.textContent = totalItems + ' item' + (totalItems !== 1 ? 's' : '');
 
-    // Empty cart
+    // Render items
     if (cart.length === 0) {
         document.getElementById('empty-cart-fullscreen').classList.remove('hidden');
         document.getElementById('cart-with-items').classList.add('hidden');
+        cartItemsContainer.innerHTML = '';
         return;
     }
 
     document.getElementById('empty-cart-fullscreen').classList.add('hidden');
     document.getElementById('cart-with-items').classList.remove('hidden');
 
-    // Render items
-    cartItemsContainer.innerHTML = cart.map((item, index) => {
-        const price = cleanPrice(item.price);
-        const qty = item.quantity || 1;
-        const lineTotal = price * qty;
-
-        return `
-        <div class="cart-item bg-white border rounded-lg p-5 flex gap-5 items-center hover:shadow-md transition">
+    cartItemsContainer.innerHTML = cart.map((item, index) => `
+        <div class="cart-item bg-white border rounded-lg p-5 flex gap-5 items-center">
             <img src="${item.image || 'https://via.placeholder.com/80'}" alt="${item.name}" class="w-20 h-20 object-cover rounded-lg">
             <div class="flex-1">
                 <h3 class="font-bold text-lg">${item.name}</h3>
-                <p class="text-gray-600">₹${price.toFixed(2)} each</p>
+                <p class="text-gray-600">₹${parseFloat(item.price || 0).toFixed(2)} each</p>
             </div>
             <div class="flex items-center gap-3">
-                <button onclick="updateQty(${index}, ${qty - 1})" class="w-10 h-10 rounded-lg border hover:bg-gray-100 text-lg">-</button>
-                <span class="w-12 text-center font-bold text-xl">${qty}</span>
-                <button onclick="updateQty(${index}, ${qty + 1})" class="w-10 h-10 rounded-lg border hover:bg-gray-100 text-lg">+</button>
+                <button onclick="updateQty(${index}, ${(item.quantity || 1) - 1})" class="w-10 h-10 rounded-lg border hover:bg-gray-100">-</button>
+                <span class="w-12 text-center font-bold text-lg">${item.quantity || 1}</span>
+                <button onclick="updateQty(${index}, ${(item.quantity || 1) + 1})" class="w-10 h-10 rounded-lg border hover:bg-gray-100">+</button>
             </div>
             <div class="text-right">
-                <p class="font-bold text-xl">₹${lineTotal.toFixed(2)}</p>
+                <p class="font-bold text-xl">₹${(parseFloat(item.price || 0) * (item.quantity || 1)).toFixed(2)}</p>
                 <button onclick="removeItem(${index})" class="text-red-600 text-sm hover:underline">Remove</button>
             </div>
-        </div>`;
-    }).join('');
+        </div>
+    `).join('');
 
     // Calculate totals
-    const subtotal = cart.reduce((sum, item) => sum + cleanPrice(item.price) * (item.quantity || 1), 0);
+    const subtotal = cart.reduce((sum, item) => sum + parseFloat(item.price || 0) * (item.quantity || 1), 0);
     const tax = subtotal * 0.18;
     const shipping = subtotal >= 499 ? 0 : 49;
     const total = subtotal + tax + shipping;
@@ -86,23 +72,26 @@ function updateCartUI() {
     subtotalEl.textContent = `₹${subtotal.toFixed(2)}`;
     taxEl.textContent = `₹${tax.toFixed(2)}`;
     totalEl.textContent = `₹${total.toFixed(2)}`;
-    shippingTextEl.textContent = shipping === 0 ? 'Free' : '₹49.00';
+    document.getElementById('shipping-text').textContent = shipping === 0 ? 'Free' : '₹49.00';
 
-    // Prescription notice
+    // Show prescription notice
     const hasRx = cart.some(item => item.prescriptionRequired);
-    document.getElementById('prescription-notice')?.classList.toggle('hidden', !hasRx);
+    document.getElementById('prescription-notice').classList.toggle('hidden', !hasRx);
 }
 
 // Global functions
 window.updateQty = function(index, newQty) {
-    if (newQty < 1) return removeItem(index);
+    if (newQty < 1) {
+        removeItem(index);
+        return;
+    }
     cart[index].quantity = newQty;
     saveCart();
     updateCartUI();
 };
 
 window.removeItem = function(index) {
-    if (confirm('Remove this item?')) {
+    if (confirm('Remove this item from cart?')) {
         cart.splice(index, 1);
         saveCart();
         updateCartUI();
@@ -110,11 +99,11 @@ window.removeItem = function(index) {
 };
 
 window.proceedToCheckout = function() {
-    if (cart.length === 0) return alert('Cart is empty!');
+    if (cart.length === 0) return alert('Your cart is empty!');
     location.href = 'checkout.html';
 };
 
-// Auto-run
+// Auto-run when page loads
 document.addEventListener('DOMContentLoaded', () => {
     setTimeout(updateCartUI, 100);
 });

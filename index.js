@@ -482,11 +482,11 @@ suggestions.addEventListener('click', (e) => {
           <button class="icon-btn view-btn" title="Quick View" onclick="event.stopPropagation(); openProductDetails(${p.id})">
             <svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
           </button>
-          <button class="icon-btn cart-btn add-to-cart-btn" title="Add to Cart" onclick="event.stopPropagation(); addToCart(${JSON.stringify(p).replace(/'/g, "\\'")})">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-cart" viewBox="0 0 16 16">
-              <path d="M0 1.5A.5.5 0 0 1 .5 1H2a.5.5 0 0 1 .485.379L2.89 3H14.5a.5.5 0 0 1 .491.592l-1.5 8A.5.5 0 0 1 13 12H4a.5.5 0 0 1-.491-.408L2.01 3.607 1.61 2H.5a.5.5 0 0 1-.5-.5M3.102 4l1.313 7h8.17l1.313-7zM5 12a2 2 0 1 0 0 4 2 2 0 0 0 0-4m7 0a2 2 0 1 0 0 4 2 2 0 0 0 0-4m-7 1a1 1 0 1 1 0 2 1 1 0 0 1 0-2m7 0a1 1 0 1 1 0 2 1 1 0 0 1 0-2"/>
-            </svg>
-          </button>
+          <button 
+          onclick='addToCart(${JSON.stringify(p)})' 
+          class="w-full bg-gradient-to-r from-teal-500 to-cyan-600 text-white font-bold py-4 rounded-full hover:from-teal-600 hover:to-cyan-700 transition shadow-lg">
+          Add to Cart
+        </button>
         </div>
       </div>
     </div>
