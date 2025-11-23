@@ -181,6 +181,31 @@ window.addEventListener('storage', (e) => {
   }
 });
 
+// FORCE WISHLIST COUNT TO SHOW ON EVERY PAGE LOAD
+function forceUpdateWishlistCount() {
+  const count = getWishlist().length;
+
+  // Update desktop badge
+  const desktopBadge = document.getElementById('desktop-wishlist-count');
+  if (desktopBadge) {
+    desktopBadge.textContent = count;
+    desktopBadge.style.display = count > 0 ? 'flex' : 'none';
+  }
+
+  // Update mobile badge
+  const mobileBadge = document.getElementById('mobile-wishlist-count');
+  if (mobileBadge) {
+    mobileBadge.textContent = count;
+    mobileBadge.style.display = count > 0 ? 'flex' : 'none';
+  }
+}
+
+// Run immediately + on DOM ready + after a tiny delay (covers all cases)
+forceUpdateWishlistCount();
+document.addEventListener('DOMContentLoaded', forceUpdateWishlistCount);
+setTimeout(forceUpdateWishlistCount, 300);
+setTimeout(forceUpdateWishlistCount, 1000);
+
         // Comprehensive pharmacy categories and products
         const pharmacyCategories = {
             'Medicines & Healthcare': {
@@ -659,11 +684,25 @@ suggestions.addEventListener('click', (e) => {
 
         // Card template
 function createCard(p) {
-  const uniqueId = `qty-${p.id}`;
+  const inWishlist = isInWishlist(p.id);
   return `
     <div class="card relative group overflow-hidden bg-white rounded-2xl shadow-lg">
       <div class="discount-badge">${p.discount}</div>
-      <div class="wishlist"><svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg></div>
+      
+      <!-- WISHLIST BUTTON -->
+      <div class="absolute top-4 right-4 z-10">
+        <button class="wishlist-btn p-3 bg-white rounded-full shadow-lg hover:shadow-xl transition-all"
+          data-product-id="${p.id}"
+          data-product-name="${p.name}"
+          data-product-price="${p.price.replace('₹', '')}"
+          data-product-image="${p.image}">
+          <svg class="w-6 h-6 ${inWishlist ? 'fill-red-500 text-red-500' : 'text-gray-400'} transition-colors" 
+               viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+          </svg>
+        </button>
+      </div>
+
       <div class="relative overflow-hidden">
         <img src="${p.image}" alt="${p.name}" class="card-img w-full h-64 object-cover transition-transform duration-500 group-hover:scale-110">
         <div class="absolute inset-0 bg-black/50 opacity-0 lg:group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
@@ -687,7 +726,7 @@ function createCard(p) {
               data-product-id="${p.id}" data-product-name="${p.name}" data-product-price="${p.price.replace('₹', '')}" data-product-image="${p.image}">
               Add to Cart
             </button>
-            <div class="quantity-selector hidden items-center justify-center bg-gradient-to-r from-teal-400 to-cyan-800 rounded-full overflow-hidden" data-selector-id="${uniqueId}">
+            <div class="quantity-selector hidden items-center justify-center bg-gradient-to-r from-teal-400 to-cyan-800 rounded-full overflow-hidden">
               <button class="decrease-qty w-12 h-12 text-white font-bold hover:bg-teal-900 transition">-</button>
               <span class="qty-display px-6 text-white font-bold text-lg min-w-12 text-center">1</span>
               <button class="increase-qty w-12 h-12 text-white font-bold hover:bg-teal-900 transition">+</button>
@@ -698,6 +737,108 @@ function createCard(p) {
     </div>
   `;
 }
+
+// ============ WISHLIST SYSTEM ============
+function getWishlist() {
+  try {
+    return JSON.parse(localStorage.getItem('wishlist') || '[]');
+  } catch {
+    localStorage.removeItem('wishlist');
+    return [];
+  }
+}
+
+function saveWishlist(items) {
+  localStorage.setItem('wishlist', JSON.stringify(items));
+}
+
+function isInWishlist(productId) {
+  return getWishlist().some(item => item.id == productId);
+}
+
+function toggleWishlist(product) {
+    let wishlist = getWishlist();
+    const exists = wishlist.some(item => item.id === product.id);
+
+    if (exists) {
+        wishlist = wishlist.filter(item => item.id !== product.id);
+        showToast('Removed from wishlist');
+    } else {
+        wishlist.push({
+            id: product.id,
+            title: product.title,
+            price: product.price,
+            description: product.description || "",
+            images: product.images,
+            originalPrice: product.originalPrice || product.price
+        });
+        showToast('Added to wishlist!');
+    }
+
+    localStorage.setItem('wishlist', JSON.stringify(wishlist));
+    updateWishlistCount();
+}
+
+function updateWishlistCount() {
+    const count = JSON.parse(localStorage.getItem('wishlist') || '[]').length;
+    document.querySelectorAll('#desktop-wishlist-count, #mobile-wishlist-count, .wishlist-count').forEach(el => {
+        if (el) {
+            el.textContent = count;
+            el.classList.toggle('hidden', count === 0);
+            if (count > 0) el.style.display = 'flex';
+        }
+    });
+}
+
+function updateAllWishlistIcons() {
+  document.querySelectorAll('.wishlist-btn').forEach(btn => {
+    const id = btn.dataset.productId;
+    const svg = btn.querySelector('svg');
+    const inList = isInWishlist(id);
+    if (inList) {
+      svg.classList.add('fill-red-500', 'text-red-500');
+      svg.setAttribute('fill', 'currentColor');
+    } else {
+      svg.classList.remove('fill-red-500', 'text-red-500');
+      svg.removeAttribute('fill');
+    }
+  });
+}
+
+// Click handler for wishlist buttons
+document.addEventListener('click', (e) => {
+  const btn = e.target.closest('.wishlist-btn');
+  if (!btn) return;
+
+  e.preventDefault();
+  e.stopPropagation();
+
+  const product = {
+    id: btn.dataset.productId,
+    name: btn.dataset.productName,
+    price: btn.dataset.productPrice,
+    image: btn.dataset.productImage
+  };
+
+  toggleWishlist(product);
+});
+
+// Re-apply icons after dynamic content loads
+document.addEventListener('DOMContentLoaded', () => {
+  updateWishlistCount();
+  updateAllWishlistIcons();
+
+  // Re-check after 1 second (for infinite scroll, etc.)
+  setTimeout(updateAllWishlistIcons, 1000);
+});
+
+// Sync across tabs
+window.addEventListener('storage', (e) => {
+  if (e.key === 'wishlist') {
+    updateWishlistCount();
+    updateAllWishlistIcons();
+  }
+});
 
 // Global function to open product details page
 // GLOBAL FUNCTION – Put this in your main index.js (above renderInfinite)

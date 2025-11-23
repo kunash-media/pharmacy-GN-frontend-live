@@ -1,3 +1,36 @@
+/* Container sizing for mobile and desktop views */
+.container {
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Mobile view - container adjustments */
+@media (max-width: 768px) {
+    .container {
+        max-width: 100%;
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+}
+
+/* Tablet view - container adjustments */
+@media (min-width: 769px) and (max-width: 1024px) {
+    .container {
+        max-width: 90%;
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+}
+
+/* Desktop view - container adjustments */
+@media (min-width: 1025px) {
+    .container {
+        max-width: 1280px;
+        padding-left: 2rem;
+        padding-right: 2rem;
+    }
+}
 
        /* Custom responsive styles */
         @media (max-width: 768px) {
