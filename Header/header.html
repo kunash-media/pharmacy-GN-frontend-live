@@ -30,10 +30,10 @@
           <!-- Pincode (Hidden on very small screens, shown on md+) -->
           <div class="hidden md:flex flex-col">
             <div class="flex items-center space-x-2">
-              <label for="pincode" class="text-sm font-medium text-gray-700">Select Pincode:</label>
+              <label for="pincode" class="text-sm font-medium text-gray-700" data-i18n="enterPinCode">Select Pincode:</label>
               <div class="relative">
                 <input type="text" id="pincode" maxlength="6" placeholder="Enter pincode"
-                       class="w-32 px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-green-500">
+                       class="w-32 px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-green-500" data-i18n="enterPincode">
                 <span id="pincode-clear" class="absolute right-2 top-1/2 -translate-y-1/2 cursor-pointer text-gray-500 hidden">×</span>
               </div>
             </div>
@@ -51,7 +51,7 @@
             <option value="hindi">Hindi</option>
             <option value="marathi">Marathi</option>
           </select>
-          <a href="/contact.html" class="hover:text-blue-700"><i class="fas fa-headset"></i> Contact</a>
+          <a href="/contact.html" class="hover:text-blue-700" data-i18n="contact"><i class="fas fa-headset"></i> Contact</a>
          <!-- DESKTOP WISHLIST (inside the hidden lg:flex block) -->
 <a href="../Wishlist/wishlist.html" class="relative hover:text-red-600">
   <i class="fas fa-heart text-xl"></i>
@@ -61,21 +61,21 @@
     0
   </span>
 </a>
-          <a href="/cart.html" class="relative">
+          <a href="/cart.html" class="relative" data-i18n="Cart">
             <i class="fas fa-shopping-cart text-xl"></i>
             <span id="desktop-cart-count" class="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-bold hidden">0</span>
           </a>
 
           <div class="relative">
-            <button id="profile-btn" class="flex items-center space-x-2 hover:bg-gray-100 px-4 py-2 rounded-md transition">
-              <i class="fas fa-user-circle text-2xl"></i>
+            <button id="profile-btn" class="flex items-center space-x-2 hover:bg-gray-100 px-4 py-2 rounded-md transition " data-i18n="profile">
+              <i class="fas fa-user-circle text-2xl" ></i>
               <span>Account</span>
             </button>
             <div id="profile-menu" class="absolute right-0 mt-2 w-56 bg-white shadow-lg rounded-lg border border-gray-200 hidden opacity-0 transition-all">
-              <a href="/Signup/auth.html" class="flex items-center px-4 py-3 hover:bg-gray-50"><i class="fas fa-user-plus mr-3"></i>Sign Up / Login</a>
-              <a href="/Profile/profile.html" class="flex items-center px-4 py-3 hover:bg-gray-50"><i class="fas fa-user-circle mr-3"></i>Profile</a>
-              <a href="/MY ORDERS/myorders.html" class="flex items-center px-4 py-3 hover:bg-gray-50"><i class="fas fa-box mr-3"></i>Orders</a>
-              <a href="/index.html" id="logout-btn" class="flex items-center px-4 py-3 hover:bg-gray-50 text-red-600"><i class="fas fa-sign-out-alt mr-3"></i>Logout</a>
+              <a href="/Signup/auth.html" class="flex items-center px-4 py-3 hover:bg-gray-50" data-i18n="signupLogin"><i class="fas fa-user-plus mr-3"></i>Sign Up / Login</a>
+              <a href="/Profile/profile.html" class="flex items-center px-4 py-3 hover:bg-gray-50" data-i18n="profile"><i class="fas fa-user-circle mr-3"></i>Profile</a>
+              <a href="/MY ORDERS/myorders.html" class="flex items-center px-4 py-3 hover:bg-gray-50" data-i18n="orders"><i class="fas fa-box mr-3"></i>Orders</a>
+              <a href="/index.html" id="logout-btn" class="flex items-center px-4 py-3 hover:bg-gray-50 text-red-600" data-i18n="logout"><i class="fas fa-sign-out-alt mr-3"></i>Logout</a>
             </div>
           </div>
         </div>
@@ -87,7 +87,7 @@
             <option value="hindi">HI</option>
             <option value="marathi">MR</option>
           </select>
-          <a href="/contact.html"><i class="fas fa-headset"></i></a>
+          <a href="/contact.html"><i class="fas fa-headset" data-i18n="contact"> </i></a>
           <!-- MOBILE WISHLIST (inside the flex lg:hidden block) -->
 <a href="../Wishlist/wishlist.html" class="relative">
   <i class="fas fa-heart text-lg"></i>
@@ -115,50 +115,50 @@
       <!-- Desktop Nav -->
       <div class="hidden lg:flex justify-center py-3">
         <ul class="flex space-x-8 text-lg font-bold">
-          <li><a href="/MotherCare/mother.html" class="px-5 py-2 rounded-lg border-2 border-pink-100 text-pink-700 hover:bg-pink-50" data-i18n="contact">Mother Care</a></li>
-          <li><a href="/BabyCare/baby.html" class="px-5 py-2 rounded-lg border-2 border-blue-100 text-blue-700 hover:bg-blue-50">Baby Care</a></li>
+          <li><a href="/MotherCare/mother.html" class="px-5 py-2 rounded-lg border-2 border-pink-100 text-pink-700 hover:bg-pink-50" data-i18n="motherCare">Mother Care</a></li>
+          <li><a href="/BabyCare/baby.html" class="px-5 py-2 rounded-lg border-2 border-blue-100 text-blue-700 hover:bg-blue-50" data-i18n="babyCare">Baby Care</a></li>
 
           <li class="relative group">
-            <a href="#" class="px-5 py-2 hover:bg-gray-100 rounded flex items-center">
-              Medicine & HealthCare <i class="ml-1 fas fa-chevron-down text-xs"></i>
+            <a href="#" class="px-5 py-2 hover:bg-gray-100 rounded flex items-center" data-i18n="medicineHealthcare">
+              Medicine & HealthCare <i class="ml-1 fas fa-chevron-down text-xs" data-i18n="chevron"></i>
             </a>
             <div class="absolute top-full left-1/2 -translate-x-1/2 mt-2 w-64 bg-white shadow-xl rounded-lg border opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all">
-              <a href="/Medical and HealthCare/Prescription/prescription.html" class="block px-4 py-3 hover:bg-gray-50">Prescription Medicines</a>
-              <a href="/Medical and HealthCare/OTC/otc.html" class="block px-4 py-3 hover:bg-gray-50">OTC</a>
-              <a href="/Medical and HealthCare/Chronic/chronic.html" class="block px-4 py-3 hover:bg-gray-50">Chronic Care</a>
-              <a href="/Medical and HealthCare/FirstAid and Emergency/firstaid.html" class="block px-4 py-3 hover:bg-gray-50">First Aid</a>
-              <a href="/Medical and HealthCare/PainRelief and Fever/painRelief.html" class="block px-4 py-3 hover:bg-gray-50">Pain Relief</a>
-              <a href="/Medical and HealthCare/Allergy and Coldcare/allergy.html" class="block px-4 py-3 hover:bg-gray-50">Allergy & Cold</a>
-              <a href="/Medical and HealthCare/Digestive Health/digestive.html" class="block px-4 py-3 hover:bg-gray-50">Digestive Health</a>
-              <a href="/Medical and HealthCare/Mens Health/men.html" class="block px-4 py-3 hover:bg-gray-50">Men's Health</a>
+              <a href="/Medical and HealthCare/Prescription/prescription.html" class="block px-4 py-3 hover:bg-gray-50" data-i18n="prescriptionMedicines">Prescription Medicines</a>
+              <a href="/Medical and HealthCare/OTC/otc.html" class="block px-4 py-3 hover:bg-gray-50" data-i18n="otc">OTC</a>
+              <a href="/Medical and HealthCare/Chronic/chronic.html" class="block px-4 py-3 hover:bg-gray-50" data-i18n="chronic">Chronic Care</a>
+              <a href="/Medical and HealthCare/FirstAid and Emergency/firstaid.html" class="block px-4 py-3 hover:bg-gray-50" data-i18n="firstAid">First Aid</a>
+              <a href="/Medical and HealthCare/PainRelief and Fever/painRelief.html" class="block px-4 py-3 hover:bg-gray-50" data-i18n="pain">Pain Relief</a>
+              <a href="/Medical and HealthCare/Allergy and Coldcare/allergy.html" class="block px-4 py-3 hover:bg-gray-50" data-i18n="allergy">Allergy & Cold</a>
+              <a href="/Medical and HealthCare/Digestive Health/digestive.html" class="block px-4 py-3 hover:bg-gray-50" data-i18n="digestive">Digestive Health</a>
+              <a href="/Medical and HealthCare/Mens Health/men.html" class="block px-4 py-3 hover:bg-gray-50" data-i18n="men">Men's Health</a>
             </div>
           </li>
 
           <li class="relative group">
-            <a href="#" class="px-5 py-2 hover:bg-gray-100 rounded flex items-center">Wellness <i class="ml-1 fas fa-chevron-down text-xs"></i></a>
+            <a href="#" class="px-5 py-2 hover:bg-gray-100 rounded flex items-center" data-i18n="wellness">Wellness <i class="ml-1 fas fa-chevron-down text-xs"></i></a>
             <div class="absolute top-full left-1/2 -translate-x-1/2 mt-2 w-64 bg-white shadow-xl rounded-lg border opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all">
-              <a href="/Wellness/VITAMINS AND SUPPLEMENTS/vitamins.html" class="block px-4 py-3 hover:bg-gray-50">Vitamins & Supplements</a>
-              <a href="/Wellness/SKIN AND HAIRCARE/skin.html" class="block px-4 py-3 hover:bg-gray-50">Skin & Hair Care</a>
-              <a href="/Wellness/ORAL CARE/oral.html" class="block px-4 py-3 hover:bg-gray-50">Oral Care</a>
-              <a href="/Wellness/MENSTRUAL/menstrualCare.html" class="block px-4 py-3 hover:bg-gray-50">Menstrual Care</a>
-              <a href="/Wellness/FITNESS AND WEIGHT MANAGEMENT/fitness.html" class="block px-4 py-3 hover:bg-gray-50">Fitness & Weight</a>
-              <a href="/Wellness/SENIOR CARE/seniorCare.html" class="block px-4 py-3 hover:bg-gray-50">Senior Care</a>
-              <a href="/Wellness/IMMUNITY BOOSTER/immunity.html" class="block px-4 py-3 hover:bg-gray-50">Immunity Booster</a>
-              <a href="/Wellness/AYURVEDA/ayurved.html" class="block px-4 py-3 hover:bg-gray-50">Ayurveda</a>
+              <a href="/Wellness/VITAMINS AND SUPPLEMENTS/vitamins.html" class="block px-4 py-3 hover:bg-gray-50" data-i18n="vitamins">Vitamins & Supplements</a>
+              <a href="/Wellness/SKIN AND HAIRCARE/skin.html" class="block px-4 py-3 hover:bg-gray-50" data-i18n="skin">Skin & Hair Care</a>
+              <a href="/Wellness/ORAL CARE/oral.html" class="block px-4 py-3 hover:bg-gray-50" data-i18n="oral">Oral Care</a>
+              <a href="/Wellness/MENSTRUAL/menstrualCare.html" class="block px-4 py-3 hover:bg-gray-50" data-i18n="menstrual">Menstrual Care</a>
+              <a href="/Wellness/FITNESS AND WEIGHT MANAGEMENT/fitness.html" class="block px-4 py-3 hover:bg-gray-50" data-i18n="fitness">Fitness & Weight</a>
+              <a href="/Wellness/SENIOR CARE/seniorCare.html" class="block px-4 py-3 hover:bg-gray-50" data-i18n="senior">Senior Care</a>
+              <a href="/Wellness/IMMUNITY BOOSTER/immunity.html" class="block px-4 py-3 hover:bg-gray-50" data-i18n="immunity">Immunity Booster</a>
+              <a href="/Wellness/AYURVEDA/ayurved.html" class="block px-4 py-3 hover:bg-gray-50" data-i18n="ayurveda">Ayurveda</a>
             </div>
           </li>
 
           <li class="relative group">
-            <a href="#" class="px-5 py-2 hover:bg-gray-100 rounded flex items-center">Devices <i class="ml-1 fas fa-chevron-down text-xs"></i></a>
+            <a href="#" class="px-5 py-2 hover:bg-gray-100 rounded flex items-center" data-i18n="devices">Devices <i class="ml-1 fas fa-chevron-down text-xs"></i></a>
             <div class="absolute top-full left-1/2 -translate-x-1/2 mt-2 w-56 bg-white shadow-xl rounded-lg border opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all">
-              <a href="/DEVICES/MONITORING DEVICES/monitor.html" class="block px-4 py-3 hover:bg-gray-50">Monitoring Devices</a>
-              <a href="/DEVICES/MOBILITY AIDS/mobility.html" class="block px-4 py-3 hover:bg-gray-50">Mobility Aids</a>
-              <a href="/DEVICES/RESPIRATORY CARE/respiratory.html" class="block px-4 py-3 hover:bg-gray-50">Respiratory Care</a>
+              <a href="/DEVICES/MONITORING DEVICES/monitor.html" class="block px-4 py-3 hover:bg-gray-50" data-i18n="bp">Monitoring Devices</a>
+              <a href="/DEVICES/MOBILITY AIDS/mobility.html" class="block px-4 py-3 hover:bg-gray-50" data-i18n="mobility">Mobility Aids</a>
+              <a href="/DEVICES/RESPIRATORY CARE/respiratory.html" class="block px-4 py-3 hover:bg-gray-50" data-i18n="respiratory">Respiratory Care</a>
             </div>
           </li>
 
-          <li><a href="#" class="px-5 py-2 hover:bg-gray-100 rounded">Surgical Items</a></li>
-          <li><a href="/about.html" class="px-5 py-2 hover:bg-gray-100 rounded">About Us</a></li>
+          <li><a href="#" class="px-5 py-2 hover:bg-gray-100 rounded" data-i18n="surgical">Surgical Items <i class="ml-1 fas fa-chevron-down text-xs"></i></a></li>
+          <li><a href="/about.html" class="px-5 py-2 hover:bg-gray-100 rounded" data-i18n="about">About Us</a></li>
         </ul>
       </div>
 

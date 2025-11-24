@@ -687,11 +687,11 @@ function createCard(p) {
   const inWishlist = isInWishlist(p.id);
   return `
     <div class="card relative group overflow-hidden bg-white rounded-2xl shadow-lg">
-      <div class="discount-badge">${p.discount}</div>
+      <div class="discount-badge mt-3">${p.discount}</div>
       
       <!-- WISHLIST BUTTON -->
       <div class="absolute top-4 right-4 z-10">
-        <button class="wishlist-btn p-3 bg-white rounded-full shadow-lg hover:shadow-xl transition-all"
+        <button class="wishlist-btn p-3 bg-white rounded-full shadow-lg hover:shadow-xl transition-all mt-2"
           data-product-id="${p.id}"
           data-product-name="${p.name}"
           data-product-price="${p.price.replace('₹', '')}"
@@ -705,8 +705,8 @@ function createCard(p) {
 
       <div class="relative overflow-hidden">
         <img src="${p.image}" alt="${p.name}" class="card-img w-full h-64 object-cover transition-transform duration-500 group-hover:scale-110">
-        <div class="absolute inset-0 bg-black/50 opacity-0 lg:group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-          <button onclick="event.stopPropagation(); openProductDetails(${p.id})" class="pointer-events-auto bg-white text-gray-900 font-bold px-8 py-3 rounded-full shadow-2xl hover:bg-gray-100 transition text-lg">
+        <div onclick="event.stopPropagation(); openProductDetails(${p.id})" class="absolute inset-0 bg-black/50 opacity-0 lg:group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+          <button onclick="event.stopPropagation(); openProductDetails(${p.id})" class="pointer-events-auto bg-gray-300 text-gray-900 font-bold px-8 py-2 rounded-full shadow-2xl hover:bg-gray-400 transition text-lg">
             Quick View
           </button>
         </div>
@@ -726,10 +726,10 @@ function createCard(p) {
               data-product-id="${p.id}" data-product-name="${p.name}" data-product-price="${p.price.replace('₹', '')}" data-product-image="${p.image}">
               Add to Cart
             </button>
-            <div class="quantity-selector hidden items-center justify-center bg-gradient-to-r from-teal-400 to-cyan-800 rounded-full overflow-hidden">
-              <button class="decrease-qty w-12 h-12 text-white font-bold hover:bg-teal-900 transition">-</button>
+            <div class="quantity-selector hidden items-center justify-center bg-gradient-to-r from-teal-400 to-cyan-800 rounded-full overflow-hidden ">
+              <button class="decrease-qty w-12 h-12 text-white font-bold hover:bg-teal-450 transition ml-14">-</button>
               <span class="qty-display px-6 text-white font-bold text-lg min-w-12 text-center">1</span>
-              <button class="increase-qty w-12 h-12 text-white font-bold hover:bg-teal-900 transition">+</button>
+              <button class="increase-qty w-12 h-12 text-white font-bold hover:bg-teal-650 transition">+</button>
             </div>
           </div>
         </div>

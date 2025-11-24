@@ -2,7 +2,8 @@
 const translations = {
   english: {
     enterPinCode: "Select Pincode:",
-    
+    about: "About Us",
+    chevron: "▼",
     contact: "Contact",
     wishlist: "Wishlist",
     cart: "Cart",
@@ -40,6 +41,8 @@ const translations = {
   },
   hindi: {
     enterPinCode: "पिनकोड चुनें",
+    about: "हमारे बारे में",
+    chevron: "▼",
     go: "जाएं",
     contact: "संपर्क",
     wishlist: "इच्छा सूची",
@@ -79,6 +82,8 @@ const translations = {
   marathi: {
     enterPinCode: "पिनकोड निवडा",
     go: "जा",
+    about: "आमच्याबद्दल",
+    chevron: "▼",
     contact: "संपर्क",
     wishlist: "इच्छा यादी",
     cart: "कार्ट",
