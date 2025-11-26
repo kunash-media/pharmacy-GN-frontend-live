@@ -1,4 +1,4 @@
-// baby.js - COMPLETE CORRECTED VERSION WITH PROPER FUNCTION ORDERING
+// baby.js - COMPLETE VERSION WITH WORKING IMAGES
 let products = [];
 let filteredProducts = [];
 let currentPage = 1;
@@ -6,16 +6,13 @@ const productsPerPage = 12;
 let cart = JSON.parse(localStorage.getItem("cart")) || [];
 let wishlist = JSON.parse(localStorage.getItem("wishlist")) || [];
 
-// Use a different name to avoid conflict with header.js
-const BABY_API_BASE_URL = 'http://localhost:8083/api/mb/products';
-
 // Banner Carousel Variables
 let currentBannerSlide = 0;
 let bannerInterval;
 
 // ==================== UTILITY FUNCTIONS ====================
 function getPlaceholderImage(text = 'Product') {
-    return `https://via.placeholder.com/300x300/f3f4f6/9ca3af?text=${encodeURIComponent(text)}`;
+    return `https://placehold.co/400x400/3B82F6/FFFFFF/png?text=${encodeURIComponent(text)}`;
 }
 
 function generateStarRating(rating) {
@@ -32,7 +29,6 @@ function generateStarRating(rating) {
 }
 
 function showNotification(msg, type = "info") {
-    // Remove existing notifications
     document.querySelectorAll('.custom-notification').forEach(n => n.remove());
     
     const notification = document.createElement("div");
@@ -45,7 +41,6 @@ function showNotification(msg, type = "info") {
     
     document.body.appendChild(notification);
     
-    // Remove after 3 seconds
     setTimeout(() => {
         notification.style.opacity = "0";
         notification.style.transform = "translateX(100%)";
@@ -55,7 +50,6 @@ function showNotification(msg, type = "info") {
 
 // ==================== PRODUCT RENDERING FUNCTIONS ====================
 function createProductCard(product) {
-    
     const mainImage = product.mainImageUrl || (product.images && product.images[0]) || 
                      product.image || 
                      getPlaceholderImage(product.title);
@@ -65,7 +59,6 @@ function createProductCard(product) {
 
     const hasMultipleImages = images.length > 1;
     const isInWishlist = wishlist.some(p => p.id === product.id);
-             
 
     return `
         <div class="product-card group">
@@ -86,7 +79,7 @@ function createProductCard(product) {
                             <div class="w-full h-full flex-shrink-0" style="width: ${100 / images.length}%">
                                 <img src="${img}" alt="${product.title}" 
                                      class="w-full h-full object-cover image-zoom"
-                                     onerror="this.src='${getPlaceholderImage(product.title)}'">
+                                     onerror="this.onerror=null; this.src='${getPlaceholderImage(product.title)}';">
                             </div>
                         `).join("")}
                     </div>
@@ -147,13 +140,11 @@ function setupProductCarousel(productId, totalImages) {
         const translateX = -currentIndex * (100 / totalImages);
         carousel.style.transform = `translateX(${translateX}%)`;
         
-        // Update dots
         dots.forEach((dot, index) => {
             dot.classList.toggle('active', index === currentIndex);
         });
     }
 
-    // Previous button
     if (prevBtn) {
         prevBtn.addEventListener('click', (e) => {
             e.stopPropagation();
@@ -162,7 +153,6 @@ function setupProductCarousel(productId, totalImages) {
         });
     }
 
-    // Next button
     if (nextBtn) {
         nextBtn.addEventListener('click', (e) => {
             e.stopPropagation();
@@ -171,7 +161,6 @@ function setupProductCarousel(productId, totalImages) {
         });
     }
 
-    // Dot navigation
     dots.forEach(dot => {
         dot.addEventListener('click', (e) => {
             e.stopPropagation();
@@ -180,14 +169,12 @@ function setupProductCarousel(productId, totalImages) {
         });
     });
 
-    // Auto slide (only if more than 1 image)
     if (totalImages > 1) {
         let autoSlide = setInterval(() => {
             currentIndex = (currentIndex + 1) % totalImages;
             updateCarousel();
         }, 4000);
 
-        // Pause on hover
         const productCard = carousel.closest('.product-card');
         if (productCard) {
             productCard.addEventListener('mouseenter', () => clearInterval(autoSlide));
@@ -235,21 +222,17 @@ function renderProducts() {
     } else {
         grid.innerHTML = pageItems.map(product => createProductCard(product)).join("");
         
-        // Add event listeners to the newly rendered products
         pageItems.forEach(product => {
-            // Wishlist button
             const wishlistBtn = document.getElementById(`wishlist-${product.id}`);
             if (wishlistBtn) {
                 wishlistBtn.addEventListener("click", () => toggleWishlist(product.id));
             }
             
-            // View details button
             const viewDetailsBtn = document.getElementById(`view-details-${product.id}`);
             if (viewDetailsBtn) {
                 viewDetailsBtn.addEventListener("click", () => viewProductDetails(product.id));
             }
             
-            // Setup carousel if product has multiple images
             if (product.images && product.images.length > 1) {
                 setupProductCarousel(product.id, product.images.length);
             }
@@ -283,14 +266,12 @@ function renderPagination() {
 
     let html = "";
     
-    // Previous button
     if (currentPage > 1) {
         html += `<button class="pagination-btn px-3 py-2 rounded-md border border-gray-300 text-gray-600 hover:bg-gray-50 transition-all" data-page="${currentPage-1}">
             <i class="fas fa-chevron-left"></i>
         </button>`;
     }
     
-    // Page numbers
     for (let i = 1; i <= totalPages; i++) {
         if (i === 1 || i === totalPages || (i >= currentPage - 1 && i <= currentPage + 1)) {
             html += `<button class="pagination-btn px-3 py-2 rounded-md border transition-all ${
@@ -301,7 +282,6 @@ function renderPagination() {
         }
     }
 
-    // Next button
     if (currentPage < totalPages) {
         html += `<button class="pagination-btn px-3 py-2 rounded-md border border-gray-300 text-gray-600 hover:bg-gray-50 transition-all" data-page="${currentPage+1}">
             <i class="fas fa-chevron-right"></i>
@@ -310,7 +290,6 @@ function renderPagination() {
     
     pagination.innerHTML = html;
     
-    // Add event listeners to pagination buttons
     document.querySelectorAll(".pagination-btn").forEach(btn => {
         btn.addEventListener("click", () => {
             currentPage = parseInt(btn.dataset.page);
@@ -324,7 +303,6 @@ function renderPagination() {
 function loadSampleProducts() {
     console.log('📦 Loading sample products...');
     
-    // Sample products data
     products = [
         {
             id: 1,
@@ -336,14 +314,14 @@ function loadSampleProducts() {
             discount: 25,
             rating: 4.5,
             reviewCount: 128,
-            mainImageUrl: "https://via.placeholder.com/300x300/3B82F6/FFFFFF?text=Baby+Diapers",
             brand: "BabyComfort",
             inStock: true,
             stockQuantity: 50,
             images: [
-                "https://via.placeholder.com/300x300/3B82F6/FFFFFF?text=Baby+Diapers+1",
-                "https://via.placeholder.com/300x300/60A5FA/FFFFFF?text=Baby+Diapers+2"
-            ]
+                "https://placehold.co/400x400/3B82F6/FFFFFF/png?text=Baby+Diapers",
+                "https://placehold.co/400x400/60A5FA/FFFFFF/png?text=Diapers+Pack"
+            ],
+            sizes: ["Newborn", "Small", "Medium", "Large"]
         },
         {
             id: 2,
@@ -355,13 +333,12 @@ function loadSampleProducts() {
             discount: 30,
             rating: 4.8,
             reviewCount: 89,
-            mainImageUrl: "https://via.placeholder.com/300x300/10B981/FFFFFF?text=Baby+Shampoo",
             brand: "NatureBaby",
             inStock: true,
             stockQuantity: 30,
             images: [
-                "https://via.placeholder.com/300x300/10B981/FFFFFF?text=Shampoo+1",
-                "https://via.placeholder.com/300x300/34D399/FFFFFF?text=Shampoo+2"
+                "https://placehold.co/400x400/10B981/FFFFFF/png?text=Baby+Shampoo",
+                "https://placehold.co/400x400/34D399/FFFFFF/png?text=Natural+Care"
             ]
         },
         {
@@ -374,13 +351,66 @@ function loadSampleProducts() {
             discount: 19,
             rating: 4.3,
             reviewCount: 204,
-            mainImageUrl: "https://via.placeholder.com/300x300/F59E0B/FFFFFF?text=Feeding+Bottle",
             brand: "FeedWell",
             inStock: true,
             stockQuantity: 25,
             images: [
-                "https://via.placeholder.com/300x300/F59E0B/FFFFFF?text=Bottle+1",
-                "https://via.placeholder.com/300x300/FBBF24/FFFFFF?text=Bottle+2"
+                "https://placehold.co/400x400/F59E0B/FFFFFF/png?text=Feeding+Bottle",
+                "https://placehold.co/400x400/FBBF24/FFFFFF/png?text=Bottle+Set"
+            ]
+        },
+        {
+            id: 4,
+            title: "Baby Wet Wipes Pack",
+            description: "Gentle wet wipes for sensitive baby skin",
+            category: "diapers-wipes",
+            price: 299,
+            originalPrice: 399,
+            discount: 25,
+            rating: 4.6,
+            reviewCount: 156,
+            brand: "BabyComfort",
+            inStock: true,
+            stockQuantity: 80,
+            images: [
+                "https://placehold.co/400x400/8B5CF6/FFFFFF/png?text=Baby+Wipes",
+                "https://placehold.co/400x400/A78BFA/FFFFFF/png?text=Wet+Wipes"
+            ]
+        },
+        {
+            id: 5,
+            title: "Baby Lotion",
+            description: "Moisturizing lotion for soft baby skin",
+            category: "skin-hair-care",
+            price: 449,
+            originalPrice: 599,
+            discount: 25,
+            rating: 4.7,
+            reviewCount: 112,
+            brand: "NatureBaby",
+            inStock: true,
+            stockQuantity: 45,
+            images: [
+                "https://placehold.co/400x400/EC4899/FFFFFF/png?text=Baby+Lotion",
+                "https://placehold.co/400x400/F472B6/FFFFFF/png?text=Skin+Care"
+            ]
+        },
+        {
+            id: 6,
+            title: "Baby Pacifier Set",
+            description: "BPA-free pacifiers for newborns and infants",
+            category: "feeding-nursing",
+            price: 399,
+            originalPrice: 499,
+            discount: 20,
+            rating: 4.4,
+            reviewCount: 78,
+            brand: "FeedWell",
+            inStock: true,
+            stockQuantity: 60,
+            images: [
+                "https://placehold.co/400x400/14B8A6/FFFFFF/png?text=Baby+Pacifier",
+                "https://placehold.co/400x400/2DD4BF/FFFFFF/png?text=Pacifier+Set"
             ]
         }
     ];
@@ -389,8 +419,6 @@ function loadSampleProducts() {
     renderProducts();
     console.log(`✅ ${products.length} sample products loaded`);
 }
-
-
 
 // ==================== BANNER CAROUSEL ====================
 function initializeBannerCarousel() {
@@ -406,13 +434,9 @@ function initializeBannerCarousel() {
         return;
     }
     
-    // Show first slide
     showBannerSlide(0);
-    
-    // Set up automatic slideshow
     startBannerAutoSlide();
     
-    // Add click events to dots
     dots.forEach((dot, index) => {
         dot.addEventListener('click', () => {
             console.log(`📍 Dot ${index} clicked`);
@@ -422,7 +446,6 @@ function initializeBannerCarousel() {
         });
     });
     
-    // Pause on hover
     const bannerWrapper = document.getElementById('bannerWrapper');
     if (bannerWrapper) {
         bannerWrapper.addEventListener('mouseenter', pauseBannerAutoSlide);
@@ -436,17 +459,14 @@ function showBannerSlide(index) {
     const slides = document.querySelectorAll('.banner-slide');
     const dots = document.querySelectorAll('.banner-dot');
     
-    // Hide all slides
     slides.forEach(slide => {
         slide.classList.remove('active');
     });
     
-    // Show current slide
     if (slides[index]) {
         slides[index].classList.add('active');
     }
     
-    // Update dots
     dots.forEach((dot, i) => {
         if (i === index) {
             dot.classList.add('active');
@@ -456,7 +476,6 @@ function showBannerSlide(index) {
     });
     
     currentBannerSlide = index;
-    console.log(`🔄 Showing banner slide: ${index}`);
 }
 
 function nextBannerSlide() {
@@ -466,20 +485,16 @@ function nextBannerSlide() {
 }
 
 function startBannerAutoSlide() {
-    // Clear existing interval
     if (bannerInterval) {
         clearInterval(bannerInterval);
     }
     
-    // Start new interval (change slide every 5 seconds)
     bannerInterval = setInterval(nextBannerSlide, 5000);
-    console.log("▶️ Banner auto-slide started");
 }
 
 function pauseBannerAutoSlide() {
     if (bannerInterval) {
         clearInterval(bannerInterval);
-        console.log("⏸️ Banner auto-slide paused");
     }
 }
 
@@ -505,20 +520,18 @@ function toggleWishlist(productId) {
     
     localStorage.setItem("wishlist", JSON.stringify(wishlist));
     updateWishlistCount();
-    renderProducts(); // Re-render to update wishlist icons
+    renderProducts();
 }
 
 function viewProductDetails(productId) {
+    console.log('🔍 Navigating to product details for ID:', productId);
     localStorage.setItem("selectedProductId", productId);
-    window.location.href = "product-details.html";
+    window.location.href = "./baby-product-details.html";
 }
 
 function updateCartCount() {
     const el = document.getElementById("cartCount");
-    if (!el) {
-        console.log('Cart count element not found');
-        return;
-    }
+    if (!el) return;
     
     const count = cart.reduce((sum, item) => sum + (item.quantity || 1), 0);
     el.textContent = count;
@@ -527,10 +540,7 @@ function updateCartCount() {
 
 function updateWishlistCount() {
     const el = document.getElementById("wishlistCount");
-    if (!el) {
-        console.log('Wishlist count element not found');
-        return;
-    }
+    if (!el) return;
     
     const count = wishlist.length;
     el.textContent = count;
@@ -541,7 +551,6 @@ function updateWishlistCount() {
 function setupEventListeners() {
     console.log("🔧 Setting up event listeners...");
     
-    // Filter sidebar toggle
     const filterToggleBtn = document.getElementById("filterToggleBtn");
     const closeSidebarBtn = document.getElementById("closeSidebarBtn");
     const filterOverlay = document.getElementById("filterOverlay");
@@ -556,13 +565,11 @@ function setupEventListeners() {
         filterOverlay.addEventListener("click", toggleFilterSidebar);
     }
 
-    // Clear filters
     const clearFiltersBtn = document.getElementById("clearFilters");
     if (clearFiltersBtn) {
         clearFiltersBtn.addEventListener("click", clearFilters);
     }
 
-    // Sort select
     const sortSelect = document.getElementById("sortSelect");
     if (sortSelect) {
         sortSelect.addEventListener("change", applySorting);
@@ -583,20 +590,16 @@ function toggleFilterSidebar() {
 }
 
 function clearFilters() {
-    // Reset category
     const allCategory = document.querySelector('input[name="category"][value="all"]');
     if (allCategory) allCategory.checked = true;
     
-    // Reset all checkboxes
     document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
         checkbox.checked = false;
     });
     
-    // Reset sort
     const sortSelect = document.getElementById("sortSelect");
     if (sortSelect) sortSelect.value = "default";
     
-    // Reset products
     filteredProducts = [...products];
     currentPage = 1;
     renderProducts();
@@ -630,24 +633,20 @@ function applySorting() {
 // ==================== INITIALIZATION ====================
 document.addEventListener("DOMContentLoaded", function() {
     console.log("🚀 Initializing Baby Care page...");
-    
-    // Initialize banner carousel FIRST
-    initializeBannerCarousel();
-    
-    // Then load products and setup other functionality
-    loadSampleProducts(); // CHANGED: Use sample data directly instead of API
-    setupEventListeners();
     updateCartCount();
     updateWishlistCount();
+    initializeBannerCarousel();
+    loadSampleProducts();
+    setupEventListeners();
     
-    // Set current year in footer
+    
+    
     const yearElement = document.getElementById('year');
     if (yearElement) {
         yearElement.textContent = new Date().getFullYear();
     }
 });
 
-// Clean up intervals when page unloads
 window.addEventListener('beforeunload', () => {
     if (bannerInterval) {
         clearInterval(bannerInterval);

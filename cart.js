@@ -27,18 +27,18 @@ const cartWithItems = document.getElementById('cart-with-items');
 const prescriptionNotice = document.getElementById('prescription-notice');
 const shippingText = document.getElementById('shipping-text');
 
-// GLOBAL & SAFE CART COUNT UPDATE (Used on ALL pages)
 function updateCartCount() {
-    const cart = getCart();
-    const totalItems = cart.reduce((sum, item) => sum + (item.quantity || 0), 0);
-    
-    // Update header cart badges safely
-    document.querySelectorAll('#desktop-cart-count, #mobile-cart-count, .cart-count, #cart-count').forEach(el => {
-        if (el) {
-            el.textContent = totalItems;
-            el.style.display = totalItems > 0 ? 'flex' : 'none';
-        }
-    });
+  const cart = getCart();
+  const totalItems = cart.reduce((sum, item) => sum + (item.quantity || 0), 0);
+  
+  
+  // Updates ALL possible cart count elements
+  document.querySelectorAll('#desktop-cart-count, #mobile-cart-count, .cart-count, #cart-count, #cartCount').forEach(el => {
+    if (el) {
+      el.textContent = totalItems;
+      el.style.display = totalItems > 0 ? 'flex' : 'none';
+    }
+  });
 }
 
 // MAIN UPDATE FUNCTION – 100% SAFE (No null errors!)
