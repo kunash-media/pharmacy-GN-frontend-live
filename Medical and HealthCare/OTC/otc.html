@@ -23,70 +23,586 @@
     }
   </script>
   <style>
-    .subcategory.hidden{display:none;}
-    .product-card{transition:transform .2s ease,box-shadow .2s ease;border:1px solid #36C2CE !important;}
-    .product-card:hover{transform:translateY(-5px);box-shadow:0 8px 16px rgba(0,0,0,.1);}
-    .product-image{object-fit:contain;width:100%;height:160px;}
-    .nav-sidebar{border:1px solid #36C2CE !important;}
+     @media (max-width: 1023px) {
+      body { padding-bottom: 90px !important; }
+    }
+
+/* Rotate chevron when sub-menu is open */
+.sub-level-1:not(.hidden) ~ .flex > i,
+.sub-level-2:not(.hidden) ~ .flex > i,
+[sub-level-1]:not(.hidden) ~ .flex > i,
+[sub-level-2]:not(.hidden) ~ .flex > i {
+  transform: rotate(180deg) !important;
+}
+
+/* Optional: Open first level by default on desktop */
+@media (min-width: 1024px) {
+  .sub-level-1 { display: block !important; }
+}
+
+.price-filter {
+      padding: 20px;
+      
+      border-radius: 12px;
+      max-width: 400px;
+      margin: 0 auto;
+    }
+
+    .price-filter h4 {
+      margin: 0 0 16px 0;
+      font-size: 16px;
+      font-weight: 600;
+      color: #0e5f80;
+    }
+
+    .price-inputs {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .price-inputs input {
+      width: 100px;
+      padding: 8px 12px;
+      border: 2px solid #a8dff9;
+      border-radius: 8px;
+      font-size: 14px;
+      background: white;
+      color: #074550;
+      font-weight: 500;
+    }
+
+    .price-inputs input:focus {
+      outline: none;
+      border-color: #139bad;
+      box-shadow: 0 0 0 3px rgba(236, 72, 153, 0.1);
+    }
+
+    .price-inputs span {
+      color: #0d6580;
+      font-weight: 600;
+    }
+
+    .slider-container {
+      position: relative;
+      height: 6px;
+      background: #e7fbfc;
+      border-radius: 3px;
+      margin: 30px 10px;
+    }
+
+    .slider-track {
+      position: absolute;
+      height: 100%;
+      background: #ace5e9;
+      border-radius: 3px;
+    }
+
+    .slider-range {
+      position: absolute;
+      height: 100%;
+      background: linear-gradient(90deg, #3e8b88, #096b7c);
+      border-radius: 3px;
+    }
+
+    .thumb {
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      background: #21848b;
+      border: 4px solid white;
+      border-radius: 50%;
+      top: 50%;
+      transform: translateY(-50%);
+      cursor: pointer;
+      box-shadow: 0 2px 8px rgba(72, 230, 236, 0.4);
+      transition: all 0.2s;
+      -webkit-appearance: none;
+      appearance: none;
+      pointer-events: all;
+    }
+
+    .thumb:hover {
+      background: #1791a1;
+      transform: translateY(-50%) scale(1.2);
+      box-shadow: 0 4px 12px rgba(22, 136, 165, 0.5);
+    }
+
+    .thumb:active {
+      background: #10868f;
+    }
+
+    /* Hide default slider styling */
+    input[type="range"] {
+      -webkit-appearance: none;
+      appearance: none;
+      background: transparent;
+      width: 100%;
+      position: absolute;
+      pointer-events: none;
+    }
+
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 20px;
+      height: 20px;
+      background: #107da8;
+      border: 4px solid white;
+      border-radius: 50%;
+      cursor: pointer;
+      box-shadow: 0 2px 8px rgba(236, 72, 153, 0.4);
+      pointer-events: all;
+      transition: all 0.2s;
+    }
+
+    input[type="range"]::-webkit-slider-thumb:hover {
+      background: #077579;
+      transform: scale(1.2);
+      box-shadow: 0 4px 12px rgba(46, 221, 221, 0.5);
+    }
+
+    input[type="range"]::-moz-range-thumb {
+      width: 20px;
+      height: 20px;
+      background: #229ba3;
+      border: 4px solid white;
+      border-radius: 50%;
+      cursor: pointer;
+      box-shadow: 0 2px 8px rgba(10, 118, 126, 0.4);
+      pointer-events: all;
+      transition: all 0.2s;
+    }
+
+    input[type="range"]::-moz-range-thumb:hover {
+      background: #066464;
+      transform: scale(1.2);
+      box-shadow: 0 4px 12px rgba(219, 39, 119, 0.5);
+    }
+
+    .price-values {
+      display: flex;
+      justify-content: space-between;
+      font-size: 13px;
+      color: #075757;
+      font-weight: 500;
+      margin-top: 8px;
+    }
+
   </style>
 </head>
 <body class="bg-[#F5F5F5]" onload="initializePage()">
  <div id="header-placeholder"></div>
 
-<!-- Hero -->
-<section class="w-full h-96 relative bg-center mt-40"
-         style="background-image:url('../../Images/Banners/Banners/OTC/OVER.png');">
-  <div class="absolute inset-0 bg-black/30"></div>
-  <div class="relative z-10 flex items-center justify-center h-full">
-    
+ <!-- Main Content -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <!-- Banner Carousel -->
+      <section class="relative w-full h-[300px] sm:h-[350px] mb-6 overflow-hidden rounded-xl shadow-lg mt-32">
+        <!-- Slides wrapper -->
+        <div id="bannerWrapper" class="w-full h-full relative">
+          <!-- Slide 1 -->
+          <div class="banner-slide active" style="background-image: url('../Images/IMG/babyCareBanner1.jpg')">
+            <div class="absolute inset-0 bg-black/10"></div>
+          </div>
+
+          <!-- Slide 2 -->
+          <div class="banner-slide" style="background-image: url('../Images/IMG/babyCareBanner2.jpg')">
+            <div class="absolute inset-0 bg-black/10"></div>
+          </div>
+
+          <!-- Slide 3 -->
+          <div class="banner-slide" style="background-image: url('../Images/IMG/babyCareBanner3.jpg')">
+            <div class="absolute inset-0 bg-black/10"></div>
+          </div>
+        </div>
+
+        <!-- Navigation Dots -->
+        <div class="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2 z-20">
+          <button class="banner-dot w-3 h-3 rounded-full bg-white opacity-70 active transition-all duration-300" data-slide="0"></button>
+          <button class="banner-dot w-3 h-3 rounded-full bg-white/50 hover:opacity-80 transition-all duration-300" data-slide="1"></button>
+          <button class="banner-dot w-3 h-3 rounded-full bg-white/50 hover:opacity-80 transition-all duration-300" data-slide="2"></button>
+        </div>
+      </section>
+
+
+      <!-- desktop sidebar -->
+
+       <div class="flex flex-col lg:flex-row gap-8 mt-8">
+    <aside id="filterSidebar"
+  class="hidden lg:block lg:w-80 bg-blue-200 rounded-lg shadow-lg p-6 h-fit lg:sticky lg:top-24">
+
+  <div class="flex justify-between items-center mb-6 lg:hidden">
+    <h2 class="text-lg font-semibold text-gray-900">Filters</h2>
+    <button id="closeSidebarBtn" class="text-gray-500 hover:text-gray-700">
+      <i class="fas fa-times"></i>
+    </button>
   </div>
-</section>
 
-<div class="container mx-auto px-1 py-6">
-  <div class="flex flex-col md:flex-row gap-6">
+  <form id="filterForm" class="space-y-8">
 
-    <!-- Sidebar -->
-    <aside class="w-full md:w-1/5 md:h-[calc(90vh-4rem)] md:sticky md:top-16 overflow-y-auto bg-white p-3 rounded-lg shadow nav-sidebar">
-      <!-- Sort -->
-      <div class="flex justify-start mb-6">
-        <select id="sortSelect" class="w-52 border border-gray-300 p-2 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-primary">
-          <option>Sort By: Relevance</option>
-          <option>Price: Low to High</option>
-          <option>Price: High to Low</option>
-        </select>
-      </div>
+  <!-- ====================== CATEGORIES ====================== -->
+  <div class="border-b border-gray-200 pb-7">
+    <div class="flex items-center justify-between cursor-pointer select-none"
+         onclick="this.nextElementSibling.classList.toggle('hidden'); this.querySelector('i').classList.toggle('rotate-180')">
+      <h3 class="text-sm font-bold text-gray-800 uppercase tracking-wider">Categories</h3>
+      <i class="fas fa-chevron-down text-gray-500 transition-transform duration-200"></i>
+    </div>
 
-      <!-- Categories -->
-      <h2 class="text-lg font-bold mb-2">Categories</h2>
-      <ul id="categoryList" class="space-y-2">
-        <li><a href="#" class="category-link font-medium">Pain Killers</a><span class="expand-toggle cursor-pointer ml-2 text-lg font-bold text-primary">+</span></li>
-        <li><a href="#" class="category-link font-medium">Infertility, OBS & Gynac</a><span class="expand-toggle cursor-pointer ml-2 text-lg font-bold text-primary">+</span></li>
-        <li><a href="#" class="category-link font-medium">Cough Syrup</a><span class="expand-toggle cursor-pointer ml-2 text-lg font-bold text-primary">+</span></li>
-        <li><a href="#" class="category-link font-medium">Antacids</a><span class="expand-toggle cursor-pointer ml-2 text-lg font-bold text-primary">+</span></li>
-        <li><a href="#" class="category-link font-medium">Wellness & Supplements</a><span class="expand-toggle cursor-pointer ml-2 text-lg font-bold text-primary">+</span></li>
-        <li><a href="#" class="category-link font-medium">Anti-Infective</a><span class="expand-toggle cursor-pointer ml-2 text-lg font-bold text-primary">+</span></li>
-        <li><a href="#" class="category-link font-medium">Laxative</a><span class="expand-toggle cursor-pointer ml-2 text-lg font-bold text-primary">+</span></li>
-        <li><a href="#" class="category-link font-medium">Flatulant</a><span class="expand-toggle cursor-pointer ml-2 text-lg font-bold text-primary">+</span></li>
-      </ul>
+    <div class="mt-5 space-y-1 hidden">
 
-      <!-- Brands -->
-      <div class="mt-6">
-        <h2 class="text-lg font-bold mb-2">Brands <span class="expand-toggle cursor-pointer">+</span></h2>
-        <div id="brandList" class="hidden space-y-2">
-          <!-- Dynamic brand filters will be populated here -->
+        <!-- All categories -->
+      <label class="flex items-center text-sm cursor-pointer">
+        <input type="radio" name="category" class="w-4 h-4 text-primary rounded border-gray-300 focus:ring-primary" checked>
+        <span class="ml-3 text-gray-700">All categories</span>
+      </label>
+
+      <!-- Numismatics -->
+      <div>
+        <div class="flex items-center justify-between cursor-pointer py-2"
+             onclick="event.stopPropagation(); this.nextElementSibling.classList.toggle('hidden'); this.querySelector('i').classList.toggle('rotate-180')">
+          <label class="flex items-center text-sm cursor-pointer">
+
+            <span class="ml-3 text-gray-700 font-medium">Antenatal or Pregnancy Care</span>
+          </label>
+          <i class="fas fa-chevron-down text-xs text-gray-500 transition-transform duration-200"></i>
+        </div>
+
+         <div class="ml-8 mt-2 space-y-2 hidden">
+          <label class="flex items-center text-sm">
+            <input type="radio" name="category" class="w-4 h-4 text-primary rounded">
+            <span class="ml-3 text-gray-600">Test Kits</span>
+          </label>
+          <label class="flex items-center text-sm">
+            <input type="radio" name="category" class="w-4 h-4 text-primary rounded">
+            <span class="ml-3 text-gray-600">Skin Care</span>
+          </label>
+          <label class="flex items-center text-sm">
+            <input type="radio" name="category" class="w-4 h-4 text-primary rounded">
+            <span class="ml-3 text-gray-600">Vitamins & Supplements</span>
+          </label>
+          <label class="flex items-center text-sm">
+            <input type="radio" name="category" class="w-4 h-4 text-primary rounded">
+            <span class="ml-3 text-gray-600">Personal Care & Hygiene</span>
+          </label>
+          <label class="flex items-center text-sm">
+            <input type="radio" name="category" class="w-4 h-4 text-primary rounded">
+            <span class="ml-3 text-gray-600">Trimester Kits</span>
+          </label>
+          <label class="flex items-center text-sm">
+            <input type="radio" name="category" class="w-6 h-6 text-primary rounded">
+            <span class="ml-3 text-gray-600">Garbhsanskar Essentials & Ayurvedic Medicines</span>
+          </label>
+          <label class="flex items-center text-sm">
+            <input type="radio" name="category" class="w-4 h-4 text-primary rounded">
+            <span class="ml-3 text-gray-600">Accessories & Maternity Wear</span>
+          </label>
         </div>
       </div>
-    </aside>
+      <!-- Bonistics -->
+      <div>
+        <div class="flex items-center justify-between cursor-pointer py-2"
+             onclick="event.stopPropagation(); this.nextElementSibling.classList.toggle('hidden'); this.querySelector('i').classList.toggle('rotate-180')">
+          <label class="flex items-center text-sm cursor-pointer">
+           
+            <span class="ml-3 text-gray-700 font-medium">Delivery & PostPartum Care</span>
+          </label>
+          <i class="fas fa-chevron-down text-xs text-gray-500 transition-transform duration-200"></i>
+        </div>
+        <div class="ml-8 mt-2 space-y-2 hidden">
+          <label class="flex items-center text-sm">
+            <input type="radio" name="category" class="w-4 h-4 text-primary rounded">
+            <span class="ml-3 text-gray-600">Delivery Kits</span>
+          </label>
+          <label class="flex items-center text-sm">
+            <input type="radio" name="category" class="w-4 h-4 text-primary rounded">
+            <span class="ml-3 text-gray-600">Post delivery recovery</span>
+          </label>
+          <label class="flex items-center text-sm">
+            <input type="radio" name="category" class="w-4 h-4 text-primary rounded">
+            <span class="ml-3 text-gray-600">Breastfeeding Essentials</span>
+          </label>
+          <label class="flex items-center text-sm">
+            <input type="radio" name="category" class="w-4 h-4 text-primary rounded">
+            <span class="ml-3 text-gray-600">Postpartum Hygiene</span>
+          </label>
+          <label class="flex items-center text-sm">
+            <input type="radio" name="category" class="w-4 h-4 text-primary rounded">
+            <span class="ml-3 text-gray-600">Postpartum Nutrition</span>
+          </label>
+          <label class="flex items-center text-sm">
+            <input type="radio" name="category" class="w-4 h-4 text-primary rounded">
+            <span class="ml-3 text-gray-600">Pain & Healing Support</span>
+          </label>
+        </div>
+        </div>
+        <!-- womens health -->
+        <div>
+            <div class="flex items-center justify-between cursor-pointer py-2"
+             onclick="event.stopPropagation(); this.nextElementSibling.classList.toggle('hidden'); this.querySelector('i').classList.toggle('rotate-180')">
+          <label class="flex items-center text-sm cursor-pointer">
+           
+            <span class="ml-3 text-gray-700 font-medium">Women's Health</span>
+          </label>
+          <i class="fas fa-chevron-down text-xs text-gray-500 transition-transform duration-200"></i>
+        </div>
+        <div class="ml-8 mt-2 space-y-2 hidden">
+          <label class="flex items-center text-sm">
+            <input type="radio" name="category" class="w-4 h-4 text-primary rounded">
+            <span class="ml-3 text-gray-600">Uterine Health</span>
+          </label>
+          <label class="flex items-center text-sm">
+            <input type="radio" name="category" class="w-4 h-4 text-primary rounded">
+            <span class="ml-3 text-gray-600">Menstruation Essentials and Hygiene</span>
+          </label>
+          <label class="flex items-center text-sm">
+            <input type="radio" name="category" class="w-4 h-4 text-primary rounded">
+            <span class="ml-3 text-gray-600">PCOS and Preconception</span>
+          </label>
+          <label class="flex items-center text-sm">
+            <input type="radio" name="category" class="w-4 h-4 text-primary rounded">
+            <span class="ml-3 text-gray-600">MenoPausal Medicines</span>
+          </label>
+         
+         
+        </div>
+        </div>
 
-    <!-- Product Grid -->
-    <section class="w-full md:w-5/6">
-      <div id="productGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-        <!-- JS fills this -->
+        
+
+        <!-- Add more categories like Sphragistics, Faleristics, etc. -->
       </div>
-    </section>
+    </div>
 
+
+    <!-- PRICE FILTER (unchanged) -->
+  <div class="price-filter">
+    <h4>Price Range</h4>
+    <div class="price-inputs">
+      <input type="text" id="minPrice" value="₹0">
+      <span>-</span>
+      <input type="text" id="maxPrice" value="₹500">
+    </div>
+    <div class="slider-container">
+      <div class="slider-track"></div>
+      <div class="slider-range" id="range"></div>
+      <input type="range" min="0" max="1000" value="0" id="minThumb">
+      <input type="range" min="0" max="1000" value="500" id="maxThumb">
+    </div>
+    <div class="price-values">
+      <span>₹0</span>
+      <span>₹1,000</span>
+    </div>
   </div>
-</div>
+
+ 
+
+    <!-- ====================== BRANDS ====================== -->
+  <div class="border-b border-gray-200 pb-7">
+    <div class="flex items-center justify-between cursor-pointer select-none"
+         onclick="this.nextElementSibling.classList.toggle('hidden'); this.querySelector('i').classList.toggle('rotate-180')">
+      <h3 class="text-sm font-bold text-gray-800 uppercase tracking-wider">Brands</h3>
+      <i class="fas fa-chevron-down text-gray-500 transition-transform duration-200"></i>
+    </div>
+    <div class="mt-5 space-y-3 hidden">
+      <label class="flex items-center text-sm">
+        <input type="radio" name="brand" class="w-4 h-4 text-primary rounded" checked>
+        <span class="ml-3 text-gray-700">All Brands</span>
+      </label>
+      <label class="flex items-center text-sm">
+        <input type="radio" name="brand" class="w-4 h-4 text-primary rounded">
+        <span class="ml-3 text-gray-700">Heritage Auctions</span>
+      </label>
+      <label class="flex items-center text-sm">
+        <input type="radio" name="brand" class="w-4 h-4 text-primary rounded">
+        <span class="ml-3 text-gray-700">NumisBids</span>
+      </label>
+    </div>
+  </div>
+
+    <!-- ====================== DISCOUNT ====================== -->
+  <div class="border-b border-gray-200 pb-7">
+    <div class="flex items-center justify-between cursor-pointer select-none"
+         onclick="this.nextElementSibling.classList.toggle('hidden'); this.querySelector('i').classList.toggle('rotate-180')">
+      <h3 class="text-sm font-bold text-gray-800 uppercase tracking-wider">Discount</h3>
+      <i class="fas fa-chevron-down text-gray-500 transition-transform duration-200"></i>
+    </div>
+    <div class="mt-5 space-y-3 hidden">
+      <label class="flex items-center text-sm">
+        <input type="radio" name="discount" class="w-4 h-4 text-primary rounded" checked>
+        <span class="ml-3 text-gray-700">All Products</span>
+      </label>
+      <label class="flex items-center text-sm">
+        <input type="radio" name="discount" class="w-4 h-4 text-primary rounded">
+        <span class="ml-3 text-gray-700">10% or more</span>
+      </label>
+      <label class="flex items-center text-sm">
+        <input type="radio" name="discount" class="w-4 h-4 text-primary rounded">
+        <span class="ml-3 text-gray-700">25% or more</span>
+      </label>
+      <label class="flex items-center text-sm">
+        <input type="radio" name="discount" class="w-4 h-4 text-primary rounded">
+        <span class="ml-3 text-gray-700">50% or more</span>
+      </label>
+    </div>
+  </div>
+
+    <!-- ====================== SHOW RESULTS BUTTON ====================== -->
+  <button type="submit" class="w-full bg-[#8FABD4] hover:bg-[#4A70A9] text-white font-semibold py-3.5 rounded-md transition-all duration-200 shadow-sm">
+    Show results
+  </button>
+
+  </form>
+</aside>
+ <main class="flex-1">
+          <!-- Title + Sort -->
+          <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4">
+            <div>
+              <h2 id="categoryTitle" class="text-2xl font-bold text-gray-900">All Products</h2>
+              <p id="resultsCount" class="text-gray-600 mt-1">Showing all products</p>
+            </div>
+
+            <!-- Sort Dropdown - Visible on tablet & desktop -->
+            <select id="sortSelect" class="hidden sm:block border border-gray-300 rounded-lg px-5 py-3 text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none cursor-pointer">
+              <option value="default">Sort by: Featured</option>
+              <option value="price-low">Price: Low to High</option>
+              <option value="price-high">Price: High to Low</option>
+              <option value="rating">Customer Rating</option>
+              <option value="newest">Newest First</option>
+            </select>
+          </div>
+
+          <!-- Products Grid -->
+          <div id="productsGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            <!-- Products will be loaded here by mother.js -->
+          </div>
+
+          <!-- Pagination -->
+          <div id="pagination" class="flex justify-center items-center mt-12 space-x-2">
+            <!-- Pagination buttons -->
+          </div>
+        </main>
+      </div>
+
+  <!-- ===================== MOBILE BOTTOM BAR (Sort + Filters) ===================== -->
+  <div class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 px-4 py-3 flex gap-3 z-50 lg:hidden shadow-2xl">
+    <button id="openSortSheet" class="flex-1 bg-blue-500 text-white font-bold py-3.5 rounded-lg flex items-center justify-center gap-2 hover:bg-green-700 transition">
+      Sort
+    </button>
+    <button id="openFilterSheet" class="flex-1 bg-blue-500 text-white font-bold py-3.5 rounded-lg flex items-center justify-center gap-2 hover:bg-red-700 transition">
+      Filters
+    </button>
+  </div>
+
+  <!-- ===================== BACKDROP ===================== -->
+  <div id="mobileSheetBackdrop" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden lg:hidden"></div>
+
+  <!-- ===================== SORT SHEET ===================== -->
+  <div id="sortSheet" class="fixed bottom-0 left-0 right-0 bg-white rounded-t-3xl shadow-2xl max-h-[90vh] overflow-y-auto z-50 transform translate-y-full transition-transform duration-300 lg:hidden">
+    <div class="sticky top-0 bg-white border-b px-6 py-4 flex justify-between items-center">
+      <h3 class="text-lg font-bold">Sort By</h3>
+      <button id="closeSortSheet">X</button>
+    </div>
+    <div class="p-6 space-y-3">
+      <label class="flex items-center p-3 hover:bg-gray-50 rounded-lg cursor-pointer">
+        <input type="radio" name="mobileSort" value="default" checked class="w-5 h-5 text-blue-600">
+        <span class="ml-4 font-medium">Featured</span>
+      </label>
+      <label class="flex items-center p-3 hover:bg-gray-50 rounded-lg cursor-pointer">
+        <input type="radio" name="mobileSort" value="price-low" class="w-5 h-5 text-blue-600">
+        <span class="ml-4 font-medium">Price: Low to High</span>
+      </label>
+      <label class="flex items-center p-3 hover:bg-gray-50 rounded-lg cursor-pointer">
+        <input type="radio" name="mobileSort" value="price-high" class="w-5 h-5 text-blue-600">
+        <span class="ml-4 font-medium">Price: High to Low</span>
+      </label>
+      <label class="flex items-center p- p-3 hover:bg-gray-50 rounded-lg cursor-pointer">
+        <input type="radio" name="mobileSort" value="rating" class="w-5 h-5 text-blue-600">
+        <span class="ml-4 font-medium">Customer Rating</span>
+      </label>
+      <label class="flex items-center p-3 hover:bg-gray-50 rounded-lg cursor-pointer">
+        <input type="radio" name="mobileSort" value="newest" class="w-5 h-5 text-blue-600">
+        <span class="ml-4 font-medium">Newest First</span>
+      </label>
+    </div>
+    <div class="p-4 border-t bg-white sticky bottom-0">
+      <button id="applySortBtn" class="w-full bg-blue-400 text-white font-bold py-3.5 rounded-lg hover:bg-blue-700">
+        Apply Sort
+      </button>
+    </div>
+  </div>
+
+  <!-- ===================== FILTER SHEET (FULL COPY OF DESKTOP) ===================== -->
+  <div id="filterSheet" class="fixed bottom-0 left-0 right-0 bg-white rounded-t-3xl shadow-2xl max-h-[90vh] overflow-y-auto z-50 transform translate-y-full transition-transform duration-300 lg:hidden">
+    <div class="sticky top-0 bg-white border-b px-6 py-4 flex justify-between items-center z-10">
+      <h3 class="text-lg font-bold">Filters</h3>
+      <button id="closeFilterSheet">X</button>
+    </div>
+
+    <div class="p-6 pb-32">
+      <form id="mobileFilterForm" class="space-y-8">
+
+        <!-- FULL CATEGORIES (exact copy from desktop) -->
+        <div class="border-b border-gray-200 rounded-lg p-4">
+          <div class="flex items-center justify-between cursor-pointer" onclick="this.nextElementSibling.classList.toggle('hidden'); this.querySelector('i').classList.toggle('rotate-180')">
+            <h3 class="font-semibold text-gray-800">Categories</h3>
+            <i class="fas fa-chevron-down transition-transform"></i>
+          </div>
+          <div class="mt-4 space-y-3 hidden">
+            <label class="flex items-center"><input type="radio" name="mobileCat" value="all" checked class="w-4 h-4 text-blue-600"><span class="ml-3">All categories</span></label>
+
+            <!-- Antenatal -->
+            <div class="ml-4">
+              <div class="flex justify-between items-center py-2 cursor-pointer" onclick="event.stopPropagation(); this.nextElementSibling.classList.toggle('hidden')">
+                <span class="font-medium">Antenatal or Pregnancy Care</span><i class="fas fa-chevron-down text-xs"></i>
+              </div>
+              <div class="ml-6 space-y-2 hidden">
+                <label class="flex items-center text-sm"><input type="radio" name="mobileCat" class="w-4 h-4 text-blue-600"><span class="ml-3 text-gray-600">Test Kits</span></label>
+                <label class="flex items-center text-sm"><input type="radio" name="mobileCat" class="w-4 h-4 text-blue-600"><span class="ml-3 text-gray-600">Skin Care</span></label>
+                <!-- ... add all others same way ... -->
+              </div>
+            </div>
+            <!-- Repeat for other main categories -->
+          </div>
+        </div>
+
+        <!-- PRICE SLIDER (WORKING) -->
+        <div class="price-filter mt-6">
+          <h4 class="font-semibold mb-4">Price Range</h4>
+          <div class="price-inputs">
+            <input type="text" id="mobileMinPrice" value="₹0" class="w-24 px-3 py-2 border border-blue-300 rounded">
+            <span>-</span>
+            <input type="text" id="mobileMaxPrice" value="₹500" class="w-24 px-3 py-2 border border-blue-300 rounded">
+          </div>
+          <div class="slider-container mt-6">
+            <div class="slider-range" id="mobileRange"></div>
+            <input type="range" min="0" max="1000" value="0" id="mobileMinThumb" class="absolute w-full">
+            <input type="range" min="0" max="1000" value="500" id="mobileMaxThumb" class="absolute w-full">
+          </div>
+          <div class="price-values mt-2 text-sm text-gray-600">
+            <span>₹0</span><span>₹1,000</span>
+          </div>
+        </div>
+
+        <!-- BRANDS & DISCOUNT (copy from desktop) -->
+        <!-- ... paste your Brands and Discount sections exactly like desktop ... -->
+
+        <!-- APPLY / CLEAR BUTTONS -->
+        <div class="fixed bottom-0 left-0 right-0 bg-white border-t p-4 flex gap-3">
+          <button type="button" id="clearMobileFilters" class="flex-1 border border-blue-600 text-blue-700 py-3 rounded-lg font-bold">
+            Clear All
+          </button>
+          <button type="button" id="applyMobileFilters" class="flex-1 bg-blue-500 text-white py-3 rounded-lg font-bold">
+            Apply Filters
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+    </div>
+
+    <!-- Mobile Filter Overlay -->
+    <div id="filterOverlay" class="fixed inset-0 bg-black bg-opacity-50 z-40 hidden lg:hidden"></div>
 
 <div id="footer-placeholder"></div>
     
@@ -399,6 +915,131 @@ function unescapeHtml(s) {
    ============================================================== */
 document.addEventListener('DOMContentLoaded', fetchProducts);
 </script>
+
+ <script>
+    const minThumb = document.getElementById('minThumb');
+    const maxThumb = document.getElementById('maxThumb');
+    const range = document.getElementById('range');
+    const minPriceInput = document.getElementById('minPrice');
+    const maxPriceInput = document.getElementById('maxPrice');
+
+    const minVal = parseInt(minThumb.min);
+    const maxVal = parseInt(minThumb.max);
+
+    // Update range highlight
+    function updateRange() {
+      const minPercent = ((minThumb.value - minVal) / (maxVal - minVal)) * 100;
+      const maxPercent = ((maxThumb.value - minVal) / (maxVal - minVal)) * 100;
+      
+      range.style.left = minPercent + '%';
+      range.style.width = (maxPercent - minPercent) + '%';
+      
+      minPriceInput.value = '₹' + minThumb.value;
+      maxPriceInput.value = '₹' + maxThumb.value;
+    }
+
+    // Prevent thumbs from crossing
+    minThumb.addEventListener('input', () => {
+      if (parseInt(minThumb.value) > parseInt(maxThumb.value) - 20) {
+        minThumb.value = parseInt(maxThumb.value) - 20;
+      }
+      updateRange();
+    });
+
+    maxThumb.addEventListener('input', () => {
+      if (parseInt(maxThumb.value) < parseInt(minThumb.value) + 20) {
+        maxThumb.value = parseInt(minThumb.value) + 20;
+      }
+      updateRange();
+    });
+
+    // Sync input fields
+    minPriceInput.addEventListener('change', () => {
+      let val = parseInt(minPriceInput.value.replace('₹', ''));
+      if (isNaN(val)) val = 0;
+      if (val > parseInt(maxThumb.value) - 20) val = parseInt(maxThumb.value) - 20;
+      if (val < 0) val = 0;
+      if (val > 1000) val = 1000;
+      minThumb.value = val;
+      updateRange();
+    });
+
+    maxPriceInput.addEventListener('change', () => {
+      let val = parseInt(maxPriceInput.value.replace('₹', ''));
+      if (isNaN(val)) val = 1000;
+      if (val < parseInt(minThumb.value) + 20) val = parseInt(minThumb.value) + 20;
+      if (val > 1000) val = 1000;
+      maxThumb.value = val;
+      updateRange();
+    });
+
+    // Initialize
+    updateRange();
+  </script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const backdrop = document.getElementById('mobileSheetBackdrop');
+      const sortSheet = document.getElementById('sortSheet');
+      const filterSheet = document.getElementById('filterSheet');
+
+      // Open
+      document.getElementById('openSortSheet')?.addEventListener('click', () => {
+        backdrop.classList.remove('hidden');
+        sortSheet.classList.remove('translate-y-full');
+      });
+      document.getElementById('openFilterSheet')?.addEventListener('click', () => {
+        backdrop.classList.remove('hidden');
+        filterSheet.classList.remove('translate-y-full');
+      });
+
+      // Close
+      function closeSheets() {
+        backdrop.classList.add('hidden');
+        sortSheet.classList.add('translate-y-full');
+        filterSheet.classList.add('translate-y-full');
+      }
+      backdrop.onclick = closeSheets;
+      document.getElementById('closeSortSheet').onclick = closeSheets;
+      document.getElementById('closeFilterSheet').onclick = closeSheets;
+
+      // Apply Sort → sync with desktop select
+      document.getElementById('applySortBtn').onclick = () => {
+        const val = document.querySelector('input[name="mobileSort"]:checked')?.value || 'default';
+        document.getElementById('sortSelect').value = val;
+        document.getElementById('sortSelect').dispatchEvent(new Event('change'));
+        closeSheets();
+      };
+
+      // Mobile Price Slider Logic (same as desktop)
+      const mMin = document.getElementById('mobileMinThumb');
+      const mMax = document.getElementById('mobileMaxThumb');
+      const mRange = document.getElementById('mobileRange');
+      const mMinInput = document.getElementById('mobileMinPrice');
+      const mMaxInput = document.getElementById('mobileMaxPrice');
+
+      function updateMobileRange() {
+        const minP = ((mMin.value / 1000) * 100);
+        const maxP = ((mMax.value / 1000) * 100);
+        mRange.style.left = minP + '%';
+        mRange.style.width = (maxP - minP) + '%';
+        mMinInput.value = '₹' + mMin.value;
+        mMaxInput.value = '₹' + mMax.value;
+      }
+      mMin.oninput = mMax.oninput = updateMobileRange;
+      mMinInput.onchange = () => { mMin.value = mMinInput.value.replace('₹',''); updateMobileRange(); };
+      mMaxInput.onchange = () => { mMax.value = mMaxInput.value.replace('₹',''); updateMobileRange(); };
+      updateMobileRange();
+
+      // Apply Filters button (you can expand this later)
+      document.getElementById('applyMobileFilters').onclick = closeSheets;
+      document.getElementById('clearMobileFilters').onclick = () => {
+        document.querySelectorAll('input[name="mobileCat"]').forEach(r => r.checked = r.value === 'all');
+        mMin.value = 0; mMax.value = 1000;
+        updateMobileRange();
+      };
+    });
+  </script>
 
 
      

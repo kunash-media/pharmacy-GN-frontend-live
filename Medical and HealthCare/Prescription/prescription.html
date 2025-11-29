@@ -3,333 +3,419 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title data-i18n="title">Prescribed Medicines - DEMO GOODNEEWZ</title>
+  <title>Prescription Medicines - Goodneewz</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="../../Header/header.css">
   <link rel="stylesheet" href="../../Footer/footer.css">
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          colors: {
-            primary: '#36C2CE',
-            secondary: '#0ea5e9',
-            accent: '#10b981',
-            dark: '#1e293b',
-          }
-        }
-      }
-    }
-  </script>
+  
   <style>
-    .subcategory.hidden { display: none; }
-    .product-card {
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
-      border: 1px solid #36C2CE !important;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      height: 100%;
-      cursor: pointer;
+   body { font-family: 'Inter', 'Noto Sans Devanagari', sans-serif; }
+    .line-clamp-2 { overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+
+    /* Rotate chevron when sub-menu is open */
+    .sub-level-1:not(.hidden) ~ .flex > i,
+    .sub-level-2:not(.hidden) ~ .flex > i,
+    [sub-level-1]:not(.hidden) ~ .flex > i,
+    [sub-level-2]:not(.hidden) ~ .flex > i {
+      transform: rotate(180deg) !important;
     }
-    .product-card:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    @media (min-width: 1024px) {
+      .sub-level-1 { display: block !important; }
     }
-    .product-image {
-      object-fit: contain;
-      width: 100%;
-      height: 160px;
+    @media (max-width: 1023px) {
+      body { padding-bottom: 90px !important; }
     }
-    .nav-sidebar {
-      border: 1px solid #36C2CE !important;
-    }
+
+    /* Dual Thumb Price Slider Styling */
+    .price-slider-container h4 {
+    font-size: 16px;
+    font-weight: 600;
+    color: #831843;
+    margin-bottom: 16px;
+  }
+
+  .slider-wrapper {
+    position: relative;
+    height: 6px;
+    background: #fce7f3;
+    border-radius: 4px;
+    margin: 40px 10px 30px;
+  }
+
+  .slider-fill {
+    position: absolute;
+    height: 100%;
+    background: linear-gradient(90deg, #f9a8d4, #ec4899);
+    border-radius: 4px;
+    top: 0;
+  }
+
+  input[type="range"] {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    background: transparent;
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    margin: 0;
+    pointer-events: none;
+  }
+
+  input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    height: 24px;
+    width: 24px;
+    border-radius: 50%;
+    background: #ec4899;
+    border: 4px solid white;
+    cursor: pointer;
+    pointer-events: all;
+    box-shadow: 0 4px 12px rgba(236, 72, 153, 0.4);
+  }
+
+  input[type="range"]::-moz-range-thumb {
+    height: 24px;
+    width: 24px;
+    border-radius: 50%;
+    background: #ec4899;
+    border: 4px solid white;
+    cursor: pointer;
+    pointer-events: all;
+    box-shadow: 0 4px 12px rgba(236, 72, 153, 0.4);
+    border: none;
+  }
+
+  .price-values {
+    display: flex;
+    justify-content: space-between;
+    font-weight: 600;
+    color: #9f1239;
+    font-size: 14px;
+    padding: 0 10px;
+  }
   </style>
 </head>
-<body class="bg-[#DDF6D2]" onload="initializePage()">
+<body class="bg-gray-50" onload="initializePage()">
+  <!-- Header Placeholder -->
   <div id="header-placeholder"></div>
 
-  <!-- Hero Banner -->
-  <section class="mt-40 w-full h-96 relative bg-center bg-cover"
-         style="background-image: url('../../Images/IMG/PRESCRIPTION\ \(1\).png');">
-    <div class="absolute inset-0 bg-black/30"></div>
-    <div class="relative flex items-center justify-center h-full px-4">
-  
-    </div>
-</section>
+  <!-- Main Content -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <!-- ✅ Auto Scrolling Banner with Dots -->
+      <section
+        class="mt-36 relative w-full h-[300px] sm:h-[350px] mb-6 overflow-hidden rounded-xl shadow-lg"
+      >
+        <!-- Slides wrapper -->
+        <div id="bannerWrapper" class="w-full h-full relative">
+          <!-- Slide 1 -->
+          <div
+            class="absolute inset-0 w-full h-full bg-cover bg-center transition-opacity duration-1000 opacity-100 slide"
+            style="background-image: url('../Images/IMG/banner1.png')"
+          >
+            <!-- <div class="absolute inset-0 bg-white/20"></div> -->
+            <div
+              class="relative z-10 flex flex-col items-center justify-center h-full text-center text-white px-4"
+            >
+              <!-- <h2
+                class="text-2xl sm:text-3xl text-gray-600 font-bold animate-fade-in-up"
+              >
+                Mother Care & Maternity
+              </h2> -->
+              <!-- <p
+                class="mt-2 text-gray-600 text-sm sm:text-base max-w-xl animate-fade-in-up delay-200"
+              >
+                Comfort and confidence through every stage of motherhood.
+              </p> -->
+            </div>
+          </div>
 
-  <div class="container mx-auto px-1 py-6">
-    <div class="flex flex-col md:flex-row gap-6">
-     <!-- Sidebar - VISIBLE ONLY ON DESKTOP (md and up) -->
-<div class="hidden md:block sticky top-16 w-full md:w-1/5 md:h-[calc(90vh-4rem)] overflow-y-auto bg-white p-3 rounded-lg shadow nav-sidebar">
-  <div class="mb-4">
-    <!-- Sorting -->
-    <div class="flex justify-start mb-6">
-      <select class="w-52 border border-gray-300 p-2 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-primary" id="sortSelect">
-        <option>Sort By: Relevance</option>
-        <option>Price: Low to High</option>
-        <option>Price: High to Low</option>
-      </select>
-    </div>
+          <!-- Slide 2 -->
+          <div
+            class="absolute inset-0 w-full h-full bg-cover bg-center transition-opacity duration-1000 opacity-0 slide"
+            style="
+              background-image: url('../Images/IMG/banner2.png');
+            "
+          >
+            <!-- <div class="absolute inset-0 bg-white/40"></div> -->
+            <div
+              class="relative z-10 flex flex-col items-center justify-center h-full text-center text-white px-4"
+            >
+              <!-- <h2 class="text-2xl sm:text-3xl font-bold text-gray-600 animate-fade-in-up">
+                Because Motherhood Has Many Moods
+              </h2>
+              <p
+                class="mt-2 text-sm text-gray-600 sm:text-base max-w-xl animate-fade-in-up delay-200"
+              >
+                Soft wear, soothing care, and joyful essentials to match every stage and feeling.
+              </p> -->
+            </div>
+          </div>
 
-    <h2 class="text-lg font-bold mb-2">Categories</h2>
-    <ul id="categoryList" class="space-y-2">
-      <li class="flex items-center justify-between">
-        <a href="#" class="category-link font-medium hover:text-primary">Anti-Allergy / Antihistamines</a>
-        <span class="expand-toggle cursor-pointer ml-2 text-lg font-bold text-primary">+</span>
-      </li>
-      <li>
-        <a href="#" class="category-link font-medium hover:text-primary">Cold & Cough Relief</a>
-      </li>
-      <!-- Add more categories as needed -->
-    </ul>
+          <!-- Slide 3 -->
+          <div
+            class="absolute inset-0 w-full h-full bg-cover bg-center transition-opacity duration-1000 opacity-0 slide"
+            style="
+              background-image: url('../Images/IMG/banner3.png');
+            "
+          >
+            <!-- <div class="absolute inset-0 bg-black/40"></div> -->
+            <div
+              class="relative z-10 flex flex-col items-center justify-center h-full text-center text-white px-4"
+            >
+              <!-- <h2 class="text-2xl sm:text-3xl font-bold animate-fade-in-up">
+                Caring for Mothers
+              </h2>
+              <p
+                class="mt-2 text-sm sm:text-base max-w-xl animate-fade-in-up delay-200"
+              >
+                Essentials to make your journey stress-free and joyful.
+              </p> -->
+            </div>
+          </div>
+        </div>
+
+        <!-- ✅ Navigation Dots -->
+        <div
+          class="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2 z-20"
+        >
+          <button
+            class="w-3 h-3 rounded-full bg-white opacity-70 active-dot transition-all duration-300"
+          ></button>
+          <button
+            class="w-3 h-3 rounded-full bg-white/50 hover:opacity-80 transition-all duration-300"
+          ></button>
+          <button
+            class="w-3 h-3 rounded-full bg-white/50 hover:opacity-80 transition-all duration-300"
+          ></button>
+        </div>
+      </section>
+
+<div class="flex flex-col lg:flex-row gap-8 mt-8">
+      <!-- Sidebar Filters (Desktop) -->
+      <aside id="filterSidebar" class="hidden lg:block lg:w-80 bg-[#FFE8DB] rounded-lg shadow-lg border p-6">
+        <form class="space-y-8">
+          <!-- Categories -->
+          <div class="border-b border-gray-200 pb-7">
+            <div class="flex items-center justify-between cursor-pointer select-none"
+                 onclick="this.nextElementSibling.classList.toggle('hidden'); this.querySelector('i').classList.toggle('rotate-180')">
+              <h3 class="text-sm font-bold text-gray-800 uppercase tracking-wider">Categories</h3>
+              <i class="fas fa-chevron-down text-gray-500 transition-transform duration-200"></i>
+            </div>
+            <div class="mt-5 space-y-3 hidden">
+              <label class="flex items-center text-sm cursor-pointer">
+                <input type="radio" name="category" class="w-4 h-4 text-pink-600 rounded border-gray-300" checked>
+                <span class="ml-3 text-gray-700">All categories</span>
+              </label>
+              <label class="flex items-center text-sm cursor-pointer">
+                <input type="radio" name="category" class="w-4 h-4 text-pink-600 rounded border-gray-300">
+                <span class="ml-3 text-gray-700">Allergy and Fever</span>
+              </label>
+              <label class="flex items-center text-sm cursor-pointer">
+                <input type="radio" name="category" class="w-4 h-4 text-pink-600 rounded border-gray-300">
+                <span class="ml-3 text-gray-700">Antibiotics</span>
+              </label>
+              <label class="flex items-center text-sm cursor-pointer">
+                <input type="radio" name="category" class="w-4 h-4 text-pink-600 rounded border-gray-300">
+                <span class="ml-3 text-gray-700">Liver & Kidney Care</span>
+              </label>
+              <label class="flex items-center text-sm cursor-pointer">
+                <input type="radio" name="category" class="w-4 h-4 text-pink-600 rounded border-gray-300">
+                <span class="ml-3 text-gray-700">Stomach Care & Digestion</span>
+              </label>
+              <label class="flex items-center text-sm cursor-pointer">
+                <input type="radio" name="category" class="w-4 h-4 text-pink-600 rounded border-gray-300">
+                <span class="ml-3 text-gray-700">Skin Medicines</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Price Range Slider (0 - 10,000) -->
+          <div class="price-slider-container">
+  <h4>Price Range</h4>
+  <div class="slider-wrapper">
+    <div class="slider-fill" id="desktopFill"></div>
+    <input type="range" min="0" max="10000" value="0"    id="minThumb">
+    <input type="range" min="0" max="10000" value="10000" id="maxThumb">
   </div>
-
-  <!-- Brands -->
-  <div>
-    <h2 class="text-lg font-bold mb-2 flex items-center justify-between">
-      Brands 
-      <span class="expand-toggle cursor-pointer text-xl">+</span>
-    </h2>
-    <ul id="brandList" class="space-y-2 mt-3">
-      <li><label class="flex items-center gap-2"><input type="checkbox" class="brand-filter" value="BrandX"> BrandX</label></li>
-      <li><label class="flex items-center gap-2"><input type="checkbox" class="brand-filter" value="BrandZ"> BrandZ</label></li>
-      <li><label class="flex items-center gap-2"><input type="checkbox" class="brand-filter" value="Cipla"> Cipla</label></li>
-      <!-- Add more brands -->
-    </ul>
+  <div class="price-values">
+    <span id="minValue">₹0</span>
+    <span id="maxValue">₹10,000</span>
   </div>
 </div>
 
-      <!-- Product Grid -->
-      <section class="w-full md:w-5/6">
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6" id="productGrid"></div>
-      </section>
-    </div>
-  </div>
-
-  <div class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-300 flex md:hidden z-50 shadow-lg">
-    <button id="openSortBtn" class="flex-1 py-4 text-center font-semibold text-gray-800 border-r border-gray-300">
-      Sort
-    </button>
-    <button id="openFilterBtn" class="flex-1 py-4 text-center font-semibold text-blue-600">
-      Filters
-    </button>
-  </div>
-
-  <!-- ====================== MOBILE SORT PANEL (slides up) ====================== -->
-  <div id="mobileSortPanel" class="fixed inset-x-0 bottom-0 bg-white rounded-t-2xl shadow-2xl z-50 transform translate-y-full slide-up md:hidden">
-    <div class="flex justify-center pt-4">
-      <div class="w-16 h-1 bg-gray-400 rounded-full"></div>
-    </div>
-    <div class="p-6">
-      <div class="flex justify-between items-center mb-6">
-        <h3 class="text-xl font-bold">Sort By</h3>
-        <button id="closeSortBtn" class="text-3xl">&times;</button>
-      </div>
-      <select id="sortSelectMobile" class="w-full border border-gray-300 p-4 rounded-lg text-base focus:ring-2 focus:ring-blue-500">
-        <option>Sort By: Relevance</option>
-        <option>Price: Low to High</option>
-        <option>Price: High to Low</option>
-      </select>
-      <button class="mt-6 w-full bg-blue-600 text-white py-4 rounded-lg font-semibold">Apply</button>
-    </div>
-  </div>
-
-  <!-- ====================== MOBILE FILTER DRAWER (all options visible) ====================== -->
-  <div id="mobileFilterDrawer" class="fixed inset-x-0 bottom-0 max-h-[90vh] bg-white rounded-t-2xl shadow-2xl overflow-y-auto z-50 transform translate-y-full slide-up md:hidden">
-    <div class="flex justify-center pt-4 pb-2">
-      <div class="w-16 h-1 bg-gray-400 rounded-full"></div>
-    </div>
-
-    <div class="px-6 pt-4 pb-24"> <!-- pb-24 to avoid overlap with bottom bar -->
-      <div class="flex justify-between items-center mb-6">
-        <h3 class="text-2xl font-bold">Filters</h3>
-        <button id="closeFilterBtn" class="text-3xl">&times;</button>
-      </div>
-
-      <!-- Sorting (also available in filter drawer for convenience) -->
-      <div class="mb-8">
-        <select class="w-full border border-gray-300 p-4 rounded-lg focus:ring-2 focus:ring-blue-500">
-          <option>Sort By: Relevance</option>
-          <option>Price: Low to High</option>
-          <option>Price: High to Low</option>
-        </select>
-      </div>
-
-      <!-- Categories - Exactly like your original -->
-      <div class="mb-8">
-        <h2 class="text-lg font-bold mb-4">Categories</h2>
-        <ul class="space-y-4">
-          <li class="flex items-center justify-between">
-            <a href="#" class="category-link font-medium text-gray-800 hover:text-blue-600">
-              Anti-Allergy / Antihistamines
-            </a>
-            <span class="expand-toggle cursor-pointer ml-2 text-lg font-bold text-blue-600">+</span>
-          </li>
-          <li>
-            <a href="#" class="category-link font-medium text-gray-800 hover:text-blue-600">
-              Cold & Cough Relief
-            </a>
-          </li>
-          <li>
-            <a href="#" class="category-link font-medium text-gray-800 hover:text-blue-600">
-              Pain Relief
-            </a>
-          </li>
-          <!-- Add as many as you want -->
-        </ul>
-      </div>
-
-      <!-- Brands - Exactly like your original, fully visible -->
-      <div class="mb-8">
-        <h2 class="text-lg font-bold mb-4 flex items-center justify-between">
-          Brands
-          <span class="expand-toggle cursor-pointer text-xl">+</span>
-        </h2>
-        <ul id="brandListMobile" class="mt-4 space-y-4">
-          <li><label class="flex items-center"><input type="checkbox" class="mr-3 h-5 w-5 text-blue-600 rounded"> BrandX</label></li>
-          <li><label class="flex items-center"><input type="checkbox" class="mr-3 h-5 w-5 text-blue-600 rounded"> BrandZ</label></li>
-          <li><label class="flex items-center"><input type="checkbox" class="mr-3 h-5 w-5 text-blue-600 rounded"> BrandY</label></li>
-          <li><label class="flex items-center"><input type="checkbox" class="mr-3 h-5 w-5 text-blue-600 rounded"> Cipla</label></li>
-          <li><label class="flex items-center"><input type="checkbox" class="mr-3 h-5 w-5 text-blue-600 rounded"> Sun Pharma</label></li>
-          <!-- Add unlimited brands -->
-        </ul>
-      </div>
-
-      <!-- Action Buttons -->
-      <div class="flex gap-4 mt-10">
-        <button id="clearAll" class="flex-1 border border-gray-400 py-4 rounded-lg font-semibold">Clear All</button>
-        <button id="applyFilters" class="flex-1 bg-blue-600 text-white py-4 rounded-lg font-semibold">Apply Filters</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Backdrop for filter drawer -->
-  <div id="filterBackdrop" class="fixed inset-0 bg-black bg-opacity-50 z-40 hidden md:hidden"></div>
-
-  <!-- Upload Prescription Modal -->
-  <div id="uploadModal" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-    <div class="bg-white rounded-2xl shadow-2xl w-11/12 max-w-3xl p-10 relative">
-      <button id="closeUploadModal" class="absolute top-3 right-3 text-gray-500 hover:text-black text-xl font-bold">✕</button>
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div class="border rounded-xl p-5 shadow-md">
-          <h2 class="text-lg font-semibold mb-4">Upload Prescription for:</h2>
-          <p id="modalProductName" class="font-bold text-primary mb-4"></p>
-          <img id="modalProductImage" class="modal-product-image w-full h-32 object-contain rounded-lg mb-4 hidden" alt="Product">
-          
-          <label class="border rounded-lg p-4 mb-3 flex items-center justify-between cursor-pointer hover:bg-gray-50">
-            <div class="flex items-center gap-3">
-              <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 16v-8m0 0l-4 4m4-4l4 4M4 20h16"/>
-              </svg>
-              <span class="font-medium text-gray-700">Choose File</span>
+          <!-- Brands & Discount (same as before) -->
+          <div class="border-b border-gray-200 pb-7">
+            <div class="flex items-center justify-between cursor-pointer select-none"
+                 onclick="this.nextElementSibling.classList.toggle('hidden'); this.querySelector('i').classList.toggle('rotate-180')">
+              <h3 class="text-sm font-bold text-gray-800 uppercase tracking-wider">Brands</h3>
+              <i class="fas fa-chevron-down text-gray-500 transition-transform duration-200"></i>
             </div>
-            <input type="file" id="prescriptionFile" accept="image/*,.pdf" class="hidden">
-            <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-            </svg>
-          </label>
-          <p id="fileNameDisplay" class="text-sm text-gray-600 mb-3"></p>
-
-          <img id="prescriptionPreviewImg" class="hidden w-full h-48 object-contain rounded-lg mb-4" alt="Preview">
-
-          <p id="validPrescriptionBtn" class="text-sm text-gray-600 mb-3 flex items-center gap-2 cursor-pointer border-b border-blue-600 inline-block pb-1 w-fit">
-            <svg class="w-4 h-4 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M12 2a10 10 0 100 20 10 10 0 000-20z"/>
-            </svg>
-            What is valid prescription?
-          </p>
-
-          <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 text-blue-600 font-semibold text-center">
-            <p class="mb-3">For urgent orders, call us:</p>
-            <button onclick="window.location.href='tel:1234567890'" class="px-5 py-2 bg-blue-600 text-white rounded-lg shadow hover:bg-blue-700 transition">
-              1234567890
-            </button>
+            <div class="mt-5 space-y-3 hidden">
+              <label class="flex items-center text-sm"><input type="radio" name="brand" class="w-4 h-4 text-pink-600 rounded" checked><span class="ml-3 text-gray-700">All Brands</span></label>
+              <label class="flex items-center text-sm"><input type="radio" name="brand" class="w-4 h-4 text-pink-600 rounded"><span class="ml-3 text-gray-700">Biofield Pharma</span></label>
+              <label class="flex items-center text-sm"><input type="radio" name="brand" class="w-4 h-4 text-pink-600 rounded"><span class="ml-3 text-gray-700">Abbott</span></label>
+            </div>
           </div>
 
-          <button id="submitPrescription" class="mt-4 w-full bg-primary hover:bg-secondary text-white py-2 rounded-lg font-semibold transition">
-            Submit Prescription
+          <div class="border-b border-gray-200 pb-7">
+            <div class="flex items-center justify-between cursor-pointer select-none"
+                 onclick="this.nextElementSibling.classList.toggle('hidden'); this.querySelector('i').classList.toggle('rotate-180')">
+              <h3 class="text-sm font-bold text-gray-800 uppercase tracking-wider">Discount</h3>
+              <i class="fas fa-chevron-down text-gray-500 transition-transform duration-200"></i>
+            </div>
+            <div class="mt-5 space-y-3 hidden">
+              <label class="flex items-center text-sm"><input type="radio" name="discount" class="w-4 h-4 text-pink-600 rounded" checked><span class="ml-3 text-gray-700">All Products</span></label>
+              <label class="flex items-center text-sm"><input type="radio" name="discount" class="w-4 h-4 text-pink-600 rounded"><span class="ml-3 text-gray-700">10% or more</span></label>
+              <label class="flex items-center text-sm"><input type="radio" name="discount" class="w-4 h-4 text-pink-600 rounded"><span class="ml-3 text-gray-700">25% or more</span></label>
+            </div>
+          </div>
+
+          <button type="submit" class="w-full bg-[#E49BA6] hover:bg-[#F39F9F] text-white font-semibold py-3.5 rounded-md transition">
+            Show results
           </button>
+        </form>
+      </aside>
+<!-- Main Products Area -->
+      <main class="flex-1">
+        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4">
+          <div>
+            <h2 id="categoryTitle" class="text-2xl font-bold text-gray-900">All Products</h2>
+            <p id="resultsCount" class="text-gray-600 mt-1">Showing all products</p>
+          </div>
+          <select id="sortSelect" class="hidden sm:block border border-gray-300 rounded-lg px-5 py-3 text-sm focus:ring-2 focus:ring-pink-500 focus:outline-none cursor-pointer">
+            <option value="default">Sort by: Featured</option>
+            <option value="price-low">Price: Low to High</option>
+            <option value="price-high">Price: High to Low</option>
+            <option value="rating">Customer Rating</option>
+            <option value="newest">Newest First</option>
+          </select>
         </div>
 
-        <div>
-          <h2 class="text-lg font-semibold mb-4">How will the Pharmacist help you?</h2>
-          <ul class="space-y-5 text-gray-700">
-            <li class="flex items-start gap-3">
-              <img src="https://assets.pharmeasy.in/web-assets/images/uploadStep1.png?dim=64x64&q=75" alt="Step 1" class="w-12 h-12">
-              <span>Pharmacist will check items on prescription and add to cart</span>
-            </li>
-            <li class="flex items-start gap-3">
-              <img src="https://assets.pharmeasy.in/web-assets/images/uploadStep2.png?dim=64x64&q=75" alt="Step 2" class="w-12 h-12">
-              <span>You can ask for additional items if needed</span>
-            </li>
-            <li class="flex items-start gap-3">
-              <img src="https://assets.pharmeasy.in/web-assets/images/uploadStep3.png?dim=64x64&q=75" alt="Step 3" class="w-12 h-12">
-              <span>They will apply the best coupon & get you the max savings</span>
-            </li>
-            <li class="flex items-start gap-3">
-              <img src="https://assets.pharmeasy.in/web-assets/images/uploadStep4.png?dim=64x64&q=75" alt="Step 4" class="w-12 h-12">
-              <span>Choose the earliest delivery date</span>
-            </li>
-            <li class="flex items-start gap-3">
-              <img src="https://assets.pharmeasy.in/web-assets/images/uploadStep5.png?dim=64x64&q=75" alt="Step 5" class="w-12 h-12">
-              <span>Finally, Share payment methods options</span>
-            </li>
-          </ul>
+        <div id="productsGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <!-- Products loaded via JS -->
+        </div>
+      </main>
+    </div>
+
+    <!-- Mobile Bottom Bar -->
+    <div class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 px-4 py-3 flex gap-3 z-50 lg:hidden shadow-2xl">
+      <button id="openSortSheet" class="flex-1 bg-[#E5BEB5] hover:bg-[#d4a89c] text-white font-bold py-3.5 rounded-lg transition">
+        Sort
+      </button>
+      <button id="openFilterSheet" class="flex-1 bg-[#E5BEB5] hover:bg-[#d4a89c] text-white font-bold py-3.5 rounded-lg transition">
+        Filters
+      </button>
+    </div>
+
+   <div id="filterSheet" class="fixed inset-x-0 bottom-0 bg-white rounded-t-3xl shadow-2xl max-h-[90vh] overflow-y-auto z-50 transform translate-y-full transition-transform duration-300">
+      <div class="sticky top-0 bg-white border-b px-6 py-4 flex justify-between items-center">
+        <h3 class="text-lg font-bold">Filters</h3>
+        <button id="closeFilterSheet" class="text-2xl">X</button>
+      </div>
+      <div class="p-6 space-y-8">
+        <!-- Mobile Price Slider (inside filter sheet) -->
+<div class="price-slider-container">
+  <h4 class="font-semibold mb-4">Price Range</h4>
+  <div class="slider-wrapper">
+    <div class="slider-fill" id="mobileFill"></div>
+    <input type="range" min="0" max="10000" value="0"    id="mobileMinThumb">
+    <input type="range" min="0" max="10000" value="10000" id="mobileMaxThumb">
+  </div>
+  <div class="price-values">
+    <span id="mobileMinValue">₹0</span>
+    <span id="mobileMaxValue">₹10,000</span>
+  </div>
+</div>
+        <div class="flex gap-3 pt-6 border-t">
+          <button id="clearMobileFilters" class="flex-1 border border-pink-600 text-pink-600 py-3 rounded-lg font-bold">Clear All</button>
+          <button id="applyMobileFilters" class="flex-1 bg-pink-600 text-white py-3 rounded-lg font-bold">Apply Filters</button>
         </div>
       </div>
     </div>
-  </div>
 
-  <!-- Valid Prescription Modal -->
-  <div id="validPrescriptionModal" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-    <div class="bg-white rounded-2xl shadow-2xl w-11/12 max-w-xl p-12 relative">
-      <button id="closeValidPrescriptionModal" class="absolute top-3 right-3 text-gray-500 hover:text-black text-xl font-bold">✕</button>
-      <h2 class="text-xl font-semibold mb-6 text-center">A valid prescription contains:</h2>
-      <div class="grid grid-cols-2 md:grid-cols-4 gap-6 text-center mb-6">
-        <div class="flex flex-col items-center">
-          <svg class="w-8 h-8 text-blue-500 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l9-5-9-5-9 5 9 5z"/>
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l6.16-3.422A12.083 12.083 0 0118 20.944V21l-6-3-6 3v-.056a12.083 12.083 0 01-.16-10.366L12 14z"/>
-          </svg>
-          <span class="text-sm font-medium">Doctor Details</span>
-        </div>
-        <div class="flex flex-col items-center">
-          <svg class="w-8 h-8 text-green-500 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10m-11 4h12M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
-          </svg>
-          <span class="text-sm font-medium">Date</span>
-        </div>
-        <div class="flex flex-col items-center">
-          <svg class="w-8 h-8 text-purple-500 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.121 17.804A9.969 9.969 0 0112 15c2.21 0 4.242.72 5.879 1.928M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
-          </svg>
-          <span class="text-sm font-medium">Patient</span>
-        </div>
-        <div class="flex flex-col items-center">
-          <svg class="w-8 h-8 text-red-500 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-6h13V7H9V1L1 9l8 8z"/>
-          </svg>
-          <span class="text-sm font-medium">Dosage</span>
+    <!-- Backdrop -->
+    <div id="mobileSheetBackdrop" class="fixed inset-0 bg-black bg-opacity-50 z-40 hidden lg:hidden"></div>
+
+    <!-- Mobile Sort Sheet (NOW VISIBLE & WORKING) -->
+    <div id="sortSheet" class="fixed inset-x-0 bottom-0 bg-white rounded-t-3xl shadow-2xl max-h-[90vh] overflow-y-auto z-50 transform translate-y-full transition-transform duration-300">
+      <div class="sticky top-0 bg-white border-b px-6 py-4 flex justify-between items-center">
+        <h3 class="text-lg font-bold">Sort By</h3>
+        <button id="closeSortSheet" class="text-2xl">&times;</button>
+      </div>
+      <div class="p-6 space-y-4">
+        <label class="flex items-center p-3 hover:bg-gray-50 rounded-lg cursor-pointer">
+          <input type="radio" name="mobileSort" value="default" checked class="w-5 h-5 text-pink-600">
+          <span class="ml-4 font-medium">Featured</span>
+        </label>
+        <label class="flex items-center p-3 hover:bg-gray-50 rounded-lg cursor-pointer">
+          <input type="radio" name="mobileSort" value="price-low" class="w-5 h-5 text-pink-600">
+          <span class="ml-4 font-medium">Price: Low to High</span>
+        </label>
+        <label class="flex items-center p-3 hover:bg-gray-50 rounded-lg cursor-pointer">
+          <input type="radio" name="mobileSort" value="price-high" class="w-5 h-5 text-pink-600">
+          <span class="ml-4 font-medium">Price: High to Low</span>
+        </label>
+        <label class="flex items-center p-3 hover:bg-gray-50 rounded-lg cursor-pointer">
+          <input type="radio" name="mobileSort" value="rating" class="w-5 h-5 text-pink-600">
+          <span class="ml-4 font-medium">Customer Rating</span>
+        </label>
+        <label class="flex items-center p-3 hover:bg-gray-50 rounded-lg cursor-pointer">
+          <input type="radio" name="mobileSort" value="newest" class="w-5 h-5 text-pink-600">
+          <span class="ml-4 font-medium">Newest First</span>
+        </label>
+      </div>
+      <div class="p-4 border-t bg-white sticky bottom-0">
+        <button id="applySortBtn" class="w-full bg-pink-600 hover:bg-pink-700 text-white font-bold py-3.5 rounded-lg">
+          Apply Sort
+        </button>
+      </div>
+    </div>
+
+    <!-- Upload Prescription Modal -->
+    <div id="uploadModal" class="hidden fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4">
+      <div class="bg-white rounded-2xl shadow-2xl max-w-4xl w-full max-h-screen overflow-y-auto">
+        <div class="p-6 md:p-10">
+          <button onclick="document.getElementById('uploadModal').classList.add('hidden')" class="float-right text-2xl">&times;</button>
+          <div class="grid md:grid-cols-2 gap-8">
+            <div>
+              <h2 class="text-2xl font-bold mb-4">Upload Prescription</h2>
+              <p class="font-semibold text-pink-600 mb-4" id="modalProductName"></p>
+              <img id="modalProductImage" class="w-full h-48 object-contain rounded-lg mb-6 hidden" alt="Product">
+              <label class="block border-2 border-dashed border-pink-300 rounded-xl p-8 text-center cursor-pointer hover:border-pink-500 transition">
+                <input type="file" id="prescriptionFile" accept="image/*,.pdf" class="hidden">
+                <svg class="w-12 h-12 mx-auto text-pink-500 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M9 19l3 3m0 0l3-3m-3 3v-11"/>
+                </svg>
+                <p class="font-medium">Click to upload prescription</p>
+                <p class="text-sm text-gray-500 mt-2">Supports JPG, PNG, PDF</p>
+              </label>
+              <p id="fileNameDisplay" class="mt-3 text-sm text-gray-700"></p>
+              <img id="prescriptionPreviewImg" class="hidden w-full mt-4 rounded-lg border" alt="Preview">
+              <button id="submitPrescription" class="mt-6 w-full bg-pink-600 hover:bg-pink-700 text-white font-bold py-4 rounded-lg transition">
+                Submit Prescription
+              </button>
+            </div>
+            <div class="bg-gray-50 rounded-xl p-6">
+              <h3 class="font-bold text-lg mb-4">How it works?</h3>
+              <ol class="space-y-4 text-gray-700">
+                <li>Pharmacist verifies your prescription</li>
+                <li>Items added to cart automatically</li>
+                <li>Get maximum discount applied</li>
+                <li>Choose fastest delivery slot</li>
+                <li>Complete payment securely</li>
+              </ol>
+            </div>
+          </div>
         </div>
       </div>
-      <hr class="my-4 border-t-4 border-blue-500 rounded">
-      <h3 class="text-lg font-semibold mb-4">DO'S AND DON'Ts</h3>
-      <ul class="space-y-3 text-sm">
-        <li class="flex items-start gap-2"><span class="text-green-600 font-bold">✔</span> <b>Upload Clear Image</b> — Flat surface, good lighting.</li>
-        <li class="flex items-start gap-2"><span class="text-red-600 font-bold">✘</span> <b>No Medicine Photos</b></li>
-        <li class="flex items-start gap-2"><span class="text-red-600 font-bold">✘</span> <b>Do Not Crop</b></li>
-      </ul>
     </div>
-  </div>
+  <!-- Footer Placeholder -->
+  <div id="footer-placeholder"></div>
 
-   <div id="footer-placeholder"></div>
-    
-
-
- <script>
+  <script>
     function loadHeader() {
         fetch('../../Header/header.html')
             .then(r => { if (!r.ok) throw r; return r.text(); })
@@ -358,9 +444,8 @@
         // ... rest of your code
     });
 </script>
-  
 
-  <!-- Main JS -->
+ <!-- Main JS -->
   <script>
     document.addEventListener('DOMContentLoaded', () => {
       // ================
@@ -1373,9 +1458,63 @@
       ];
 
       // ================
-      // DOM Elements
-      // ================
-      const productGrid = document.getElementById('productGrid');
+        function initSlider(minThumbId, maxThumbId, fillId, minDisplayId, maxDisplayId) {
+   const minThumb = document.getElementById(minThumbId);
+   const maxThumb = document.getElementById(maxThumbId);
+   const fill = document.getElementById(fillId);
+   const minDisplay = document.getElementById(minDisplayId);
+   const maxDisplay = document.getElementById(maxDisplayId);
+
+   function update() {
+     let minVal = parseInt(minThumb.value);
+     let maxVal = parseInt(maxThumb.value);
+
+     if (minVal > maxVal) {
+       [minVal, maxVal] = [maxVal, minVal];
+       minThumb.value = minVal;
+       maxThumb.value = maxVal;
+     }
+
+     const percentMin = (minVal / 10000) * 100;
+     const percentMax = (maxVal / 10000) * 100;
+
+     fill.style.left = percentMin + '%';
+     fill.style.width = (percentMax - percentMin) + '%';
+
+     minDisplay.textContent = '₹' + minVal.toLocaleString('en-IN');
+     maxDisplay.textContent = '₹' + maxVal.toLocaleString('en-IN');
+   }
+
+   minThumb.addEventListener('input', update);
+   maxThumb.addEventListener('input', update);
+   update(); // initial
+ }
+
+ // Initialize both sliders
+ initSlider('minThumb', 'maxThumb', 'desktopFill', 'minValue', 'maxValue');
+ initSlider('mobileMinThumb', 'mobileMaxThumb', 'mobileFill', 'mobileMinValue', 'mobileMaxValue');
+
+ // ... rest of your existing JS stays the same
+
+
+   
+        // Mobile sheets
+        const backdrop = document.getElementById('mobileSheetBackdrop');
+        const sortSheet = document.getElementById('sortSheet');
+        const filterSheet = document.getElementById('filterSheet');
+
+        document.getElementById('openSortSheet').onclick = () => { sortSheet.classList.remove('translate-y-full'); backdrop.classList.remove('hidden'); };
+        document.getElementById('openFilterSheet').onclick = () => { filterSheet.classList.remove('translate-y-full'); backdrop.classList.remove('hidden'); };
+        document.getElementById('closeSortSheet').onclick = document.getElementById('closeFilterSheet').onclick = backdrop.onclick = () => {
+          sortSheet.classList.add('translate-y-full');
+          filterSheet.classList.add('translate-y-full');
+          backdrop.classList.add('hidden');
+        };
+      
+
+        
+
+      const productsGrid = document.getElementById('productsGrid'); // Fixed ID!
       const categoryList = document.getElementById('categoryList');
       const brandList = document.getElementById('brandList');
       const brandToggle = brandList?.previousElementSibling?.querySelector('span');
@@ -1428,12 +1567,43 @@
         return div;
       }
 
-      function displayProducts(list) {
-        productGrid.innerHTML = '';
-        list.forEach(p => productGrid.appendChild(createProductCard(p)));
+      function displayProducts() {
+        productsGrid.innerHTML = '';
+        products.forEach(p => productsGrid.appendChild(createProductCard(p)));
       }
 
-      displayProducts(products);
+      displayProducts();
+
+     // Mobile sheet controls
+        document.getElementById('openFilterSheet')?.addEventListener('click', () => {
+          document.getElementById('filterSheet').classList.remove('translate-y-full');
+          document.getElementById('mobileSheetBackdrop').classList.remove('hidden');
+        });
+        document.getElementById('closeFilterSheet')?.addEventListener('click', () => {
+          document.getElementById('filterSheet').classList.add('translate-y-full');
+          document.getElementById('mobileSheetBackdrop').classList.add('hidden');
+        });
+        document.getElementById('mobileSheetBackdrop')?.addEventListener('click', () => {
+          document.getElementById('filterSheet').classList.add('translate-y-full');
+          document.getElementById('mobileSheetBackdrop').classList.add('hidden');
+        });
+
+        // Upload modal logic (simplified)
+       window.openUploadModalForProduct = function(product) {
+          document.getElementById('modalProductName').textContent = 'Upload Prescription for: ' + product.name;
+          document.getElementById('modalProductImage').src = product.image;
+          document.getElementById('modalProductImage').classList.remove('hidden');
+          document.getElementById('uploadModal').classList.remove('hidden');
+        };
+
+        document.body.addEventListener('click', e => {
+          if (e.target.closest('.upload-pres-btn')) {
+            const data = e.target.closest('.upload-pres-btn').dataset.product;
+            const product = JSON.parse(data.replace(/&apos;/g, "'"));
+            openUploadModalForProduct(product);
+          }
+        });
+      });
 
       // ================
       // Filters & Sorting
@@ -1566,52 +1736,71 @@
       };
 
       applyFilters(products);
-    });
+    
   </script>
 
   <script>
-    // Elements
-    const openSortBtn = document.getElementById('openSortBtn');
-    const closeSortBtn = document.getElementById('closeSortBtn');
-    const mobileSortPanel = document.getElementById('mobileSortPanel');
+    document.addEventListener('DOMContentLoaded', () => {
+      const backdrop = document.getElementById('mobileSheetBackdrop');
+      const sortSheet = document.getElementById('sortSheet');
+      const filterSheet = document.getElementById('filterSheet');
 
-    const openFilterBtn = document.getElementById('openFilterBtn');
-    const closeFilterBtn = document.getElementById('closeFilterBtn');
-    const mobileFilterDrawer = document.getElementById('mobileFilterDrawer');
-    const filterBackdrop = document.getElementById('filterBackdrop');
+      // Open
+      document.getElementById('openSortSheet')?.addEventListener('click', () => {
+        backdrop.classList.remove('hidden');
+        sortSheet.classList.remove('translate-y-full');
+      });
+      document.getElementById('openFilterSheet')?.addEventListener('click', () => {
+        backdrop.classList.remove('hidden');
+        filterSheet.classList.remove('translate-y-full');
+      });
 
-    // Open Sort
-    openSortBtn.onclick = () => {
-      mobileSortPanel.classList.remove('translate-y-full');
-    };
-
-    // Close Sort
-    closeSortBtn.onclick = () => {
-      mobileSortPanel.classList.add('translate-y-full');
-    };
-
-    // Open Filter Drawer
-    openFilterBtn.onclick = () => {
-      filterBackdrop.classList.remove('hidden');
-      mobileFilterDrawer.classList.remove('translate-y-full');
-    };
-
-    // Close Filter Drawer
-    const closeFilter = () => {
-      mobileFilterDrawer.classList.add('translate-y-full');
-      setTimeout(() => filterBackdrop.classList.add('hidden'), 350);
-    };
-    closeFilterBtn.onclick = closeFilter;
-    filterBackdrop.onclick = closeFilter;
-
-    // Optional: Close panels when clicking outside (sort panel)
-    mobileSortPanel.addEventListener('click', (e) => {
-      if (e.target === mobileSortPanel) {
-        mobileSortPanel.classList.add('translate-y-full');
+      // Close
+      function closeSheets() {
+        backdrop.classList.add('hidden');
+        sortSheet.classList.add('translate-y-full');
+        filterSheet.classList.add('translate-y-full');
       }
+      backdrop.onclick = closeSheets;
+      document.getElementById('closeSortSheet').onclick = closeSheets;
+      document.getElementById('closeFilterSheet').onclick = closeSheets;
+
+      // Apply Sort → sync with desktop select
+      document.getElementById('applySortBtn').onclick = () => {
+        const val = document.querySelector('input[name="mobileSort"]:checked')?.value || 'default';
+        document.getElementById('sortSelect').value = val;
+        document.getElementById('sortSelect').dispatchEvent(new Event('change'));
+        closeSheets();
+      };
+
+      // Mobile Price Slider Logic (same as desktop)
+      const mMin = document.getElementById('mobileMinThumb');
+      const mMax = document.getElementById('mobileMaxThumb');
+      const mRange = document.getElementById('mobileRange');
+      const mMinInput = document.getElementById('mobileMinPrice');
+      const mMaxInput = document.getElementById('mobileMaxPrice');
+
+      function updateMobileRange() {
+        const minP = ((mMin.value / 1000) * 100);
+        const maxP = ((mMax.value / 1000) * 100);
+        mRange.style.left = minP + '%';
+        mRange.style.width = (maxP - minP) + '%';
+        mMinInput.value = '₹' + mMin.value;
+        mMaxInput.value = '₹' + mMax.value;
+      }
+      mMin.oninput = mMax.oninput = updateMobileRange;
+      mMinInput.onchange = () => { mMin.value = mMinInput.value.replace('₹',''); updateMobileRange(); };
+      mMaxInput.onchange = () => { mMax.value = mMaxInput.value.replace('₹',''); updateMobileRange(); };
+      updateMobileRange();
+
+      // Apply Filters button (you can expand this later)
+      document.getElementById('applyMobileFilters').onclick = closeSheets;
+      document.getElementById('clearMobileFilters').onclick = () => {
+        document.querySelectorAll('input[name="mobileCat"]').forEach(r => r.checked = r.value === 'all');
+        mMin.value = 0; mMax.value = 1000;
+        updateMobileRange();
+      };
     });
   </script>
-
- <script src="../../cart-wishlist-system.js" defer></script>
 </body>
 </html>

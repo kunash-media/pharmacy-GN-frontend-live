@@ -118,80 +118,13 @@ function getPlaceholderImage() {
   return 'https://via.placeholder.com/300x300/f3f4f6/9ca3af?text=Product+Image';
 }
 
-// Fallback local products
-function loadLocalProducts() {
-  console.log('Loading local products as fallback');
-  products = [
-    {
-      id: 1,
-      title: "Maternity Maxi Dress",
-      description: "Comfortable and stylish maxi dress for expecting mothers",
-      category: "maternity-wear",
-      price: 3817.17,
-      originalPrice: 4979.17,
-      discount: 23,
-      rating: 4.5,
-      reviewCount: 128,
-      images: [
-        getPlaceholderImage('Maternity Dress'),
-        getPlaceholderImage('Maternity Dress'),
-        getPlaceholderImage('Maternity Dress'),
-        getPlaceholderImage('Maternity Dress'),
-      ],
-      mainImageUrl: getPlaceholderImage('Maternity Dress'),
-      sizes: ["S", "M", "L", "XL"],
-      inStock: true,
-      brand: "MomStyle",
-    },
-    {
-      id: 2,
-      title: "Prenatal Vitamins - 90 Count",
-      description: "Essential vitamins for healthy pregnancy",
-      category: "nutrition",
-      price: 2489.17,
-      originalPrice: 3319.17,
-      discount: 25,
-      rating: 4.8,
-      reviewCount: 256,
-      images: [
-        getPlaceholderImage('Prenatal Vitamins'),
-        getPlaceholderImage('Prenatal Vitamins'),
-        getPlaceholderImage('Prenatal Vitamins'),
-        getPlaceholderImage('Prenatal Vitamins'),
-      ],
-      mainImageUrl: getPlaceholderImage('Prenatal Vitamins'),
-      inStock: true,
-      brand: "VitaMom",
-    },
-    {
-      id: 3,
-      title: "Stretch Mark Prevention Cream",
-      description: "Natural ingredients to prevent and reduce stretch marks",
-      category: "skincare",
-      price: 2074.17,
-      originalPrice: 2904.17,
-      discount: 29,
-      rating: 4.3,
-      reviewCount: 89,
-      images: [
-        getPlaceholderImage('Stretch Mark Cream'),
-        getPlaceholderImage('Stretch Mark Cream'),
-        getPlaceholderImage('Stretch Mark Cream'),
-        getPlaceholderImage('Stretch Mark Cream'),
-      ],
-      mainImageUrl: getPlaceholderImage('Stretch Mark Cream'),
-      inStock: true,
-      brand: "Medaderma",
-    }
-  ];
-  filteredProducts = [...products];
-  renderProducts();
-  updateResultsCount();
-}
+
 
 // Initialize mother page function
 function initializeMotherPage() {
   console.log('Initializing mother page...');
+  updateCartAndWishlistCounts();
+  loadLocalProducts();
   updateCartCount();
   updateWishlistCount();
   fetchProducts();

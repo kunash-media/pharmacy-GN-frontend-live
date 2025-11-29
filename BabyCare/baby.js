@@ -1,654 +1,342 @@
-// baby.js - COMPLETE VERSION WITH WORKING IMAGES
-let products = [];
-let filteredProducts = [];
-let currentPage = 1;
-const productsPerPage = 12;
-let cart = JSON.parse(localStorage.getItem("cart")) || [];
-let wishlist = JSON.parse(localStorage.getItem("wishlist")) || [];
+// baby.js - 100% FIXED FINAL VERSION (No Syntax Errors, Mobile Apply Button Works Perfectly)
+(function() {
+  'use strict';
+  
+  if (window.babyFinal) return;
+  window.babyFinal = true;
 
-// Banner Carousel Variables
-let currentBannerSlide = 0;
-let bannerInterval;
+  let products = [];
+  let filteredProducts = [];
+  let currentPage = 1;
+  const itemsPerPage = 12;
 
-// ==================== UTILITY FUNCTIONS ====================
-function getPlaceholderImage(text = 'Product') {
-    return `https://placehold.co/400x400/3B82F6/FFFFFF/png?text=${encodeURIComponent(text)}`;
-}
+  const $ = id => document.getElementById(id);
 
-function generateStarRating(rating) {
-    const full = Math.floor(rating);
-    const half = rating % 1 >= 0.5 ? 1 : 0;
-    const empty = 5 - full - half;
-    
-    let stars = '';
-    for (let i = 0; i < full; i++) stars += '<i class="fas fa-star"></i>';
-    if (half) stars += '<i class="fas fa-star-half-alt"></i>';
-    for (let i = 0; i < empty; i++) stars += '<i class="far fa-star"></i>';
-    
-    return stars;
-}
+  const loadProducts = () => {
+    products = [
+      {id:1, title:"Pampers Premium Diapers Pack", price:899, discount:30, category:"diapers-hygiene", brand:"Pampers", rating:4.5},
+      {id:4, title:"Mee Mee Gentle Wet Wipes", price:199, discount:33, category:"diapers-hygiene", brand:"MeeMee", rating:4.2},
+      {id:7, title:"Pampers Baby Wipes", price:299, discount:15, category:"diapers-hygiene", brand:"Pampers", rating:4.5},
+      {id:10, title:"MeeMee Diaper Bag", price:1299, discount:25, category:"diapers-hygiene", brand:"MeeMee", rating:4.6},
+      {id:12, title:"Pampers Pants Diapers", price:1499, discount:28, category:"diapers-hygiene", brand:"Pampers", rating:4.7},
+      
+      {id:2, title:"Himalaya Baby Shampoo", price:349, discount:25, category:"bath-body", brand:"Himalaya", rating:4.3},
+      {id:5, title:"Johnson's Baby Oil 200ml", price:449, discount:20, category:"bath-body", brand:"Johnsons", rating:4.6},
+      {id:8, title:"Himalaya Baby Lotion", price:275, discount:10, category:"bath-body", brand:"Himalaya", rating:4.1},
+      {id:11, title:"Himalaya Baby Powder", price:180, discount:50, category:"bath-body", brand:"Himalaya", rating:4.8},
+      {id:14, title:"Himalaya Baby Soap Pack", price:120, discount:20, category:"bath-body", brand:"Himalaya", rating:4.2},
+      
+      {id:3, title:"Babyhug Feeding Bottle Set", price:599, discount:0, category:"nutrition-feeding", brand:"BabyHug", rating:4.7},
+      {id:6, title:"Chicco Pacifier Orthodontic", price:399, discount:0, category:"nutrition-feeding", brand:"Chicco", rating:4.4},
+      {id:9, title:"BabyHug Sipper Bottle", price:450, discount:12, category:"nutrition-feeding", brand:"BabyHug", rating:4.3},
+      {id:15, title:"BabyHug Feeding Bowl Set", price:350, discount:18, category:"nutrition-feeding", brand:"BabyHug", rating:4.5},
+      {id:16, title:"Chicco Baby Spoon Set", price:250, discount:0, category:"nutrition-feeding", brand:"Chicco", rating:4.2},
+      
+      {id:13, title:"BabyHug Gift Hamper", price:2999, discount:15, category:"gift-hampers", brand:"BabyHug", rating:4.9},
+      {id:17, title:"Himalaya Baby Care Combo", price:1499, discount:30, category:"gift-hampers", brand:"Himalaya", rating:4.6},
+    ];
+    filteredProducts = [...products];
+    render();
+  };
 
-function showNotification(msg, type = "info") {
-    document.querySelectorAll('.custom-notification').forEach(n => n.remove());
-    
-    const notification = document.createElement("div");
-    notification.className = `custom-notification fixed top-20 right-4 z-50 px-6 py-3 rounded-lg shadow-lg text-white font-medium transition-all duration-300 ${
-        type === "success" ? "bg-green-500" : 
-        type === "error" ? "bg-red-500" : 
-        "bg-blue-500"
-    }`;
-    notification.textContent = msg;
-    
-    document.body.appendChild(notification);
-    
-    setTimeout(() => {
-        notification.style.opacity = "0";
-        notification.style.transform = "translateX(100%)";
-        setTimeout(() => notification.remove(), 300);
-    }, 3000);
-}
+  const render = () => {
+    const start = (currentPage - 1) * itemsPerPage;
+    const items = filteredProducts.slice(start, start + itemsPerPage);
+    const grid = $("productsGrid");
 
-// ==================== PRODUCT RENDERING FUNCTIONS ====================
-function createProductCard(product) {
-    const mainImage = product.mainImageUrl || (product.images && product.images[0]) || 
-                     product.image || 
-                     getPlaceholderImage(product.title);
-    const images = product.images && product.images.length > 0
-                   ? product.images
-                   : [mainImage];
+    if (items.length === 0) {
+      grid.innerHTML = `<div class="col-span-full text-center py-20">
+        <i class="fas fa-box-open text-6xl text-gray-300 mb-4"></i>
+        <p class="text-2xl text-gray-500 font-semibold">No products found</p>
+        <p class="text-gray-400 mt-2">Try adjusting your filters</p>
+      </div>`;
+      $("resultsCount").textContent = "0 products found";
+      renderPagination();
+      return;
+    }
 
-    const hasMultipleImages = images.length > 1;
-    const isInWishlist = wishlist.some(p => p.id === product.id);
-
-    return `
-        <div class="product-card group">
-            <div class="relative">
-                ${product.discount > 0 ? `
-                    <div class="absolute top-2 left-2 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-md z-10">
-                        ${product.discount}% OFF
-                    </div>
-                ` : ''}
-                
-                <button id="wishlist-${product.id}" class="absolute top-2 right-2 z-10 p-2 bg-white rounded-full shadow-md hover:bg-gray-50 transition-all duration-200">
-                    <i class="${isInWishlist ? 'fas fa-heart text-pink-500' : 'far fa-heart text-gray-400'}"></i>
-                </button>
-                
-                <div class="relative h-64 overflow-hidden rounded-t-lg">
-                    <div id="carousel-${product.id}" class="flex product-carousel h-full" style="width: ${images.length * 100}%">
-                        ${images.map((img, index) => `
-                            <div class="w-full h-full flex-shrink-0" style="width: ${100 / images.length}%">
-                                <img src="${img}" alt="${product.title}" 
-                                     class="w-full h-full object-cover image-zoom"
-                                     onerror="this.onerror=null; this.src='${getPlaceholderImage(product.title)}';">
-                            </div>
-                        `).join("")}
-                    </div>
-                    
-                    ${hasMultipleImages ? `
-                        <button id="prev-${product.id}" class="absolute left-2 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white rounded-full p-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                            <i class="fas fa-chevron-left text-gray-600 text-sm"></i>
-                        </button>
-                        <button id="next-${product.id}" class="absolute right-2 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white rounded-full p-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                            <i class="fas fa-chevron-right text-gray-600 text-sm"></i>
-                        </button>
-                        <div class="absolute bottom-2 left-1/2 -translate-x-1/2 flex space-x-1">
-                            ${images.map((_, i) => `
-                                <button class="carousel-dot w-2 h-2 rounded-full transition-all duration-300 ${i === 0 ? 'bg-white active' : 'bg-white/60'}" 
-                                        data-index="${i}" data-carousel="${product.id}"></button>
-                            `).join("")}
-                        </div>
-                    ` : ''}
-                </div>
-            </div>
-            
-            <div class="content p-4">
-                <h3 class="text-lg font-semibold text-gray-900 line-clamp-2 mb-2">${product.title}</h3>
-                <p class="text-sm text-gray-600 line-clamp-2 mb-3">${product.description || 'No description available'}</p>
-                
-                <div class="flex items-center mb-2">
-                    <div class="flex text-yellow-400 text-sm">${generateStarRating(product.rating)}</div>
-                    <span class="ml-2 text-sm text-gray-600">(${product.reviewCount || 0})</span>
-                </div>
-                
-                <div class="flex items-center mb-3">
-                    <span class="text-xl font-bold text-pink-600">₹${(product.price || 0).toFixed(2)}</span>
-                    ${product.originalPrice > product.price ? `
-                        <span class="ml-2 text-sm text-gray-500 line-through">₹${(product.originalPrice || 0).toFixed(2)}</span>
-                    ` : ''}
-                </div>
-                
-                <div class="mt-3">
-                    <button id="view-details-${product.id}" class="view-details">
-                        View Details
-                    </button>
-                </div>
-            </div>
+    grid.innerHTML = items.map(p => `
+      <div class="product-card bg-white rounded-2xl shadow-lg overflow-hidden transition-all duration-300">
+        <div class="relative h-64 bg-gradient-to-br from-pink-50 to-blue-50 flex items-center justify-center overflow-hidden">
+          <div class="image-zoom transition-transform duration-300 text-5xl font-bold text-gray-300">${p.title.slice(0,2)}</div>
+          ${p.discount ? `<span class="absolute top-3 right-3 bg-red-500 text-white px-3 py-1 rounded-full text-sm font-bold">${p.discount}% OFF</span>` : ''}
         </div>
-    `;
-}
+        <div class="p-5">
+          <h3 class="font-bold text-lg mb-2 line-clamp-2 text-gray-800">${p.title}</h3>
+          <div class="flex items-center gap-1 mb-2">
+            <span class="text-yellow-500">★</span>
+            <span class="text-sm font-medium text-gray-700">${p.rating}</span>
+          </div>
+          <div class="flex items-baseline gap-2">
+            <p class="text-2xl font-bold text-pink-600">₹${p.price}</p>
+            ${p.discount ? `<p class="text-sm text-gray-400 line-through">₹${Math.round(p.price/(1-p.discount/100))}</p>` : ''}
+          </div>
+          <button class="mt-4 w-full bg-gradient-to-r from-pink-600 to-pink-700 hover:from-pink-700 hover:to-pink-800 text-white font-bold py-3 rounded-xl transition">
+            Add to Cart
+          </button>
+        </div>
+      </div>
+    `).join('');
 
-function setupProductCarousel(productId, totalImages) {
-    let currentIndex = 0;
-    const carousel = document.getElementById(`carousel-${productId}`);
-    const prevBtn = document.getElementById(`prev-${productId}`);
-    const nextBtn = document.getElementById(`next-${productId}`);
-    const dots = document.querySelectorAll(`[data-carousel="${productId}"]`);
-
-    if (!carousel) return;
-
-    function updateCarousel() {
-        const translateX = -currentIndex * (100 / totalImages);
-        carousel.style.transform = `translateX(${translateX}%)`;
-        
-        dots.forEach((dot, index) => {
-            dot.classList.toggle('active', index === currentIndex);
-        });
-    }
-
-    if (prevBtn) {
-        prevBtn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            currentIndex = (currentIndex - 1 + totalImages) % totalImages;
-            updateCarousel();
-        });
-    }
-
-    if (nextBtn) {
-        nextBtn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            currentIndex = (currentIndex + 1) % totalImages;
-            updateCarousel();
-        });
-    }
-
-    dots.forEach(dot => {
-        dot.addEventListener('click', (e) => {
-            e.stopPropagation();
-            currentIndex = parseInt(dot.dataset.index);
-            updateCarousel();
-        });
-    });
-
-    if (totalImages > 1) {
-        let autoSlide = setInterval(() => {
-            currentIndex = (currentIndex + 1) % totalImages;
-            updateCarousel();
-        }, 4000);
-
-        const productCard = carousel.closest('.product-card');
-        if (productCard) {
-            productCard.addEventListener('mouseenter', () => clearInterval(autoSlide));
-            productCard.addEventListener('mouseleave', () => {
-                autoSlide = setInterval(() => {
-                    currentIndex = (currentIndex + 1) % totalImages;
-                    updateCarousel();
-                }, 4000);
-            });
-        }
-    }
-}
-
-function showLoading() {
-    const grid = document.getElementById("productsGrid");
-    if (grid) {
-        grid.innerHTML = `
-            <div class="col-span-full text-center py-12">
-                <div class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-                <p class="mt-2 text-gray-600">Loading products...</p>
-            </div>
-        `;
-    }
-}
-
-function renderProducts() {
-    const grid = document.getElementById("productsGrid");
-    if (!grid) {
-        console.error('❌ Products grid element not found');
-        return;
-    }
-
-    const start = (currentPage - 1) * productsPerPage;
-    const end = start + productsPerPage;
-    const pageItems = filteredProducts.slice(start, end);
-
-    if (pageItems.length === 0) {
-        grid.innerHTML = `
-            <div class="col-span-full text-center py-12">
-                <i class="fas fa-search text-6xl text-gray-300 mb-4"></i>
-                <h3 class="text-xl font-semibold text-gray-600 mb-2">No products found</h3>
-                <p class="text-gray-500">Try adjusting your filters or search terms</p>
-            </div>
-        `;
-    } else {
-        grid.innerHTML = pageItems.map(product => createProductCard(product)).join("");
-        
-        pageItems.forEach(product => {
-            const wishlistBtn = document.getElementById(`wishlist-${product.id}`);
-            if (wishlistBtn) {
-                wishlistBtn.addEventListener("click", () => toggleWishlist(product.id));
-            }
-            
-            const viewDetailsBtn = document.getElementById(`view-details-${product.id}`);
-            if (viewDetailsBtn) {
-                viewDetailsBtn.addEventListener("click", () => viewProductDetails(product.id));
-            }
-            
-            if (product.images && product.images.length > 1) {
-                setupProductCarousel(product.id, product.images.length);
-            }
-        });
-    }
-
+    $("resultsCount").textContent = 
+      `Showing ${start + 1}–${Math.min(start + itemsPerPage, filteredProducts.length)} of ${filteredProducts.length} products`;
+    
     renderPagination();
-    updateResultsCount();
-}
+  };
 
-function updateResultsCount() {
-    const el = document.getElementById("resultsCount");
-    if (el) {
-        const total = filteredProducts.length;
-        const start = (currentPage - 1) * productsPerPage + 1;
-        const end = Math.min(currentPage * productsPerPage, total);
-        el.textContent = total === 0 ? "No products found" : `Showing ${start}-${end} of ${total} products`;
-    }
-}
+  const renderPagination = () => {
+    const totalPages = Math.ceil(filteredProducts.length / itemsPerPage);
+    const pag = $("pagination");
+    if (totalPages <= 1) { pag.innerHTML = ''; return; }
 
-function renderPagination() {
-    const pagination = document.getElementById("pagination");
-    if (!pagination) return;
-
-    const totalPages = Math.ceil(filteredProducts.length / productsPerPage);
-    
-    if (totalPages <= 1) { 
-        pagination.innerHTML = ""; 
-        return; 
-    }
-
-    let html = "";
-    
-    if (currentPage > 1) {
-        html += `<button class="pagination-btn px-3 py-2 rounded-md border border-gray-300 text-gray-600 hover:bg-gray-50 transition-all" data-page="${currentPage-1}">
-            <i class="fas fa-chevron-left"></i>
-        </button>`;
-    }
+    let html = '';
+    if (currentPage > 1) html += `<button class="px-4 py-2 bg-white rounded-lg font-bold text-pink-600" onclick="window.changePage(${currentPage-1})">← Prev</button>`;
     
     for (let i = 1; i <= totalPages; i++) {
-        if (i === 1 || i === totalPages || (i >= currentPage - 1 && i <= currentPage + 1)) {
-            html += `<button class="pagination-btn px-3 py-2 rounded-md border transition-all ${
-                i === currentPage ? 'bg-blue-600 text-white border-blue-600' : 'border-gray-300 text-gray-600 hover:bg-gray-50'
-            }" data-page="${i}">${i}</button>`;
-        } else if (i === currentPage - 2 || i === currentPage + 2) {
-            html += `<span class="px-2 text-gray-400">...</span>`;
-        }
+      if (i === 1 || i === totalPages || (i >= currentPage - 1 && i <= currentPage + 1)) {
+        html += `<button class="px-4 py-2 ${i === currentPage ? 'bg-pink-600 text-white' : 'bg-white text-pink-600'} rounded-lg font-bold" onclick="window.changePage(${i})">${i}</button>`;
+      } else if (i === currentPage - 2 || i === currentPage + 2) {
+        html += `<span class="px-2">...</span>`;
+      }
+    }
+    if (currentPage < totalPages) html += `<button class="px-4 py-2 bg-white rounded-lg font-bold text-pink-600" onclick="window.changePage(${currentPage+1})">Next →</button>`;
+    
+    pag.innerHTML = html;
+  };
+
+  window.changePage = (page) => {
+    currentPage = page;
+    render();
+    window.scrollTo({top: 0, behavior: 'smooth'});
+  };
+
+  // Get current active filters from both desktop & mobile
+ const getActiveFilters = () => {
+  // Category
+  const category = document.querySelector('input[name="category"]:checked, input[name="mobileCategory"]:checked')?.value || 'all';
+
+  // Brand
+  const brand = document.querySelector('input[name="brand"]:checked, input[name="mobileBrand"]:checked')?.value || 'all';
+
+  // Discount
+  const discountEl = document.querySelector('input[name="discount"]:checked, input[name="mobileDiscount"]:checked');
+  const discount = discountEl?.value === 'all' ? null : parseInt(discountEl?.value || '0');
+
+  // ───── PRICE RANGE – ALWAYS READ FROM THE VISIBLE SLIDERS ─────
+  let minPrice = 0;
+  let maxPrice = 10000;
+
+  // Desktop sliders exist → use them
+  const desktopMin = $("minThumb");
+  const desktopMax = $("maxThumb");
+  if (desktopMin && desktopMax) {
+    minPrice = Number(desktopMin.value);
+    maxPrice = Number(desktopMax.value);
+  } 
+  // Mobile sliders exist → use them (fallback)
+  else {
+    const mobileMin = $("mobileMinThumb");
+    const mobileMax = $("mobileMaxThumb");
+    if (mobileMin) minPrice = Number(mobileMin.value);
+    if (mobileMax) maxPrice = Number(mobileMax.value);
+  }
+
+  return { category, brand, discount, minPrice, maxPrice };
+};
+
+  const applyFilters = () => {
+    const { category, brand, discount, minPrice, maxPrice } = getActiveFilters();
+
+    let list = [...products];
+
+    if (category !== 'all') list = list.filter(p => p.category === category);
+    if (brand !== 'all') list = list.filter(p => p.brand === brand);
+    if (discount !== null) list = list.filter(p => (p.discount || 0) >= discount);
+    list = list.filter(p => p.price >= minPrice && p.price <= maxPrice);
+
+    filteredProducts = list;
+    currentPage = 1;
+    applySorting();
+  };
+
+  const applySorting = () => {
+    const sortValue = $("sortSelect")?.value || document.querySelector('input[name="mobileSort"]:checked')?.value || 'default';
+
+    if (sortValue === 'price-low') filteredProducts.sort((a,b) => a.price - b.price);
+    else if (sortValue === 'price-high') filteredProducts.sort((a,b) => b.price - a.price);
+    else if (sortValue === 'rating') filteredProducts.sort((a,b) => b.rating - a.rating);
+    else if (sortValue === 'newest') filteredProducts.sort((a,b) => b.id - a.id);
+
+    render();
+  };
+
+ const syncAndUpdateSliders = () => {
+  let min = 0;
+  let max = 10000;
+
+  // Take the current values from whichever slider is available
+  if ($("minThumb")) min = Number($("minThumb").value);
+  else if ($("mobileMinThumb")) min = Number($("mobileMinThumb").value);
+
+  if ($("maxThumb")) max = Number($("maxThumb").value);
+  else if ($("mobileMaxThumb")) max = Number($("mobileMaxThumb").value);
+
+  // Make sure min ≤ max
+  if (min > max) [min, max] = [max, min];
+
+  // ───── WRITE THE SAME VALUES TO ALL FOUR THUMBS ─────
+  const thumbs = ["minThumb", "mobileMinThumb", "maxThumb", "mobileMaxThumb"];
+  thumbs.forEach(id => {
+    const el = $(id);
+    if (el) {
+      el.value = (id.includes("min")) ? min : max;
+    }
+  });
+
+  // Update visual fill
+  document.querySelectorAll('.slider-fill').forEach(fill => {
+    fill.style.left = (min / 10000 * 100) + '%';
+    fill.style.width = ((max - min) / 10000 * 100) + '%';
+  });
+
+  // Update text
+  document.querySelectorAll('#minValue, #mobileMinValue').forEach(el => el && (el.textContent = '₹' + min));
+  document.querySelectorAll('#maxValue, #mobileMaxValue').forEach(el => el && (el.textContent = '₹' + max));
+};
+
+  // NEW: Sync mobile radio selections to desktop ones so filtering works perfectly
+  const syncMobileFiltersToDesktop = () => {
+    // Category
+    const mobileCat = document.querySelector('input[name="mobileCategory"]:checked');
+    if (mobileCat) {
+      const desktopCat = document.querySelector(`input[name="category"][value="${mobileCat.value}"]`);
+      if (desktopCat) desktopCat.checked = true;
     }
 
-    if (currentPage < totalPages) {
-        html += `<button class="pagination-btn px-3 py-2 rounded-md border border-gray-300 text-gray-600 hover:bg-gray-50 transition-all" data-page="${currentPage+1}">
-            <i class="fas fa-chevron-right"></i>
-        </button>`;
+    // Brand
+    const mobileBrand = document.querySelector('input[name="mobileBrand"]:checked');
+    if (mobileBrand) {
+      const desktopBrand = document.querySelector(`input[name="brand"][value="${mobileBrand.value}"]`);
+      if (desktopBrand) desktopBrand.checked = true;
     }
-    
-    pagination.innerHTML = html;
-    
-    document.querySelectorAll(".pagination-btn").forEach(btn => {
-        btn.addEventListener("click", () => {
-            currentPage = parseInt(btn.dataset.page);
-            renderProducts();
-            window.scrollTo({ top: 0, behavior: "smooth" });
-        });
+
+    // Discount
+    const mobileDisc = document.querySelector('input[name="mobileDiscount"]:checked');
+    if (mobileDisc) {
+      const desktopDisc = document.querySelector(`input[name="discount"][value="${mobileDisc.value}"]`);
+      if (desktopDisc) desktopDisc.checked = true;
+    }
+  };
+
+  const clearAllFilters = () => {
+    // Reset ALL radios (both mobile & desktop)
+    document.querySelectorAll('input[type="radio"]').forEach(radio => {
+      if (radio.value === 'all') radio.checked = true;
     });
-}
 
-// ==================== PRODUCT DATA FUNCTIONS ====================
-function loadSampleProducts() {
-    console.log('📦 Loading sample products...');
-    
-    products = [
-        {
-            id: 1,
-            title: "Premium Baby Diapers",
-            description: "Soft and absorbent diapers for your baby's comfort",
-            category: "diapers-wipes",
-            price: 899,
-            originalPrice: 1199,
-            discount: 25,
-            rating: 4.5,
-            reviewCount: 128,
-            brand: "BabyComfort",
-            inStock: true,
-            stockQuantity: 50,
-            images: [
-                "https://placehold.co/400x400/3B82F6/FFFFFF/png?text=Baby+Diapers",
-                "https://placehold.co/400x400/60A5FA/FFFFFF/png?text=Diapers+Pack"
-            ],
-            sizes: ["Newborn", "Small", "Medium", "Large"]
-        },
-        {
-            id: 2,
-            title: "Organic Baby Shampoo",
-            description: "Gentle shampoo made with natural ingredients for sensitive skin",
-            category: "skin-hair-care",
-            price: 349,
-            originalPrice: 499,
-            discount: 30,
-            rating: 4.8,
-            reviewCount: 89,
-            brand: "NatureBaby",
-            inStock: true,
-            stockQuantity: 30,
-            images: [
-                "https://placehold.co/400x400/10B981/FFFFFF/png?text=Baby+Shampoo",
-                "https://placehold.co/400x400/34D399/FFFFFF/png?text=Natural+Care"
-            ]
-        },
-        {
-            id: 3,
-            title: "Baby Feeding Bottle Set",
-            description: "BPA-free feeding bottles with anti-colic technology",
-            category: "feeding-nursing",
-            price: 1299,
-            originalPrice: 1599,
-            discount: 19,
-            rating: 4.3,
-            reviewCount: 204,
-            brand: "FeedWell",
-            inStock: true,
-            stockQuantity: 25,
-            images: [
-                "https://placehold.co/400x400/F59E0B/FFFFFF/png?text=Feeding+Bottle",
-                "https://placehold.co/400x400/FBBF24/FFFFFF/png?text=Bottle+Set"
-            ]
-        },
-        {
-            id: 4,
-            title: "Baby Wet Wipes Pack",
-            description: "Gentle wet wipes for sensitive baby skin",
-            category: "diapers-wipes",
-            price: 299,
-            originalPrice: 399,
-            discount: 25,
-            rating: 4.6,
-            reviewCount: 156,
-            brand: "BabyComfort",
-            inStock: true,
-            stockQuantity: 80,
-            images: [
-                "https://placehold.co/400x400/8B5CF6/FFFFFF/png?text=Baby+Wipes",
-                "https://placehold.co/400x400/A78BFA/FFFFFF/png?text=Wet+Wipes"
-            ]
-        },
-        {
-            id: 5,
-            title: "Baby Lotion",
-            description: "Moisturizing lotion for soft baby skin",
-            category: "skin-hair-care",
-            price: 449,
-            originalPrice: 599,
-            discount: 25,
-            rating: 4.7,
-            reviewCount: 112,
-            brand: "NatureBaby",
-            inStock: true,
-            stockQuantity: 45,
-            images: [
-                "https://placehold.co/400x400/EC4899/FFFFFF/png?text=Baby+Lotion",
-                "https://placehold.co/400x400/F472B6/FFFFFF/png?text=Skin+Care"
-            ]
-        },
-        {
-            id: 6,
-            title: "Baby Pacifier Set",
-            description: "BPA-free pacifiers for newborns and infants",
-            category: "feeding-nursing",
-            price: 399,
-            originalPrice: 499,
-            discount: 20,
-            rating: 4.4,
-            reviewCount: 78,
-            brand: "FeedWell",
-            inStock: true,
-            stockQuantity: 60,
-            images: [
-                "https://placehold.co/400x400/14B8A6/FFFFFF/png?text=Baby+Pacifier",
-                "https://placehold.co/400x400/2DD4BF/FFFFFF/png?text=Pacifier+Set"
-            ]
-        }
-    ];
-    
-    filteredProducts = [...products];
-    renderProducts();
-    console.log(`✅ ${products.length} sample products loaded`);
-}
+    // Reset sliders
+    [$("minThumb"), $("mobileMinThumb")].forEach(el => el && (el.value = 0));
+    [$("maxThumb"), $("mobileMaxThumb")].forEach(el => el && (el.value = 10000));
 
-// ==================== BANNER CAROUSEL ====================
-function initializeBannerCarousel() {
-    console.log("🖼️ Initializing banner carousel...");
-    
+    syncAndUpdateSliders();
+    applyFilters();
+  };
+
+  const initBannerCarousel = () => {
     const slides = document.querySelectorAll('.banner-slide');
     const dots = document.querySelectorAll('.banner-dot');
-    
-    console.log(`Found ${slides.length} slides and ${dots.length} dots`);
-    
-    if (slides.length === 0) {
-        console.log('❌ No banner slides found');
-        return;
-    }
-    
-    showBannerSlide(0);
-    startBannerAutoSlide();
-    
-    dots.forEach((dot, index) => {
-        dot.addEventListener('click', () => {
-            console.log(`📍 Dot ${index} clicked`);
-            currentBannerSlide = index;
-            showBannerSlide(currentBannerSlide);
-            resetBannerAutoSlide();
-        });
-    });
-    
-    const bannerWrapper = document.getElementById('bannerWrapper');
-    if (bannerWrapper) {
-        bannerWrapper.addEventListener('mouseenter', pauseBannerAutoSlide);
-        bannerWrapper.addEventListener('mouseleave', startBannerAutoSlide);
-    }
-    
-    console.log("✅ Banner carousel initialized successfully");
-}
+    let idx = 0;
+    const show = (i) => {
+      slides.forEach(s => s.classList.remove('active'));
+      dots.forEach(d => d.classList.remove('active'));
+      slides[i].classList.add('active');
+      dots[i].classList.add('active');
+    };
+    dots.forEach((d, i) => d.onclick = () => show(idx = i));
+    setInterval(() => show(idx = (idx + 1) % slides.length), 4000);
+    show(0);
+  };
 
-function showBannerSlide(index) {
-    const slides = document.querySelectorAll('.banner-slide');
-    const dots = document.querySelectorAll('.banner-dot');
-    
-    slides.forEach(slide => {
-        slide.classList.remove('active');
-    });
-    
-    if (slides[index]) {
-        slides[index].classList.add('active');
-    }
-    
-    dots.forEach((dot, i) => {
-        if (i === index) {
-            dot.classList.add('active');
-        } else {
-            dot.classList.remove('active');
-        }
-    });
-    
-    currentBannerSlide = index;
-}
+  const initMobileSheets = () => {
+    const filterSheet = $("filterSheet");
+    const sortSheet = $("sortSheet");
+    const backdrop = $("mobileSheetBackdrop");
 
-function nextBannerSlide() {
-    const slides = document.querySelectorAll('.banner-slide');
-    currentBannerSlide = (currentBannerSlide + 1) % slides.length;
-    showBannerSlide(currentBannerSlide);
-}
+    const close = () => {
+      filterSheet?.classList.add('translate-y-full');
+      sortSheet?.classList.add('translate-y-full');
+      backdrop?.classList.add('hidden');
+    };
 
-function startBannerAutoSlide() {
-    if (bannerInterval) {
-        clearInterval(bannerInterval);
-    }
-    
-    bannerInterval = setInterval(nextBannerSlide, 5000);
-}
-
-function pauseBannerAutoSlide() {
-    if (bannerInterval) {
-        clearInterval(bannerInterval);
-    }
-}
-
-function resetBannerAutoSlide() {
-    pauseBannerAutoSlide();
-    startBannerAutoSlide();
-}
-
-// ==================== EVENT HANDLERS ====================
-function toggleWishlist(productId) {
-    const product = products.find(p => p.id === productId);
-    if (!product) return;
-
-    const existingIndex = wishlist.findIndex(p => p.id === productId);
-    
-    if (existingIndex > -1) {
-        wishlist.splice(existingIndex, 1);
-        showNotification("Removed from wishlist", "info");
-    } else {
-        wishlist.push(product);
-        showNotification("Added to wishlist!", "success");
-    }
-    
-    localStorage.setItem("wishlist", JSON.stringify(wishlist));
-    updateWishlistCount();
-    renderProducts();
-}
-
-function viewProductDetails(productId) {
-    console.log('🔍 Navigating to product details for ID:', productId);
-    localStorage.setItem("selectedProductId", productId);
-    window.location.href = "./baby-product-details.html";
-}
-
-function updateCartCount() {
-    const el = document.getElementById("cartCount");
-    if (!el) return;
-    
-    const count = cart.reduce((sum, item) => sum + (item.quantity || 1), 0);
-    el.textContent = count;
-    el.classList.toggle("hidden", count === 0);
-}
-
-function updateWishlistCount() {
-    const el = document.getElementById("wishlistCount");
-    if (!el) return;
-    
-    const count = wishlist.length;
-    el.textContent = count;
-    el.classList.toggle("hidden", count === 0);
-}
-
-// ==================== FILTERS & SORTING ====================
-function setupEventListeners() {
-    console.log("🔧 Setting up event listeners...");
-    
-    const filterToggleBtn = document.getElementById("filterToggleBtn");
-    const closeSidebarBtn = document.getElementById("closeSidebarBtn");
-    const filterOverlay = document.getElementById("filterOverlay");
-
-    if (filterToggleBtn) {
-        filterToggleBtn.addEventListener("click", toggleFilterSidebar);
-    }
-    if (closeSidebarBtn) {
-        closeSidebarBtn.addEventListener("click", toggleFilterSidebar);
-    }
-    if (filterOverlay) {
-        filterOverlay.addEventListener("click", toggleFilterSidebar);
-    }
-
-    const clearFiltersBtn = document.getElementById("clearFilters");
-    if (clearFiltersBtn) {
-        clearFiltersBtn.addEventListener("click", clearFilters);
-    }
-
-    const sortSelect = document.getElementById("sortSelect");
-    if (sortSelect) {
-        sortSelect.addEventListener("change", applySorting);
-    }
-
-    console.log("✅ Event listeners setup complete");
-}
-
-function toggleFilterSidebar() {
-    const sidebar = document.getElementById("filterSidebar");
-    const overlay = document.getElementById("filterOverlay");
-    
-    if (sidebar && overlay) {
-        sidebar.classList.toggle("hidden-mobile");
-        overlay.classList.toggle("hidden");
-        document.body.classList.toggle("overflow-hidden");
-    }
-}
-
-function clearFilters() {
-    const allCategory = document.querySelector('input[name="category"][value="all"]');
-    if (allCategory) allCategory.checked = true;
-    
-    document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
-        checkbox.checked = false;
-    });
-    
-    const sortSelect = document.getElementById("sortSelect");
-    if (sortSelect) sortSelect.value = "default";
-    
-    filteredProducts = [...products];
-    currentPage = 1;
-    renderProducts();
-}
-
-function applySorting() {
-    const sortSelect = document.getElementById("sortSelect");
-    if (!sortSelect) return;
-
-    const sortValue = sortSelect.value;
-    
-    filteredProducts.sort((a, b) => {
-        switch (sortValue) {
-            case "price-low":
-                return a.price - b.price;
-            case "price-high":
-                return b.price - a.price;
-            case "rating":
-                return b.rating - a.rating;
-            case "newest":
-                return b.id - a.id;
-            default:
-                return 0;
-        }
+    $("openFilterSheet")?.addEventListener('click', () => {
+      filterSheet?.classList.remove('translate-y-full');
+      backdrop?.classList.remove('hidden');
     });
 
-    currentPage = 1;
-    renderProducts();
-}
+    $("openSortSheet")?.addEventListener('click', () => {
+      sortSheet?.classList.remove('translate-y-full');
+      backdrop?.classList.remove('hidden');
+    });
 
-// ==================== INITIALIZATION ====================
-document.addEventListener("DOMContentLoaded", function() {
-    console.log("🚀 Initializing Baby Care page...");
-    updateCartCount();
-    updateWishlistCount();
-    initializeBannerCarousel();
-    loadSampleProducts();
-    setupEventListeners();
-    
-    
-    
-    const yearElement = document.getElementById('year');
-    if (yearElement) {
-        yearElement.textContent = new Date().getFullYear();
-    }
+    $("closeFilterSheet")?.addEventListener('click', close);
+    $("closeSortSheet")?.addEventListener('click', close);
+    backdrop?.addEventListener('click', close);
+
+    // FIXED: Apply Filters from Mobile (now syncs + applies perfectly)
+    $("applyMobileFilters")?.addEventListener('click', () => {
+      syncMobileFiltersToDesktop();  // Sync mobile choices to desktop
+      applyFilters();                // Now it WILL work correctly
+      close();
+    });
+
+    // Apply Sort from Mobile
+    $("applySortBtn")?.addEventListener('click', () => {
+      const val = document.querySelector('input[name="mobileSort"]:checked')?.value || 'default';
+      if ($("sortSelect")) $("sortSelect").value = val;
+      applySorting();
+      close();
+    });
+
+    $("clearMobileFilters")?.addEventListener('click', clearAllFilters);
+  };
+
+  const init = () => {
+    loadProducts();
+    syncAndUpdateSliders();
+    initBannerCarousel();
+    initMobileSheets();
+
+    // Apply filters when any radio changes (desktop + mobile)
+    document.addEventListener('change', (e) => {
+      if (e.target.matches('input[name="category"], input[name="brand"], input[name="discount"], input[name="mobileCategory"], input[name="mobileBrand"], input[name="mobileDiscount"]')) {
+        applyFilters();
+      }
+      if (e.target.matches('input[name="mobileSort"]')) {
+        const val = e.target.value;
+        if ($("sortSelect")) $("sortSelect").value = val;
+      }
+    });
+
+    $("sortSelect")?.addEventListener('change', applySorting);
+
+   // Inside init() → replace the old input listener with this:
+document.addEventListener('input', e => {
+  if (e.target.matches('input[type="range"]')) {
+    syncAndUpdateSliders();
+    clearTimeout(window._sliderTO);
+    window._sliderTO = setTimeout(applyFilters, 200);
+  }
 });
 
-window.addEventListener('beforeunload', () => {
-    if (bannerInterval) {
-        clearInterval(bannerInterval);
-    }
-});
+    $("filterForm")?.addEventListener('submit', e => {
+      e.preventDefault();
+      applyFilters();
+    });
+  };
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
+})();
