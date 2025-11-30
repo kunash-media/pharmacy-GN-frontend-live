@@ -6,220 +6,498 @@
   <title>MediCart - Checkout</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="./Footer/footer.css">
   <style>
     body { font-family: 'Inter', sans-serif; background: #f8fafc; }
-    .collapsible { transition: all 0.4s ease; }
-    .collapsible-content { max-height: 0; overflow: hidden; transition: max-height 0.5s ease; }
-    .collapsible.open .collapsible-content { max-height: 2000px; }
-    .collapsible-header { cursor: pointer; user-select: none; }
-    input, select { @apply border border-gray-300 rounded-lg px-4 py-3 focus:border-blue-500 focus:ring-2 focus:ring-blue-100; }
+    #address-modal { display: none; }
+    #address-modal.show { display: flex !important; }
   </style>
 </head>
-<body class="bg-gray-50 mt-36">
+<body class="bg-gray-50">
 
   <div id="header-placeholder"></div>
 
   <main class="container mx-auto px-4 py-6 max-w-6xl">
-    <h1 class="text-2xl font-semibold text-gray-800 mb-6 text-center">Checkout</h1>
+    <h1 class="text-2xl font-semibold text-gray-800 text-center lg:block hidden mt-10">Checkout</h1>
 
-    <div class="grid lg:grid-cols-3 gap-6">
+    <div class="grid lg:grid-cols-3 gap-6 mt-6">
 
-      <!-- LEFT: Order Items (Collapsible) -->
-      <div class="lg:col-span-2 space-y-4">
-        <!-- Items -->
-        <div class="bg-white rounded-xl shadow-sm border collapsible open">
-          <div class="collapsible-header p-5 flex justify-between items-center border-b" onclick="toggleSection(this)">
-            <h3 class="font-semibold text-gray-800 flex items-center">
-              <i class="fas fa-box mr-3 text-blue-600"></i>
-              Your Items (<span id="item-count">0</span>)
-            </h3>
-            <i class="fas fa-chevron-down transition-transform duration-300"></i>
-          </div>
-          <div class="collapsible-content p-5 space-y-4">
-            <div id="order-items"></div>
-          </div>
+      <!-- Left Column -->
+      <div class="lg:col-span-2 space-y-6 mt-12">
+
+                <!-- Back Arrow + Checkout Title (Perfect for Mobile + Desktop) -->
+       <div class="flex items-center gap-4 mt-0 lg:mt-0">
+          <!-- Back Arrow - Hidden on desktop if you have header back button -->
+          <a href="cart.html" class="w-12 h-12 bg-white rounded-full shadow-lg flex items-center justify-center hover:bg-pink-50 transition-all duration-300 hover:scale-110 group flex-shrink-0">
+                <i class="fas fa-arrow-left text-pink-500 text-xl group-hover:text-pink-600"></i>
+              </a>
+
+          <!-- Checkout Title -->
+          <h1 class="font-bold text-2xl text-pink-600 ml-20">
+            Checkout
+          </h1>
         </div>
 
-        <!-- Order Summary (Collapsible) -->
-        <div class="bg-white rounded-xl shadow-sm border collapsible open">
-          <div class="collapsible-header p-5 flex justify-between items-center border-b" onclick="toggleSection(this)">
-            <h3 class="font-semibold text-gray-800 flex items-center">
-              <i class="fas fa-receipt mr-3 text-green-600"></i>
-              Order Summary
+        <!-- Mobile Savings -->
+        <div class="lg:hidden bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg text-sm font-medium mt-4">
+          You're saving <span id="mobile-savings">₹0</span> on this order
+        </div>
+
+        
+
+        <!-- Items -->
+        <div class="bg-white rounded-xl shadow-sm border">
+          <div class="p-5 flex justify-between items-center border-b">
+            <h3 class="font-semibold text-gray-800 flex items-center text-lg">
+              <i class="fas fa-shopping-bag mr-3 text-pink-600"></i>
+              <span class="lg:hidden"><span id="mobile-item-count">0</span> ITEMS • ₹<span id="mobile-total">0</span></span>
+              <span class="hidden lg:block">Your Items (<span id="item-count">0</span>)</span>
             </h3>
-            <i class="fas fa-chevron-down transition-transform duration-300"></i>
           </div>
-          <div class="collapsible-content p-5">
-            <div class="space-y-3 text-sm">
-              <div class="flex justify-between"><span>Subtotal</span><span id="subtotal">₹0.00</span></div>
-              <div class="flex justify-between"><span>Shipping</span><span id="shipping">₹49.00</span></div>
-              <div class="flex justify-between text-green-600 font-medium"><span>Discount</span><span>-₹0.00</span></div>
-              <div class="border-t pt-3 mt-3">
-                <div class="flex justify-between text-lg font-bold">
-                  <span>Total</span>
-                  <span class="text-blue-600" id="total">₹0.00</span>
-                </div>
-              </div>
+          <div class="p-4 space-y-4" id="order-items"></div>
+        </div>
+
+        <!-- Desktop Order Summary -->
+        <div class="bg-white rounded-xl shadow-sm border hidden lg:block">
+          <div class="p-5 border-b"><h3 class="font-semibold flex items-center"><i class="fas fa-receipt mr-3 text-green-600"></i> Order Summary</h3></div>
+          <div class="p-5 space-y-3 text-sm">
+            <div class="flex justify-between"><span>Subtotal</span><span id="subtotal">₹0</span></div>
+            <div class="flex justify-between"><span>Shipping</span><span id="shipping">₹49</span></div>
+            <div class="flex justify-between text-green-600 font-medium"><span>Discount</span><span id="discount">-₹0</span></div>
+            <hr class="my-3">
+            <div class="flex justify-between text-lg font-bold">
+              <span>Total</span><span class="text-pink-600" id="total">₹0</span>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- RIGHT: Forms (Collapsible) -->
-      <div class="space-y-4">
+      <!-- Right Column (unchanged) -->
+      <div class="space-y-6">
 
-        <!-- Delivery Address -->
-        <div class="bg-white rounded-xl shadow-sm border collapsible open">
-          <div class="collapsible-header p-5 flex justify-between items-center border-b" onclick="toggleSection(this)">
-            <h3 class="font-semibold text-gray-800 flex items-center">
-              <i class="fas fa-map-marker-alt mr-3 text-blue-600"></i>
-              Delivery Address
+        <!-- Delivery Address Section -->
+        <div class="bg-white rounded-xl shadow-sm border p-5 mt-12">
+          <div class="flex justify-between items-center mb-3">
+            <h3 class="font-semibold text-gray-800 flex items-center text-lg">
+              <i class="fas fa-map-marker-alt text-pink-600 mr-2"></i> Delivery Address
             </h3>
-            <i class="fas fa-chevron-down transition-transform duration-300"></i>
+            <button id="add-address-btn" class="text-pink-600 text-sm font-medium hover:underline">
+              + Add New
+            </button>
           </div>
-          <div class="collapsible-content p-5">
-            <form id="addressForm" class="space-y-4 text-sm">
-              <div class="grid grid-cols-2 gap-3">
-                <input type="text" placeholder="Full Name" required>
-                <input type="tel" placeholder="Phone" required pattern="[0-9]{10}">
-              </div>
-              <input type="text" placeholder="Flat / House No." required>
-              <input type="text" placeholder="Area / Street" required>
-              <div class="grid grid-cols-2 gap-3">
-                <input type="text" placeholder="Pincode" id="pincode" required maxlength="6">
-                <input type="text" placeholder="City" required>
-              </div>
-              <input type="text" placeholder="State" required>
-            </form>
-          </div>
-        </div>
 
-        <!-- Payment Method -->
-        <div class="bg-white rounded-xl shadow-sm border collapsible open">
-          <div class="collapsible-header p-5 flex justify-between items-center border-b" onclick="toggleSection(this)">
-            <h3 class="font-semibold text-gray-800 flex items-center">
-              <i class="fas fa-credit-card mr-3 text-green-600"></i>
-              Payment Method
-            </h3>
-            <i class="fas fa-chevron-down transition-transform duration-300"></i>
-          </div>
-          <div class="collapsible-content p-5 space-y-4">
-            <label class="flex items-center p-4 border rounded-lg cursor-pointer hover:bg-blue-50">
-              <input type="radio" name="pay" value="cod" checked class="mr-4">
-              <div>
-                <p class="font-medium">Cash on Delivery (COD)</p>
-                <p class="text-xs text-gray-600">Pay when you receive</p>
-              </div>
-            </label>
-
-            <label class="flex items-center p-4 border rounded-lg cursor-pointer hover:bg-blue-50">
-              <input type="radio" name="pay" value="qr" class="mr-4">
-              <div>
-                <p class="font-medium">UPI / QR Code</p>
-                <p class="text-xs text-gray-600">Google Pay, PhonePe, etc.</p>
-              </div>
-            </label>
-
-            <div id="qr-box" class="hidden text-center p-6 bg-gray-50 rounded-lg">
-              <img src="https://via.placeholder.com/200x200/2563eb/ffffff?text=Scan+QR" class="mx-auto rounded-lg shadow">
-              <p class="mt-3 font-semibold text-blue-600">₹<span id="qr-amount">0.00</span></p>
+          <div id="addresses-container" class="space-y-3">
+            <div id="no-address-msg" class="text-center py-8 text-gray-400">
+              <i class="fas fa-home text-3xl mb-2 text-gray-300"></i>
+              <p class="text-sm italic">No address saved yet</p>
             </div>
           </div>
         </div>
 
-        <!-- Place Order Button -->
-        <button onclick="placeOrder()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 rounded-xl shadow-lg transition">
-          Place Order • ₹<span id="final-total">0.00</span>
-        </button>
+        <!-- Mobile Payment -->
+        <div class="lg:hidden bg-white rounded-xl shadow-sm border p-6 space-y-6">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center">
+              <span class="w-8 h-8 rounded-full border-2 border-pink-600 text-pink-600 flex items-center justify-center text-sm font-bold">3</span>
+              <h3 class="ml-3 font-semibold">Payment Options</h3>
+            </div>
+           
+          </div>
+
+         
+
+          <div class="space-y-4">
+            <h4 class="text-xs font-medium text-gray-600 uppercase tracking-wider">Select Payment Method</h4>
+
+            <label class="flex items-center p-5 border-2 rounded-xl cursor-pointer hover:border-pink-600 transition-all border-gray-300 cod-option">
+              <input type="radio" name="payment_method" value="cod" class="mr-4" disabled>
+              <div class="flex-1">
+                <div class="font-semibold flex items-center"><i class="fas fa-rupee-sign mr-2"></i> Cash on Delivery (COD)</div>
+                <p class="text-xs text-gray-600 mt-1">Pay when you receive the order</p>
+              </div>
+              <i class="fas fa-truck text-pink-600 text-xl"></i>
+            </label>
+
+            <label class="flex items-center p-5 border-2 rounded-xl cursor-pointer hover:border-pink-600 transition-all border-pink-600 bg-pink-50">
+              <input type="radio" name="payment_method" value="qr" class="mr-4" checked>
+              <div class="flex-1">
+                <div class="font-semibold flex items-center"><i class="fas fa-qrcode mr-2"></i> Scan & Pay (UPI QR)</div>
+                <p class="text-xs text-gray-600 mt-1">Fastest • Recommended</p>
+              </div>
+              <img src="https://via.placeholder.com/50x50/6366F1/FFFFFF?text=QR" class="w-12 h-12 rounded-lg">
+            </label>
+          </div>
+
+          <button id="mobile-place-order-btn" class="w-full bg-pink-600 text-white font-bold py-4 rounded-lg text-lg opacity-60 cursor-not-allowed" disabled>
+            PLACE ORDER • ₹<span id="mobile-pay-amount">0</span>
+          </button>
+
+          <div id="no-address-warning" class="text-center text-sm text-red-600 font-medium">
+            Please select a delivery address first
+          </div>
+        </div>
+
+        <!-- Desktop Place Order -->
+        <div class="hidden lg:block bg-white rounded-xl shadow-sm border p-6">
+          <button id="desktop-place-order-btn" class="w-full bg-pink-600 text-white font-bold py-4 rounded-lg text-lg hover:bg-pink-700 transition opacity-60 cursor-not-allowed" disabled>
+            PLACE ORDER • ₹<span id="desktop-pay-amount">0</span>
+          </button>
+          <div id="desktop-address-warning" class="text-center text-sm text-red-600 font-medium mt-3">
+            Please select a delivery address first
+          </div>
+        </div>
+
       </div>
     </div>
   </main>
 
-  <div id="footer-placeholder"></div>
+  <!-- Address Modal (unchanged) -->
+  <div id="address-modal" class="fixed inset-0 bg-black bg-opacity-50 z-50 p-4">
+    <div class="bg-white rounded-xl shadow-xl max-w-lg w-full max-h-screen overflow-y-auto">
+      <div class="p-6 border-b flex justify-between items-center">
+        <h2 class="text-xl font-bold" id="modal-title">Add New Address</h2>
+        <button id="close-modal-btn" class="text-gray-500 hover:text-gray-800"><i class="fas fa-times text-2xl"></i></button>
+      </div>
+      <form id="address-form" class="p-6 space-y-4">
+        <input type="hidden" id="edit-index" value="-1">
+        <div class="grid grid-cols-2 gap-4">
+          <input type="text" name="fullName" placeholder="Full Name *" required class="w-full border rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-pink-600">
+          <input type="text" name="mobile" placeholder="Mobile Number *" required pattern="[0-9]{10}" class="w-full border rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-pink-600">
+        </div>
+        <input type="text" name="flat" placeholder="Flat / House No / Floor *" required class="w-full border rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-pink-600">
+        <input type="text" name="area" placeholder="Area / Street / Locality *" required class="w-full border rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-pink-600">
+        <div class="grid grid-cols-2 gap-4">
+          <input type="text" name="city" placeholder="City *" required class="w-full border rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-pink-600">
+          <input type="text" name="state" placeholder="State *" required class="w-full border rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-pink-600">
+        </div>
+        <input type="text" name="pincode" placeholder="Pincode *" required pattern="[0-9]{6}" class="w-full border rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-pink-600">
+        <div class="flex gap-4 pt-4">
+          <button type="submit" class="flex-1 bg-pink-600 text-white font-bold py-3 rounded-lg hover:bg-pink-700">Save Address</button>
+          <button type="button" id="cancel-modal-btn" class="flex-1 bg-gray-200 text-gray-800 font-bold py-3 rounded-lg hover:bg-gray-300">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div id="footer-placeholder" class="pb-24 lg:pb-0"></div>
 
   <script>
-    function getCart() {
-      return JSON.parse(localStorage.getItem('cart') || '[]');
-    }
-
     function loadHeader() {
-      fetch('../Header/header.html')
-        .then(r => r.ok ? r.text() : '')
-        .then(html => {
-          document.getElementById('header-placeholder').innerHTML = html;
-          const script = document.createElement('script');
-          script.src = '../Header/header.js';
-          document.body.appendChild(script);
-        });
+        fetch('../Header/header.html')
+            .then(r => { if (!r.ok) throw r; return r.text(); })
+            .then(html => {
+                document.getElementById('header-placeholder').innerHTML = html;
+                const script = document.createElement('script');
+                script.src = '../Header/header.js';
+                script.onload = () => console.log('Header JS loaded');
+                document.body.appendChild(script);
+            })
+            .catch(err => console.error('Header load failed:', err));
     }
 
     function loadFooter() {
-      fetch('../Footer/footer.html')
-        .then(r => r.ok ? r.text() : '')
-        .then(html => document.getElementById('footer-placeholder').innerHTML = html);
-    }
-
-    function toggleSection(header) {
-      const collapsible = header.parentElement;
-      collapsible.classList.toggle('open');
-      const icon = header.querySelector('i:last-child');
-      icon.classList.toggle('rotate-180');
-    }
-
-    function updateCheckout() {
-      const cart = getCart();
-      if (cart.length === 0) {
-        alert("Cart is empty!");
-        window.location.href = "cart.html";
-        return;
-      }
-
-      const subtotal = cart.reduce((s, i) => s + i.price * i.quantity, 0);
-      const shipping = subtotal >= 499 ? 0 : 49;
-      const total = subtotal + shipping;
-
-      document.getElementById('item-count').textContent = cart.reduce((s, i) => s + i.quantity, 0);
-      document.getElementById('subtotal').textContent = `₹${subtotal.toFixed(2)}`;
-      document.getElementById('shipping').textContent = shipping === 0 ? 'Free' : '₹49.00';
-      document.getElementById('total').textContent = `₹${total.toFixed(2)}`;
-      document.getElementById('final-total').textContent = total.toFixed(2);
-      document.getElementById('qr-amount').textContent = total.toFixed(2);
-
-      document.getElementById('order-items').innerHTML = cart.map(item => `
-        <div class="flex gap-4 items-center p-4 bg-gray-50 rounded-lg">
-          <img src="${item.image || 'https://via.placeholder.com/60'}" class="w-16 h-16 rounded object-cover">
-          <div class="flex-1">
-            <p class="font-medium text-sm">${item.name}</p>
-            <p class="text-xs text-gray-600">₹${item.price} × ${item.quantity}</p>
-          </div>
-          <p class="font-semibold text-blue-600">₹${(item.price * item.quantity).toFixed(2)}</p>
-        </div>
-      `).join('');
-    }
-
-    // Show QR when selected
-    document.querySelectorAll('input[name="pay"]').forEach(r => {
-      r.addEventListener('change', () => {
-        document.getElementById('qr-box').classList.toggle('hidden', r.value !== 'qr');
-      });
-    });
-
-    function placeOrder() {
-      if (!document.getElementById('addressForm').checkValidity()) {
-        alert("Please fill all required fields");
-        return;
-      }
-      alert("Order placed successfully! Thank you!");
-      localStorage.removeItem('cart');
-      window.location.href = "order-success.html";
+        fetch('../Footer/footer.html')
+            .then(r => { if (!r.ok) throw r; return r.text(); })
+            .then(html => {
+                document.getElementById('footer-placeholder').innerHTML = html;
+            })
+            .catch(err => console.error('Footer load failed:', err));
     }
 
     document.addEventListener('DOMContentLoaded', () => {
-      loadHeader();
-      loadFooter();
-      updateCheckout();
+        loadHeader();
+        loadFooter();
+        // ... rest of your code
+    });
+</script>
+
+  <!-- JavaScript (completely unchanged - all your previous fixes are here) -->
+  <script>
+    const STORAGE = { CART: 'cart', ADDRESSES: 'user_addresses', SELECTED: 'selected_address_index' };
+
+    class CheckoutApp {
+      constructor() { this.cart = []; this.addresses = []; this.selectedIdx = -1; this.init(); }
+
+      init() { this.loadFromStorage(); this.setupEventListeners(); this.render(); }
+
+      loadFromStorage() {
+        try {
+          this.cart = JSON.parse(localStorage.getItem(STORAGE.CART)) || [];
+          this.addresses = JSON.parse(localStorage.getItem(STORAGE.ADDRESSES)) || [];
+          this.selectedIdx = parseInt(localStorage.getItem(STORAGE.SELECTED), 10) || -1;
+          if (isNaN(this.selectedIdx)) this.selectedIdx = -1;
+        } catch (e) { this.cart = []; this.addresses = []; this.selectedIdx = -1; }
+      }
+
+      saveAddresses() { localStorage.setItem(STORAGE.ADDRESSES, JSON.stringify(this.addresses)); }
+      saveSelected() { localStorage.setItem(STORAGE.SELECTED, this.selectedIdx); }
+
+      isDuplicateAddress(newAddr) {
+        return this.addresses.some(addr => 
+          addr.fullName.trim() === newAddr.fullName.trim() &&
+          addr.mobile.trim() === newAddr.mobile.trim() &&
+          addr.flat.trim() === newAddr.flat.trim() &&
+          addr.area.trim() === newAddr.area.trim() &&
+          addr.city.trim() === newAddr.city.trim() &&
+          addr.state.trim() === newAddr.state.trim() &&
+          addr.pincode.trim() === newAddr.pincode.trim()
+        );
+      }
+
+      selectAddress(index) {
+        this.selectedIdx = (index >= 0 && index < this.addresses.length) ? index : -1;
+        this.saveSelected();
+        this.renderAddresses();
+        this.updatePaymentSection();
+      }
+
+      addAddress(addr) {
+        if (this.isDuplicateAddress(addr)) { alert("This address is already saved"); return; }
+        this.addresses.push(addr);
+        this.selectedIdx = this.addresses.length - 1;
+        this.saveAddresses(); this.saveSelected();
+        this.renderAddresses(); this.updatePaymentSection();
+      }
+
+      updateAddress(index, addr) {
+        if (index < 0 || index >= this.addresses.length) return;
+        const isSame = JSON.stringify(this.addresses[index]) === JSON.stringify(addr);
+        if (!isSame && this.isDuplicateAddress(addr)) { alert("This address is already saved"); return; }
+        this.addresses[index] = addr;
+        this.saveAddresses(); this.renderAddresses(); this.updatePaymentSection();
+      }
+
+      deleteAddress(index) {
+        if (!confirm('Delete this address?')) return;
+        this.addresses.splice(index, 1);
+        if (this.selectedIdx >= this.addresses.length) this.selectedIdx = this.addresses.length > 0 ? 0 : -1;
+        this.saveAddresses(); this.saveSelected();
+        this.renderAddresses(); this.updatePaymentSection();
+      }
+
+      render() { this.renderCart(); this.renderAddresses(); this.updatePaymentSection(); }
+
+      renderCart() {
+        const container = document.getElementById('order-items');
+        if (!this.cart.length) {
+          container.innerHTML = `<div class="text-center text-gray-500 py-10">Your cart is empty.</div>`;
+          this.updateTotals(0, 0, 0); return;
+        }
+
+        let subtotal = 0, totalItems = 0, totalSavings = 0;
+        container.innerHTML = '';
+
+        this.cart.forEach((item, i) => {
+          const qty = item.quantity || 1;
+          const total = item.price * qty;
+          subtotal += total; totalItems += qty;
+          const original = Math.round(item.price * 2.5);
+          totalSavings += (original - item.price) * qty;
+
+          const div = document.createElement('div');
+          div.className = "flex gap-4 p-4 bg-gray-50 rounded-lg";
+          div.innerHTML = `
+            <img src="${item.image || 'https://via.placeholder.com/80'}" class="w-20 h-20 rounded object-cover">
+            <div class="flex-1">
+              <p class="font-medium text-sm">${item.name}</p>
+              <p class="text-xs text-gray-600 mt-1">Size: ${item.size || 'M'}</p>
+              <div class="flex items-center gap-3 mt-2">
+                <span class="font-bold">₹${item.price}</span>
+                <span class="text-xs text-gray-500 line-through">₹${original}</span>
+                <span class="text-green-600 text-xs font-medium">60% OFF</span>
+              </div>
+              <div class="mt-3 flex items-center justify-between">
+                <select class="qty-select text-sm border rounded px-3 py-1.5" data-index="${i}">
+                  ${[1,2,3,4,5].map(q => `<option value="${q}" ${q===qty?'selected':''}>Qty: ${q}</option>`).join('')}
+                </select>
+                <div class="text-right"><span class="text-lg font-bold text-pink-600">₹${total}</span></div>
+              </div>
+            </div>
+          `;
+          container.appendChild(div);
+        });
+
+        const shipping = subtotal >= 499 ? 0 : 49;
+        const total = subtotal + shipping;
+        this.updateTotals(totalItems, subtotal, totalSavings, total, shipping);
+      }
+
+      updateTotals(items, subtotal, savings, total, shipping) {
+        document.getElementById('item-count').textContent = items;
+        document.getElementById('mobile-item-count').textContent = items;
+        document.getElementById('mobile-total').textContent = total;
+        document.getElementById('mobile-pay-amount').textContent = total;
+        document.getElementById('desktop-pay-amount').textContent = total;
+        document.getElementById('subtotal').textContent = `₹${subtotal}`;
+        document.getElementById('shipping').textContent = shipping === 0 ? 'FREE' : `₹${shipping}`;
+        document.getElementById('discount').textContent = `-₹${savings}`;
+        document.getElementById('total').textContent = `₹${total}`;
+        document.getElementById('mobile-savings').textContent = `₹${savings}`;
+      }
+
+      renderAddresses() {
+        const container = document.getElementById('addresses-container');
+        const noMsg = document.getElementById('no-address-msg');
+
+        Array.from(container.children).forEach(child => {
+          if (child.id !== 'no-address-msg') child.remove();
+        });
+
+        if (this.addresses.length === 0) {
+          noMsg.style.display = 'block';
+          return;
+        }
+        noMsg.style.display = 'none';
+
+        this.addresses.forEach((addr, i) => {
+          const isSelected = this.selectedIdx === i;
+
+          const card = document.createElement('div');
+          card.className = ` address-card border-2 rounded-xl p-4 mt-10 cursor-pointer transition-all duration-200 
+            ${isSelected ? 'border-pink-600 bg-pink-50 shadow-lg' : 'border-gray-200 hover:border-pink-300'}`;
+
+          card.innerHTML = `
+            <div class="flex items-center gap-3">
+              <div class="flex-shrink-0 w-10 h-10 rounded-full ${isSelected ? 'bg-pink-600' : 'bg-gray-200'} flex items-center justify-center text-white">
+                <i class="fas fa-map-marker-alt text-lg"></i>
+              </div>
+
+              <div class="flex-1 min-w-0 select-address" data-index="${i}">
+                <div class="flex items-center gap-2 flex-wrap">
+                  <p class="font-semibold text-gray-900">${addr.fullName}</p>
+                  <span class="px-2 py-0.5 text-xs rounded-full ${isSelected ? 'bg-pink-600 text-white' : 'bg-gray-200 text-gray-700'}">Home</span>
+                </div>
+                <p class="text-xs text-gray-600 mt-1">
+                  ${addr.flat}, ${addr.area}, ${addr.city} - ${addr.pincode}
+                </p>
+                <p class="text-xs text-gray-500"><i class="fas fa-phone-alt"></i> ${addr.mobile}</p>
+                
+                ${isSelected ? `
+                  <div class="mt-2 text-green-600 font-semibold text-sm flex items-center">
+                    <i class="fas fa-check-circle mr-1.5"></i>
+                    Delivering Here
+                  </div>
+                ` : ''}
+              </div>
+
+              <div class="flex gap-1">
+                <button type="button" class="edit-btn p-2 hover:bg-gray-100 rounded-lg" data-index="${i}">
+                  <i class="fas fa-edit text-gray-600 text-sm"></i>
+                </button>
+                <button type="button" class="delete-btn p-2 hover:bg-red-50 rounded-lg" data-index="${i}">
+                  <i class="fas fa-trash-alt text-red-500 text-sm"></i>
+                </button>
+              </div>
+            </div>
+          `;
+
+          container.appendChild(card);
+        });
+      }
+
+      updatePaymentSection() {
+        const hasAddr = this.selectedIdx !== -1;
+        const mobileBtn = document.getElementById('mobile-place-order-btn');
+        const desktopBtn = document.getElementById('desktop-place-order-btn');
+        const mobileWarn = document.getElementById('no-address-warning');
+        const desktopWarn = document.getElementById('desktop-address-warning');
+        const codInput = document.querySelector('.cod-option input');
+
+        if (hasAddr) {
+          mobileBtn.disabled = false; mobileBtn.classList.remove('opacity-60', 'cursor-not-allowed');
+          desktopBtn.disabled = false; desktopBtn.classList.remove('opacity-60', 'cursor-not-allowed');
+          mobileWarn.style.display = 'none'; desktopWarn.style.display = 'none';
+          if (codInput) codInput.disabled = false;
+        } else {
+          mobileBtn.disabled = true; mobileBtn.classList.add('opacity-60', 'cursor-not-allowed');
+          desktopBtn.disabled = true; desktopBtn.classList.add('opacity-60', 'cursor-not-allowed');
+          mobileWarn.style.display = 'block'; desktopWarn.style.display = 'block';
+          if (codInput) codInput.disabled = true;
+        }
+      }
+
+      openModal(editIndex = -1) {
+        document.getElementById('edit-index').value = editIndex;
+        document.getElementById('modal-title').textContent = editIndex === -1 ? 'Add New Address' : 'Edit Address';
+        const form = document.getElementById('address-form');
+        if (editIndex === -1) form.reset();
+        else {
+          const addr = this.addresses[editIndex];
+          if (addr) Object.keys(addr).forEach(k => { if (form[k]) form[k].value = addr[k]; });
+        }
+        document.getElementById('address-modal').classList.add('show');
+      }
+
+      closeModal() { document.getElementById('address-modal').classList.remove('show'); }
+
+      setupEventListeners() {
+        document.getElementById('add-address-btn').addEventListener('click', () => this.openModal(-1));
+        document.getElementById('close-modal-btn').addEventListener('click', () => this.closeModal());
+        document.getElementById('cancel-modal-btn').addEventListener('click', () => this.closeModal());
+        document.getElementById('address-modal').addEventListener('click', e => { if (e.target.id === 'address-modal') this.closeModal(); });
+        document.addEventListener('keydown', e => { if (e.key === 'Escape') this.closeModal(); });
+
+        document.getElementById('address-form').addEventListener('submit', e => {
+          e.preventDefault();
+          const fd = new FormData(e.target);
+          const addr = {
+            fullName: fd.get('fullName').trim(),
+            mobile: fd.get('mobile').trim(),
+            flat: fd.get('flat').trim(),
+            area: fd.get('area').trim(),
+            city: fd.get('city').trim(),
+            state: fd.get('state').trim(),
+            pincode: fd.get('pincode').trim()
+          };
+          const editIdx = parseInt(document.getElementById('edit-index').value, 10);
+          editIdx >= 0 ? this.updateAddress(editIdx, addr) : this.addAddress(addr);
+          this.closeModal();
+        });
+
+        document.getElementById('mobile-place-order-btn').addEventListener('click', () => this.placeOrder());
+        document.getElementById('desktop-place-order-btn').addEventListener('click', () => this.placeOrder());
+
+        document.getElementById('addresses-container').addEventListener('click', e => {
+          const editBtn = e.target.closest('.edit-btn');
+          const deleteBtn = e.target.closest('.delete-btn');
+          const selectArea = e.target.closest('.select-address');
+          if (editBtn) { this.openModal(parseInt(editBtn.dataset.index, 10)); return; }
+          if (deleteBtn) { this.deleteAddress(parseInt(deleteBtn.dataset.index, 10)); return; }
+          if (selectArea) { this.selectAddress(parseInt(selectArea.dataset.index, 10)); }
+        });
+
+        document.getElementById('order-items').addEventListener('change', e => {
+          if (e.target.classList.contains('qty-select')) {
+            const idx = parseInt(e.target.dataset.index, 10);
+            const qty = parseInt(e.target.value, 10);
+            this.cart[idx].quantity = qty;
+            localStorage.setItem(STORAGE.CART, JSON.stringify(this.cart));
+            this.renderCart();
+          }
+        });
+      }
+
+      placeOrder() {
+        if (this.selectedIdx === -1) return alert('Please select a delivery address!');
+        const method = document.querySelector('input[name="payment_method"]:checked').value;
+        alert(`Order Placed Successfully!\nPayment: ${method === 'cod' ? 'Cash on Delivery' : 'UPI QR'}`);
+        localStorage.removeItem(STORAGE.CART);
+        window.location.href = 'order-success.html';
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+    
+
+      if (!localStorage.getItem(STORAGE.CART)) {
+        localStorage.setItem(STORAGE.CART, JSON.stringify([
+          { name: 'Paracetamol 500mg', price: 60, quantity: 2, size: '1 strip', image: 'https://via.placeholder.com/80' },
+          { name: 'Vitamin C 1000mg', price: 250, quantity: 1, size: '1 bottle', image: 'https://via.placeholder.com/80' }
+        ]));
+      }
+
+      new CheckoutApp();
     });
   </script>
 </body>
