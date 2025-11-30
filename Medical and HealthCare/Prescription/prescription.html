@@ -9,6 +9,15 @@
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../../Footer/footer.css">
   
+
+  <style>
+  /* Hide footer only on mobile & tablet (≤1024px) */
+  @media (max-width: 1024px) {
+    #footer-placeholder {
+      display: none !important;
+    }
+  }
+</style>
   <style>
    body { font-family: 'Inter', 'Noto Sans Devanagari', sans-serif; }
     .line-clamp-2 { overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }

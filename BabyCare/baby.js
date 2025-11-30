@@ -56,27 +56,38 @@
     }
 
     grid.innerHTML = items.map(p => `
-      <div class="product-card bg-white rounded-2xl shadow-lg overflow-hidden transition-all duration-300">
-        <div class="relative h-64 bg-gradient-to-br from-pink-50 to-blue-50 flex items-center justify-center overflow-hidden">
-          <div class="image-zoom transition-transform duration-300 text-5xl font-bold text-gray-300">${p.title.slice(0,2)}</div>
-          ${p.discount ? `<span class="absolute top-3 right-3 bg-red-500 text-white px-3 py-1 rounded-full text-sm font-bold">${p.discount}% OFF</span>` : ''}
-        </div>
-        <div class="p-5">
-          <h3 class="font-bold text-lg mb-2 line-clamp-2 text-gray-800">${p.title}</h3>
-          <div class="flex items-center gap-1 mb-2">
-            <span class="text-yellow-500">★</span>
-            <span class="text-sm font-medium text-gray-700">${p.rating}</span>
-          </div>
-          <div class="flex items-baseline gap-2">
-            <p class="text-2xl font-bold text-pink-600">₹${p.price}</p>
-            ${p.discount ? `<p class="text-sm text-gray-400 line-through">₹${Math.round(p.price/(1-p.discount/100))}</p>` : ''}
-          </div>
-          <button class="mt-4 w-full bg-gradient-to-r from-pink-600 to-pink-700 hover:from-pink-700 hover:to-pink-800 text-white font-bold py-3 rounded-xl transition">
-            Add to Cart
-          </button>
-        </div>
+  <div class="product-card bg-white rounded-2xl shadow-lg overflow-hidden transition-all duration-300 cursor-pointer"
+       onclick="openProductDetails(${p.id})">
+    <div class="relative h-64 bg-gradient-to-br from-pink-50 to-blue-50 flex items-center justify-center overflow-hidden">
+      <div class="image-zoom transition-transform duration-300 text-5xl font-bold text-gray-300">${p.title.slice(0,2)}</div>
+      ${p.discount ? `<span class="absolute top-3 right-3 bg-red-500 text-white px-3 py-1 rounded-full text-sm font-bold">${p.discount}% OFF</span>` : ''}
+    </div>
+    <button 
+  class="absolute top-3 left-3 bg-white/90 backdrop-blur hover:bg-white p-3 rounded-full shadow-lg transition-all duration-300 z-10"
+  onclick="event.stopPropagation(); addToWishlist(${p.id}); 
+           this.classList.toggle('active-wish');
+           this.querySelector('i').classList.toggle('fas');
+           this.querySelector('i').classList.toggle('far');
+           this.querySelector('i').classList.toggle('text-red-600');">
+  <i class="far fa-heart text-xl ${JSON.parse(localStorage.getItem('wishlist')||'[]').some(w => w.id === p.id) ? 'fas text-red-600' : 'text-gray-600'}"></i>
+</button>
+    <div class="p-5">
+      <h3 class="font-bold text-lg mb-2 line-clamp-2 text-gray-800">${p.title}</h3>
+      <div class="flex items-center gap-1 mb-2">
+        <span class="text-yellow-500">★</span>
+        <span class="text-sm font-medium text-gray-700">${p.rating}</span>
       </div>
-    `).join('');
+      <div class="flex items-baseline gap-2">
+        <p class="text-2xl font-bold text-pink-600">₹${p.price}</p>
+        ${p.discount ? `<p class="text-sm text-gray-400 line-through">₹${Math.round(p.price/(1-p.discount/100))}</p>` : ''}
+      </div>
+      <button class="mt-4 w-full bg-gradient-to-r from-pink-600 to-pink-700 hover:from-pink-700 hover:to-pink-800 text-white font-bold py-3 rounded-xl transition prevent-click"
+              onclick="event.stopPropagation(); addToCart(${p.id})">
+        Add to Cart
+      </button>
+    </div>
+  </div>
+`).join('');
 
     $("resultsCount").textContent = 
       `Showing ${start + 1}–${Math.min(start + itemsPerPage, filteredProducts.length)} of ${filteredProducts.length} products`;
@@ -299,6 +310,142 @@
 
     $("clearMobileFilters")?.addEventListener('click', clearAllFilters);
   };
+
+
+  // Open product details page
+window.openProductDetails = (id) => {
+  const product = products.find(p => p.id === id);
+  if (!product) return;
+
+  // Save product to sessionStorage so details page can read it
+  sessionStorage.setItem('currentProduct', JSON.stringify(product));
+  sessionStorage.setItem('allProducts', JSON.stringify(products)); // optional, for related products
+
+  // Open product details page
+  window.location.href = 'baby-product-details.html';
+};
+
+// Add to Cart (shared function)
+window.addToCart = (id) => {
+  const product = products.find(p => p.id === id);
+  if (!product) return;
+
+  let cart = JSON.parse(localStorage.getItem('cart') || '[]');
+  
+  const existing = cart.find(item => item.id === id);
+  if (existing) {
+    existing.quantity += 1;
+  } else {
+    cart.push({ ...product, quantity: 1 });
+  }
+
+  localStorage.setItem('cart', JSON.stringify(cart));
+  updateCartCount();
+
+  // Optional: Show toast/notification
+  showToast(`${product.title} added to cart!`);
+};
+
+// Update cart count in header (assumes your header has #cartCount)
+function updateCartCount() {
+  const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+  const total = cart.reduce((sum, item) => sum + item.quantity, 0);
+  const countEl = document.querySelector('#cartCount');
+  if (countEl) {
+    countEl.textContent = total;
+    countEl.style.display = total > 0 ? 'flex' : 'none';
+  }
+}
+
+// Simple toast notification
+function showToast(message) {
+  const toast = document.createElement('div');
+  toast.textContent = message;
+  toast.style.cssText = `
+    position: fixed; bottom: 100px; left: 50%; transform: translateX(-50%);
+    background: #10b981; color: white; padding: 1rem 2rem; border-radius: 50px;
+    font-weight: bold; z-index: 10000; animation: toast 3s ease forwards;
+  `;
+  document.body.appendChild(toast);
+  setTimeout(() => toast.remove(), 3000);
+}
+
+// Replace your current addToWishlist with this FIXED version
+window.addToWishlist = (id) => {
+  const product = products.find(p => p.id === id);
+  if (!product) return;
+
+  let wishlist = JSON.parse(localStorage.getItem('wishlist') || '[]');
+
+  const exists = wishlist.find(item => item.id === id);
+  if (exists) {
+    wishlist = wishlist.filter(item => item.id !== id);
+    showToast('Removed from Wishlist');
+  } else {
+    // YE LINE SABSE ZAROORI HAI – name & image add kar rahe hain
+    wishlist.push({
+      id: product.id,
+      name: product.title,                    // ← yeh add karo
+      price: product.price,
+      originalPrice: product.discount 
+        ? Math.round(product.price / (1 - product.discount/100)) 
+        : product.price,
+      discount: product.discount || 0,
+      image: product.image || `https://via.placeholder.com/300/ ec4899/white?text=${product.title.slice(0,2)}`, // optional real image
+      title: product.title,                   // backup
+      brand: product.brand,
+      rating: product.rating
+    });
+    showToast('Added to Wishlist');
+  }
+
+  localStorage.setItem('wishlist', JSON.stringify(wishlist));
+  updateWishlistCount();
+
+  // Update heart icon instantly
+  const btn = event?.target?.closest('button');
+  if (btn) {
+    btn.classList.toggle('active-wish');
+    const icon = btn.querySelector('i');
+    icon.classList.toggle('far');
+    icon.classList.toggle('fas');
+    icon.classList.toggle('text-red-600');
+  }
+};
+
+// Update Wishlist Count in Header (Desktop + Mobile)
+function updateWishlistCount() {
+  const wishlist = JSON.parse(localStorage.getItem('wishlist') || '[]');
+  const total = wishlist.length;
+
+  // Desktop count
+  const desktopCount = document.querySelector('#wishlistCount');
+  if (desktopCount) {
+    desktopCount.textContent = total;
+    desktopCount.style.display = total > 0 ? 'flex' : 'none';
+  }
+
+  // Mobile count (agar header mein hai toh)
+  const mobileCount = document.querySelector('#mobileWishlistCount');
+  if (mobileCount) {
+    mobileCount.textContent = total;
+    mobileCount.style.display = total > 0 ? 'flex' : 'none';
+  }
+}
+
+// Add toast animation
+if (!document.querySelector('#toastStyle')) {
+  const style = document.createElement('style');
+  style.id = 'toastStyle';
+  style.textContent = `
+    @keyframes toast {
+      0%, 100% { opacity: 0; transform: translateX(-50%) translateY(20px); }
+      10%, 90% { opacity: 1; transform: translateX(-50%) translateY(0); }
+    }
+  `;
+  document.head.appendChild(style);
+}
+
 
   const init = () => {
     loadProducts();

@@ -11,6 +11,15 @@
     />
 <link rel="stylesheet" href="./baby.css">
 <link rel="stylesheet" href="../Footer/footer.css">
+
+<style>
+  /* Hide footer only on mobile & tablet (≤1024px) */
+  @media (max-width: 1024px) {
+    #footer-placeholder {
+      display: none !important;
+    }
+  }
+</style>
     <style>
       /* General Styling */
       body {
@@ -618,7 +627,8 @@
         // ... rest of your code
     });
 </script>
-  <script defer src="baby-product-details.js"></script>
+<script src="../cart-wishlist-system.js"></script>
+  <script defer src="./baby-product-details.js"></script>
   
   
   </body>

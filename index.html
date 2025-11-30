@@ -26,6 +26,15 @@
         }
     </script>
 
+    <style>
+  /* Hide footer only on mobile & tablet (≤1024px) */
+  @media (max-width: 1024px) {
+    #footer-placeholder {
+      display: none !important;
+    }
+  }
+</style>
+
     <!-- Required Tailwind Animation (add this in <head> if not already present) -->
 <style>
   @keyframes ping {
@@ -454,71 +463,83 @@
             }
         }
         
-       /* Custom responsive styles */
-        @media (max-width: 768px) {
-            /* Main Banner */
-            #mainBannerSection {
-                height: 500px !important;
-            }
-            
-            .search-container {
-                padding: 1rem !important;
-            }
-            
-            .search-container h1 {
-                font-size: 1.5rem !important;
-                margin-bottom: 1rem !important;
-            }
-            
-            .search-container h4 {
-                font-size: 1.1rem !important;
-                margin-bottom: 1.5rem !important;
-            }
-            
-            #searchInput {
-                padding: 0.75rem 1rem !important;
-                font-size: 0.875rem !important;
-            }
-            
-            /* Order Options */
-            .order-options-container p {
-                font-size: 0.875rem !important;
-            }
-            
-            .order-buttons-container {
-                flex-direction: column !important;
-                gap: 0.75rem !important;
-            }
-            
-            .order-button {
-                padding: 0.5rem 1rem !important;
-                font-size: 0.875rem !important;
-                width: 100% !important;
-                max-width: 250px !important;
-            }
-            
-            
-            
-            
-            
-            #prev, #next {
-                padding: 0.25rem !important;
-                width: 2rem !important;
-                height: 2rem !important;
-            }
-            
-            #prev {
-                left: 0.5rem !important;
-            }
-            
-            #next {
-                right: 0.5rem !important;
-            }
-            
-            .dot {
-                width: 0.5rem !important;
-                height: 0.5rem !important;
-            }
+      
+  /* ===== MOBILE VIEW ME BANNER CONTENT KO FIX KARNE KE LIYE ===== */
+  @media (max-width: 768px) {
+
+    
+    /* Pura banner section ko safe area mein rakh do */
+    #mainBannerSection {
+      height: auto !important;        /* 800px fixed height hata di */
+      min-height: 600px;
+      padding-bottom: 2rem;
+    }
+
+    /* Content container ko full width but safe padding */
+    #mainBannerSection > .relative.z-10 {
+      padding-left: 1rem !important;
+      padding-right: 1rem !important;
+      margin-top: 0 !important;
+    }
+
+    /* Search container ko full width kar do lekin safe margins */
+    .search-container {
+      width: 100% !important;
+      max-width: none !important;
+      padding: 1rem !important;
+      margin-top: 4rem !important;
+    }
+
+    /* Search bar ko bhi thoda chhota aur centered */
+    #searchInput {
+      font-size: 0.95rem !important;
+      padding: 0.85rem 1rem !important;
+    }
+
+    /* Order buttons (Doctor + Upload) ko column bana do taaki side mein na jaye */
+    .order-options-container > div,
+    .flex.flex-wrap.justify-center.gap-3 {
+      flex-direction: column !important;
+      align-items: center;
+      width: 100%;
+    }
+
+    .order-button,
+    .flex.items-center.px-4.py-2.border {
+      width: 85% !important;
+      max-width: 300px !important;
+      justify-content: center;
+    }
+
+    /* Carousel ko bhi mobile pe safe kar do */
+    .carousel-container {
+      padding: 1rem 0 !important;
+    }
+
+    /* Carousel arrows ko thoda andar laao taaki cut na ho */
+    #prev {
+      left: 0.5rem !important;
+    }
+    #next {
+      right: 0.5rem !important;
+    }
+
+    /* Suggestions dropdown ko bhi mobile pe safe width */
+    #searchSuggestions {
+      left: 1rem !important;
+      right: 1rem !important;
+      width: auto !important;
+    }
+  }
+
+  /* Extra safety: agar koi bhi cheez bahar ja rahi ho to clip kar do */
+  @media (max-width:768px) {
+    #mainBannerSection,
+    #mainBannerSection * {
+      overflow-x: hidden !important;
+    }
+  }
+
             
             /* Categories Grid */
             #categoryGrid {
@@ -647,7 +668,7 @@
                 font-size: 0.75rem !important;
             }
            
-        }
+        
 
        
 
@@ -669,7 +690,7 @@
                 <div class="absolute inset-0 bg-black/10"></div>
             </div>
             <!-- Content Container -->
-            <div class="relative z-10 px-1 mt-10 ">
+            <div class="relative z-10 px-1 mt-16 ">
                 <!-- Search Container -->
                 <div class="flex items-start justify-center mb-1">
                     <div class="search-container w-full max-w-4xl p-6 mt-20px rounded-2xl">

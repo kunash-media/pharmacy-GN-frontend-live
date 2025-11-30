@@ -73,11 +73,12 @@ function updateCartUI() {
     // Render items
     cartItemsContainer.innerHTML = cart.map((item, index) => `
         <div class="cart-item bg-white border rounded-lg p-5 flex flex-col md:flex-row gap-5 items-center">
-            <img src="${item.image || 'https://via.placeholder.com/80'}" alt="${item.name}" class="w-20 h-20 object-cover rounded-lg">
+            <img src="${item.image || item.mainImageUrl || 'https://via.placeholder.com/80'}" 
+     alt="${item.name || item.title}" class="w-20 h-20 object-cover rounded-lg">
             <div class="flex-1 text-center md:text-left">
-                <h3 class="font-bold text-lg">${item.name}</h3>
-                <p class="text-gray-600">₹${parseFloat(item.price || 0).toFixed(2)} each</p>
-            </div>
+    <h3 class="font-bold text-lg">${item.name || item.title || 'Unknown Product'}</h3>
+    <p class="text-gray-600">₹${parseFloat(item.price || 0).toFixed(2)} each</p>
+</div>
             <div class="flex items-center gap-3">
                 <button onclick="updateQty(${index}, ${(item.quantity || 1) - 1})" 
                         class="w-10 h-10 rounded-lg border hover:bg-gray-100 text-lg font-bold">-</button>

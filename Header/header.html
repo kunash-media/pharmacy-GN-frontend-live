@@ -6,6 +6,7 @@
   <title>GoodiNeewz - Header</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  
   <style>
     body { padding-top: 0 !important; }
     .fixed-header { 
@@ -62,8 +63,8 @@
 
   <!-- MAIN HEADER -->
   <header class="border-b bg-white">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="flex justify-between items-center py-3">
+    <div class="max-w-7xl mx-auto px-4 sm:px-4 lg:px-8">
+      <div class="flex justify-between items-center py-5">
 
         <!-- Logo + Pincode (Desktop) -->
         <div class="flex items-center space-x-4">
@@ -96,7 +97,7 @@
             <option value="marathi">Marathi</option>
           </select>
           <a href="/contact.html" class="hover:text-blue-700 flex items-center gap-2">
-            <i class="fas fa-headset"></i> Contact
+            <i class="fas fa-phone"></i> Contact
           </a>
 
           <!-- Wishlist -->
@@ -135,14 +136,19 @@
           </a> -->
 
           <div class="flex items-center gap-4">
-            <a href="/contact.html"><i class="fas fa-headset text-xl"></i></a>
+            <select id="language-selector" class="text-sm border border-gray-300 rounded px-1 py-1">
+            <option value="english">En</option>
+            <option value="hindi">Hindi</option>
+            <option value="marathi">Marathi</option>
+          </select>
+            <a href="/contact.html"><i class="fas fa-phone text-xl"></i></a>
             <a href="../Wishlist/wishlist.html" class="relative">
               <i class="fas fa-heart text-xl"></i>
-              <span id="mobile-wishlist-count" class="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] font-bold rounded-full w-4 h-4 flex items-center justify-center hidden">0</span>
+              <span id="mobile-wishlist-count" class="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-bold hidden">0</span>
             </a>
             <a href="/cart.html" class="relative">
               <i class="fas fa-shopping-cart text-xl"></i>
-              <span id="mobile-cart-count" class="absolute -top-1 -right-1  bg-red-500 text-white text-[12px] rounded-full w-4 h-4 flex items-center hidden">0</span>
+              <span id="mobile-cart-count" class="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-bold hidden">0</span>
             </a>
             <button id="mobile-profile-btn"><i class="fas fa-user-circle text-2xl"></i></button>
             <button id="mobile-menu-btn" class="text-2xl">
@@ -181,13 +187,13 @@
               Wellness <i class="ml-1 fas fa-chevron-down text-xs"></i>
             </a>
             <div class="absolute top-full left-1/2 -translate-x-1/2 mt-2 w-64 bg-white shadow-xl rounded-lg border opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50">
-              <a href="/Wellness/VITAMINS AND SUPPLEMENTS/vitamins.html" class="block px-4 py-3 hover:bg-gray-50">Vitamins & Supplements</a>
-              <a href="/Wellness/SKIN AND HAIRCARE/skin.html" class="block px-4 py-3 hover:bg-gray-50">Skin & Hair Care</a>
-              <a href="/Wellness/ORAL CARE/oral.html" class="block px-4 py-3 hover:bg-gray-50">Oral Care</a>
-              <a href="/Wellness/MENSTRUAL/menstrualCare.html" class="block px-4 py-3 hover:bg-gray-50">Menstrual Care</a>
-              <a href="/Wellness/FITNESS AND WEIGHT MANAGEMENT/fitness.html" class="block px-4 py-3 hover:bg-gray-50">Fitness & Weight</a>
-              <a href="/Wellness/SENIOR CARE/seniorCare.html" class="block px-4 py-3 hover:bg-gray-50">Senior Care</a>
-              <a href="/Wellness/IMMUNITY BOOSTER/immunity.html" class="block px-4 py-3 hover:bg-gray-50">Immunity Booster</a>
+              <a href="/Wellness/wellness.html" class="block px-4 py-3 hover:bg-gray-50">Vitamins & Supplements</a>
+              <a href="/Wellness/wellness.html" class="block px-4 py-3 hover:bg-gray-50">Skin & Hair Care</a>
+              <a href="/Wellness/wellness.html" class="block px-4 py-3 hover:bg-gray-50">Oral Care</a>
+              <a href="/Wellness/wellness.html" class="block px-4 py-3 hover:bg-gray-50">Menstrual Care</a>
+              <a href="/Wellness/wellness.html" class="block px-4 py-3 hover:bg-gray-50">Fitness & Weight</a>
+              <a href="/Wellness/wellness.html" class="block px-4 py-3 hover:bg-gray-50">Senior Care</a>
+              <a href="/Wellness/wellness.html" class="block px-4 py-3 hover:bg-gray-50">Immunity Booster</a>
             </div>
           </li>
 

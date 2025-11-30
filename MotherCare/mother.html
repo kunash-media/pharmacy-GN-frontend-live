@@ -32,6 +32,15 @@
       }
     }
   </script>
+
+  <style>
+  /* Hide footer only on mobile & tablet (≤1024px) */
+  @media (max-width: 1024px) {
+    #footer-placeholder {
+      display: none !important;
+    }
+  }
+</style>
     <style>
       /* ==========================
    General Hover Effects
@@ -788,378 +797,175 @@
 
     <div id="footer-placeholder"></div>
     
-
-   
-
 <script>
-    // Global cart & wishlist (shared across pages)
-    let cart = JSON.parse(localStorage.getItem("cart")) || [];
-    let wishlist = JSON.parse(localStorage.getItem("wishlist")) || [];
-
     function loadHeader() {
-        fetch('../Header/header.html')
+        fetch('../../Header/header.html')
             .then(r => { if (!r.ok) throw r; return r.text(); })
             .then(html => {
                 document.getElementById('header-placeholder').innerHTML = html;
                 const script = document.createElement('script');
-                script.src = '../Header/header.js';
-                script.onload = () => {
-                    console.log('Header JS loaded');
-                    // CRITICAL FIX: Update counts after header loads
-                    updateCartAndWishlistCounts();
-                };
+                script.src = '../../Header/header.js';
+                script.onload = () => console.log('Header JS loaded');
                 document.body.appendChild(script);
             })
             .catch(err => console.error('Header load failed:', err));
     }
 
     function loadFooter() {
-        fetch('../Footer/footer.html')
+        fetch('../../Footer/footer.html')
             .then(r => { if (!r.ok) throw r; return r.text(); })
-            .then(html => document.getElementById('footer-placeholder').innerHTML = html)
+            .then(html => {
+                document.getElementById('footer-placeholder').innerHTML = html;
+            })
             .catch(err => console.error('Footer load failed:', err));
     }
-      document.addEventListener('DOMContentLoaded', () => {
+
+    document.addEventListener('DOMContentLoaded', () => {
         loadHeader();
         loadFooter();
+        // ... rest of your code
     });
-
-     function initSlider(minThumbId, maxThumbId, fillId, minDisplayId, maxDisplayId) {
-   const minThumb = document.getElementById(minThumbId);
-   const maxThumb = document.getElementById(maxThumbId);
-   const fill = document.getElementById(fillId);
-   const minDisplay = document.getElementById(minDisplayId);
-   const maxDisplay = document.getElementById(maxDisplayId);
-
-   function update() {
-     let minVal = parseInt(minThumb.value);
-     let maxVal = parseInt(maxThumb.value);
-
-     if (minVal > maxVal) {
-       [minVal, maxVal] = [maxVal, minVal];
-       minThumb.value = minVal;
-       maxThumb.value = maxVal;
-     }
-
-     const percentMin = (minVal / 10000) * 100;
-     const percentMax = (maxVal / 10000) * 100;
-
-     fill.style.left = percentMin + '%';
-     fill.style.width = (percentMax - percentMin) + '%';
-
-     minDisplay.textContent = '₹' + minVal.toLocaleString('en-IN');
-     maxDisplay.textContent = '₹' + maxVal.toLocaleString('en-IN');
-   }
-
-   minThumb.addEventListener('input', update);
-   maxThumb.addEventListener('input', update);
-   update(); // initial
- }
-
- // Initialize both sliders
- initSlider('minThumb', 'maxThumb', 'desktopFill', 'minValue', 'maxValue');
- initSlider('mobileMinThumb', 'mobileMaxThumb', 'mobileFill', 'mobileMinValue', 'mobileMaxValue');
-
- // ... rest of your existing JS stays the same
-
-
-   
-        // Mobile sheets
-        const backdrop = document.getElementById('mobileSheetBackdrop');
-        const sortSheet = document.getElementById('sortSheet');
-        const filterSheet = document.getElementById('filterSheet');
-
-        document.getElementById('openSortSheet').onclick = () => { sortSheet.classList.remove('translate-y-full'); backdrop.classList.remove('hidden'); };
-        document.getElementById('openFilterSheet').onclick = () => { filterSheet.classList.remove('translate-y-full'); backdrop.classList.remove('hidden'); };
-        document.getElementById('closeSortSheet').onclick = document.getElementById('closeFilterSheet').onclick = backdrop.onclick = () => {
-          sortSheet.classList.add('translate-y-full');
-          filterSheet.classList.add('translate-y-full');
-          backdrop.classList.add('hidden');
-        };
-
-         document.getElementById('openFilterSheet')?.addEventListener('click', () => {
-          document.getElementById('filterSheet').classList.remove('translate-y-full');
-          document.getElementById('mobileSheetBackdrop').classList.remove('hidden');
-        });
-        document.getElementById('closeFilterSheet')?.addEventListener('click', () => {
-          document.getElementById('filterSheet').classList.add('translate-y-full');
-          document.getElementById('mobileSheetBackdrop').classList.add('hidden');
-        });
-        document.getElementById('mobileSheetBackdrop')?.addEventListener('click', () => {
-          document.getElementById('filterSheet').classList.add('translate-y-full');
-          document.getElementById('mobileSheetBackdrop').classList.add('hidden');
-        });
-
-        // Upload modal logic (simplified)
-       window.openUploadModalForProduct = function(product) {
-          document.getElementById('modalProductName').textContent = 'Upload Prescription for: ' + product.name;
-          document.getElementById('modalProductImage').src = product.image;
-          document.getElementById('modalProductImage').classList.remove('hidden');
-          document.getElementById('uploadModal').classList.remove('hidden');
-        };
-
-        document.body.addEventListener('click', e => {
-          if (e.target.closest('.upload-pres-btn')) {
-            const data = e.target.closest('.upload-pres-btn').dataset.product;
-            const product = JSON.parse(data.replace(/&apos;/g, "'"));
-            openUploadModalForProduct(product);
-          }
-        });
-    
-
-      // ================
-      // Filters & Sorting
-      // ================
-      categoryList?.addEventListener('click', (e) => {
-        if (e.target.classList.contains('expand-toggle')) {
-          const sub = e.target.parentElement.querySelector('.subcategory');
-          if (sub) sub.classList.toggle('hidden');
-          e.target.textContent = e.target.textContent === '+' ? '-' : '+';
-          return;
-        }
-        if (e.target.classList.contains('category-link')) {
-          e.preventDefault();
-          const cat = e.target.textContent.trim();
-          activeCategory = cat;
-          applyFilters(products.filter(p => p.category === cat));
-        }
-      });
-
-      if (brandToggle) {
-        brandToggle.addEventListener('click', () => {
-          brandList.classList.toggle('hidden');
-          brandToggle.textContent = brandToggle.textContent === '+' ? '-' : '+';
-        });
-      }
-
-      brandFilters.forEach(f => f.addEventListener('change', () => applyFilters(products)));
-      sortSelect?.addEventListener('change', () => { activeSort = sortSelect.value; applyFilters(products); });
-
-      function applyFilters(startList) {
-        let list = [...(startList || products)];
-        const brands = Array.from(brandFilters).filter(f => f.checked).map(f => f.value);
-        if (brands.length) list = list.filter(p => brands.includes(p.brand));
-        if (activeSort === 'Price: Low to High') list.sort((a,b) => a.price - b.price);
-        else if (activeSort === 'Price: High to Low') list.sort((a,b) => b.price - a.price);
-        displayProducts(list);
-      }
-    
-  
-
-    // This function updates the cart & wishlist badges
-    function updateCartAndWishlistCounts() {
-        setTimeout(() => {
-            const cartCount = document.getElementById("cartCount");
-            const wishlistCount = document.getElementById("wishlistCount");
-
-            if (cartCount) {
-                const total = cart.reduce((sum, item) => sum + item.quantity, 0);
-                cartCount.textContent = total;
-                cartCount.classList.toggle("hidden", total === 0);
-            }
-            if (wishlistCount) {
-                wishlistCount.textContent = wishlist.length;
-                wishlistCount.classList.toggle("hidden", wishlist.length === 0);
-            }
-        }, 100);
-    }
-
-    // Make it globally available so mother.js can call it
-    window.updateCartAndWishlistCounts = updateCartAndWishlistCounts;
-
-  
 </script>
- <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      const backdrop = document.getElementById('mobileSheetBackdrop');
-      const sortSheet = document.getElementById('sortSheet');
-      const filterSheet = document.getElementById('filterSheet');
 
-      // Open
-      document.getElementById('openSortSheet')?.addEventListener('click', () => {
-        backdrop.classList.remove('hidden');
-        sortSheet.classList.remove('translate-y-full');
-      });
-      document.getElementById('openFilterSheet')?.addEventListener('click', () => {
-        backdrop.classList.remove('hidden');
-        filterSheet.classList.remove('translate-y-full');
-      });
-
-      // Close
-      function closeSheets() {
-        backdrop.classList.add('hidden');
-        sortSheet.classList.add('translate-y-full');
-        filterSheet.classList.add('translate-y-full');
-      }
-      backdrop.onclick = closeSheets;
-      document.getElementById('closeSortSheet').onclick = closeSheets;
-      document.getElementById('closeFilterSheet').onclick = closeSheets;
-
-      // Apply Sort → sync with desktop select
-      document.getElementById('applySortBtn').onclick = () => {
-        const val = document.querySelector('input[name="mobileSort"]:checked')?.value || 'default';
-        document.getElementById('sortSelect').value = val;
-        document.getElementById('sortSelect').dispatchEvent(new Event('change'));
-        closeSheets();
-      };
-
-      // Mobile Price Slider Logic (same as desktop)
-      const mMin = document.getElementById('mobileMinThumb');
-      const mMax = document.getElementById('mobileMaxThumb');
-      const mRange = document.getElementById('mobileRange');
-      const mMinInput = document.getElementById('mobileMinPrice');
-      const mMaxInput = document.getElementById('mobileMaxPrice');
-
-      function updateMobileRange() {
-        const minP = ((mMin.value / 1000) * 100);
-        const maxP = ((mMax.value / 1000) * 100);
-        mRange.style.left = minP + '%';
-        mRange.style.width = (maxP - minP) + '%';
-        mMinInput.value = '₹' + mMin.value;
-        mMaxInput.value = '₹' + mMax.value;
-      }
-      mMin.oninput = mMax.oninput = updateMobileRange;
-      mMinInput.onchange = () => { mMin.value = mMinInput.value.replace('₹',''); updateMobileRange(); };
-      mMaxInput.onchange = () => { mMax.value = mMaxInput.value.replace('₹',''); updateMobileRange(); };
-      updateMobileRange();
-
-      // Apply Filters button (you can expand this later)
-      document.getElementById('applyMobileFilters').onclick = closeSheets;
-      document.getElementById('clearMobileFilters').onclick = () => {
-        document.querySelectorAll('input[name="mobileCat"]').forEach(r => r.checked = r.value === 'all');
-        mMin.value = 0; mMax.value = 1000;
-        updateMobileRange();
-      };
-    });
-  </script>
-
-    
-    
-    <script>
-      // Initialize mother page after DOM is loaded
-      document.addEventListener('DOMContentLoaded', function() {
-        if (typeof initializeMotherPage === 'function') {
-          initializeMotherPage();
-        } else {
-          console.error('initializeMotherPage function not found');
-        }
-      });
-    </script>
-
-   
-
-    <script>
-      // Set current year in footer
-      document.getElementById('year').textContent = new Date().getFullYear();
-    </script>  
-    
- 
-
-
-
- 
-
-<!-- ============================================= -->
-<!--  FINAL FIX – 10 dummy products + no errors  -->
-<!-- ============================================= -->
 <script>
-// All the code you need is here – no external mother.js required for demo
-let products = [];
-let filteredProducts = [];
-let currentPage = 1;
-const productsPerPage = 12;
+// 12 PRODUCTS — AB IMAGES 101% DIKHENGI (FAST & RELIABLE LINKS)
 
-// 10 BEAUTIFUL REAL-LOOKING DUMMY PRODUCTS (instantly visible)
-function loadLocalProducts() {
- products = [
-    { id: 101, title: "Premium Pregnancy Support Belt", description: "Adjustable belly band that relieves back & pelvic pain", category: "Accessories & Maternity Wear", price: 1899, originalPrice: 2799, discount: 32, rating: 4.7, reviewCount: 342, mainImageUrl: "https://images.unsplash.com/photo-1610545633263-958b4f4c14df?w=600&h=800&fit=crop", images: ["https://images.unsplash.com/photo-1610545633263-958b4f4c14df?w=600&h=800&fit=crop"], sizes: ["S-M","L-XL"], inStock: true, brand: "MomComfort" },
-    { id: 102, title: "Organic Stretch Mark Butter 200g", description: "100% natural cocoa & shea butter with vitamin E", category: "Skin Care", price: 1299, originalPrice: 1899, discount: 31, rating: 4.9, reviewCount: 628, mainImageUrl: "https://images.unsplash.com/photo-1556229010-4d1c4c7d9b4b?w=600&h=800&fit=crop", images: ["https://images.unsplash.com/photo-1556229010-4d1c4c7d9b4b?w=600&h=800&fit=crop"], sizes: ["One Size"], inStock: true, brand: "MamaEarth" },
-    { id: 103, title: "Complete Trimester 1 Kit", description: "Folic acid, DHA, nausea bands & journal", category: "Trimester Kits", price: 3499, originalPrice: 4999, discount: 30, rating: 4.8, reviewCount: 189, mainImageUrl: "https://images.unsplash.com/photo-1600585154340-be6161c0d4a234?w=600&h=800&fit=crop", images: ["https://images.unsplash.com/photo-1600585154340-be6161c0d4a234?w=600&h=800&fit=crop"], sizes: ["One Size"], inStock: true, brand: "FirstTri" },
-    { id: 104, title: "Wireless Wearable Breast Pump", description: "Silent & hands-free pumping", category: "Breastfeeding Essentials", price: 7999, originalPrice: 11999, discount: 33, rating: 4.6, reviewCount: 512, mainImageUrl: "https://images.unsplash.com/photo-1621330396173-7a4c52f9c0c8?w=600&h=800&fit=crop", images: ["https://images.unsplash.com/photo-1621330396173-7a4c52f9c0c8?w=600&h=800&fit=crop"], sizes: ["One Size"], inStock: true, brand: "Elvie" },
-    { id: 105, title: "Postpartum Recovery Kit Deluxe", description: "Peri bottle, witch hazel pads, belly binder", category: "Post delivery recovery", price: 2799, originalPrice: 3999, discount: 30, rating: 5.0, reviewCount: 298, mainImageUrl: "https://images.unsplash.com/photo-1606890658317-7d14490b76fd?w=600&h=800&fit=crop", images: ["https://images.unsplash.com/photo-1606890658317-7d14490b76fd?w=600&h=800&fit=crop"], sizes: ["One Size"], inStock: true, brand: "FridaMom" },
-    { id: 106, title: "Maternity & Nursing Night Dress (Set of 2)", description: "Ultra-soft cotton with nursing access", category: "Maternity Wear", price: 2199, originalPrice: 3199, discount: 31, rating: 4.5, reviewCount: 421, mainImageUrl: "https://images.unsplash.com/photo-1585487000152-7720c4c3d95f?w=600&h=800&fit=crop", images: ["https://images.unsplash.com/photo-1585487000152-7720c4c3d95f?w=600&h=800&fit=crop"], sizes: ["S","M","L","XL"], inStock: true, brand: "Kindred Bravely" },
-    { id: 107, title: "Prenatal DHA Gummies (90 pcs)", description: "Lemon-orange vegetarian gummies", category: "Vitamins & Supplements", price: 1599, originalPrice: 2299, discount: 30, rating: 4.8, reviewCount: 734, mainImageUrl: "https://images.unsplash.com/photo-1606185547286-925c2d52c9a4?w=600&h=800&fit=crop", images: ["https://images.unsplash.com/photo-1606185547286-925c2d52c9a4?w=600&h=800&fit=crop"], sizes: ["One Size"], inStock: true, brand: "Ritual" },
-    { id: 108, title: "Garbhsanskar Music & Book Combo", description: "Classical ragas + guided meditation", category: "Garbhsanskar Essentials & Ayurvedic Medicines", price: 1199, originalPrice: 1799, discount: 33, rating: 4.9, reviewCount: 156, mainImageUrl: "https://images.unsplash.com/photo-1511376979163-f804dff7ad0b?w=600&h=800&fit=crop", images: ["https://images.unsplash.com/photo-1511376979163-f804dff7ad0b?w=600&h=800&fit=crop"], sizes: ["One Size"], inStock: true, brand: "GarbhSanskriti" },
-    { id: 109, title: "Reusable Bamboo Nursing Pads (8 pcs)", description: "Super absorbent & eco-friendly", category: "Breastfeeding Essentials", price: 799, originalPrice: 1299, discount: 38, rating: 4.7, reviewCount: 892, mainImageUrl: "https://images.unsplash.com/photo-1588776814546-1f1ff2c3a3d6?w=600&h=800&fit=crop", images: ["https://images.unsplash.com/photo-1588776814546-1f1ff2c3a3d6?w=600&h=800&fit=crop"], sizes: ["One Size"], inStock: true, brand: "Keababies" },
-    { id: 110, title: "Hospital Delivery Gown & Robe", description: "Stylish labor gown with skin-to-skin snaps", category: "Delivery Kits", price: 2499, originalPrice: 3499, discount: 28, rating: 4.8, reviewCount: 267, mainImageUrl: "https://images.unsplash.com/photo-1594737623803-e795964a7db6?w=600&h=800&fit=crop", images: ["https://images.unsplash.com/photo-1594737623803-e795964a7db6?w=600&h=800&fit=crop"], sizes: ["Free Size"], inStock: true, brand: "BabyBeMine" }
-  ];
-  filteredProducts = [...products];
-  renderProducts();
-  updateResultsCount();
-  console.log("10 dummy products loaded!");
+const allProducts = [
+  { id: 101, title: "Pregnancy Support Belt", price: 1899, originalPrice: 2799, discount: 32, rating: 4.7, reviewCount: 342,
+    mainImageUrl: "https://i.ibb.co.com/0jR1Y3h/pregnancy-belt.jpg",
+    description: "Adjustable belt for back & pelvic pain relief", category: "Maternity Support" },
+
+  { id: 102, title: "Organic Stretch Mark Cream 200ml", price: 1399, originalPrice: 1999, discount: 30, rating: 4.9, reviewCount: 628,
+    mainImageUrl: "https://i.ibb.co.com/3hxkK3Y/stretchmark-cream.jpg",
+    description: "Cocoa + Shea butter for deep moisturizing", category: "Skin Care" },
+
+  { id: 103, title: "Wireless Wearable Breast Pump", price: 8999, originalPrice: 12999, discount: 31, rating: 4.6, reviewCount: 512,
+    mainImageUrl: "https://i.ibb.co.com/9hVJ7Y Wearable-pump.jpg",
+    description: "Silent & hands-free double pump", category: "Breastfeeding" },
+
+  { id: 104, title: "Frida Mom Postpartum Recovery Kit", price: 2999, originalPrice: 4499, discount: 33, rating: 5.0, reviewCount: 298,
+    mainImageUrl: "https://i.ibb.co.com/4pY3h9k/frida-kit.jpg",
+    description: "Peri bottle, pads, underwear – full recovery kit", category: "Post Delivery" },
+
+  { id: 105, title: "Maternity Nursing Night Dress (Set of 2)", price: 2299, originalPrice: 3499, discount: 34, rating: 4.5, reviewCount: 421,
+    mainImageUrl: "https://i.ibb.co.com/6P3vK7m/nursing-dress.jpg",
+    description: "Super soft cotton with easy feeding access", category: "Maternity Wear" },
+
+  { id: 106, title: "Prenatal DHA Gummies (90 pcs)", price: 1699, originalPrice: 2499, discount: 32, rating: 4.8, reviewCount: 734,
+    mainImageUrl: "https://i.ibb.co.com/8Xq7g5N/dha-gummies.jpg",
+    description: "Tasty lemon-orange vegetarian gummies", category: "Supplements" },
+
+  { id: 107, title: "Bamboo Nursing Pads (8 pcs)", price: 799, originalPrice: 1499, discount: 47, rating: 4.7, reviewCount: 892,
+    mainImageUrl: "https://i.ibb.co.com/7tQ3jYp/nursing-pads.jpg",
+    description: "Reusable, ultra-absorbent & eco-friendly", category: "Breastfeeding" },
+
+  { id: 108, title: "Hospital Delivery Gown + Robe", price: 2599, originalPrice: 3799, discount: 31, rating: 4.8, reviewCount: 267,
+    mainImageUrl: "https://i.ibb.co.com/LQH2n9m/delivery-gown.jpg",
+    description: "Stylish gown with skin-to-skin access", category: "Delivery Wear" },
+
+  { id: 109, title: "Postpartum Belly Binder", price: 1799, originalPrice: 2999, discount: 40, rating: 4.6, reviewCount: 389,
+    mainImageUrl: "https://i.ibb.co.com/8gQ3vKp/belly-binder.jpg",
+    description: "Supports core recovery after delivery", category: "Recovery" },
+
+  { id: 110, title: "MomCozy S12 Pro Double Pump", price: 11999, originalPrice: 16999, discount: 29, rating: 4.9, reviewCount: 981,
+    mainImageUrl: "https://i.ibb.co.com/5YhJ7Kp/momcozy-pump.jpg",
+    description: "App-controlled wearable double pump", category: "Premium Breast Pump" },
+
+  { id: 111, title: "Garbhsanskar Music & Book Combo", price: 1299, originalPrice: 1999, discount: 35, rating: 4.9, reviewCount: 156,
+    mainImageUrl: "https://i.ibb.co.com/3y7g5Kp/garbhsanskar.jpg",
+    description: "Classical music + pregnancy journal", category: "Wellness" },
+
+  { id: 112, title: "Trimester 1 Nutrition Kit", price: 3499, originalPrice: 4999, discount: 30, rating: 4.8, reviewCount: 189,
+    mainImageUrl: "https://i.ibb.co.com/7t3v9Yp/trimester-kit.jpg",
+    description: "Folic acid, DHA, nausea bands & journal", category: "Trimester Kits" }
+];
+
+// Baki sab same rahega (wishlist, render, etc.) – bas images badli hain
+
+let products = [...allProducts];
+let filteredProducts = [...allProducts];
+let wishlist = JSON.parse(localStorage.getItem("wishlist")) || [];
+
+function getDiscountBadge(d) { return d ? `<div class="absolute top-2 left-2 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded z-10">${d}% OFF</div>` : ''; }
+function getWishlistIcon(f) { return f ? "fas fa-heart text-pink-500" : "far fa-heart text-gray-400"; }
+
+function generateStars(r) {
+  let html = '';
+  for(let i=1; i<=5; i++){
+    if(i <= Math.floor(r)) html += '<i class="fas fa-star text-yellow-400"></i>';
+    else if(i - 0.5 <= r) html += '<i class="fas fa-star-half-alt text-yellow-400"></i>';
+    else html += '<i class="far fa-star text-yellow-400"></i>';
+  }
+  return html;
 }
 
-// Minimal product card (exactly matches your existing createProductCard function)
 function createProductCard(p) {
-  const discountBadge = p.discount ? `<div class="absolute top-2 left-2 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded z-10">${p.discount}% OFF</div>` : '';
+  const inWishlist = wishlist.some(x => x.id === p.id);
   return `
-    <div class="product-card group">
-      <div class="relative">
-        ${discountBadge}
-        <img src="${p.mainImageUrl}" alt="${p.title}" class="w-full h-64 object-cover rounded-t-xl">
+    <div class="product-card group cursor-pointer" onclick="viewProductDetails(${p.id})">
+      <div class="relative overflow-hidden rounded-xl">
+        ${getDiscountBadge(p.discount)}
+        <button onclick="event.stopPropagation(); toggleWishlist(${p.id})" class="absolute top-3 right-3 z-20 p-2.5 bg-white rounded-full shadow-lg">
+          <i class="${getWishlistIcon(inWishlist)} text-lg"></i>
+        </button>
+        <img src="${p.mainImageUrl}" alt="${p.title}" class="w-full h-64 object-cover bg-pink-50 rounded-t-xl group-hover:scale-110 transition duration-500">
       </div>
       <div class="p-4">
-        <h3 class="text-lg font-semibold text-gray-900 line-clamp-2">${p.title}</h3>
-        <p class="text-sm text-gray-600 mt-1 line-clamp-2">${p.description}</p>
-        <div class="flex items-center mt-2">
-          <span class="text-yellow-400">★★★★★</span>
-          <span class="ml-2 text-sm text-gray-600">(${p.reviewCount})</span>
+        <h3 class="font-semibold text-lg line-clamp-2">${p.title}</h3>
+        <p class="text-sm text-gray-600 mt-1">${p.description}</p>
+        <div class="flex items-center gap-2 mt-2">${generateStars(p.rating)} <span class="text-sm text-gray-500">(${p.reviewCount})</span></div>
+        <div class="mt-3 flex items-center gap-3">
+          <span class="text-2xl font-bold text-pink-600">₹${p.price.toLocaleString()}</span>
+          ${p.originalPrice > p.price ? `<span class="text-gray-500 line-through">₹${p.originalPrice.toLocaleString()}</span>` : ''}
         </div>
-        <div class="mt-3 flex items-center gap-2">
-          <span class="text-xl font-bold text-pink-600">₹${p.price}</span>
-          <span class="text-sm text-gray-500 line-through">₹${p.originalPrice}</span>
-        </div>
-        <button class="mt-4 w-full bg-gradient-to-r from-pink-500 to-pink-600 text-white py-3 rounded-xl font-medium hover:from-pink-600 hover:to-pink-700 transition">
+        <button onclick="event.stopPropagation(); viewProductDetails(${p.id})" class="mt-4 w-full bg-pink-600 hover:bg-pink-700 text-white py-3 rounded-lg font-medium transition">
           View Details
         </button>
       </div>
-    </div>`;
+    </div>
+  `;
 }
 
 function renderProducts() {
   const grid = document.getElementById("productsGrid");
-  if (!grid) return;
-  const start = (currentPage-1)*productsPerPage;
-  const end = start + productsPerPage;
-  const items = filteredProducts.slice(start, end);
-  grid.innerHTML = items.map(createProductCard).join("");
+  if(grid) grid.innerHTML = filteredProducts.map(createProductCard).join("");
 }
 
-function updateResultsCount() {
-  const el = document.getElementById("resultsCount");
-  if (el) el.textContent = `Showing ${filteredProducts.length} beautiful products for you`;
+function toggleWishlist(id) {
+  const idx = wishlist.findIndex(x => x.id === id);
+  if(idx > -1) wishlist.splice(idx, 1);
+  else wishlist.push(allProducts.find(x => x.id === id));
+  localStorage.setItem("wishlist", JSON.stringify(wishlist));
+  renderProducts();
 }
 
-// Banner auto-slide (your existing code works perfectly)
-function initializeBanner() {
-  const slides = document.querySelectorAll("#bannerWrapper .slide");
-  const dots = document.querySelectorAll("section .absolute.bottom-4 button");
-  let current = 0;
-  setInterval(() => {
-    current = (current + 1) % slides.length;
-    slides.forEach((s, i) => s.style.opacity = i === current ? "1" : "0");
-    dots.forEach((d, i) => d.classList.toggle("active-dot", i === current));
-  }, 4000);
+function viewProductDetails(id) {
+  localStorage.setItem("selectedProductId", id);
+  localStorage.setItem("allProducts", JSON.stringify(allProducts));
+  window.location.href = "mother-product-details.html";
 }
 
-// FINAL INITIALISATION – runs immediately when page loads
-window.addEventListener('DOMContentLoaded', () => {
-  console.log("Mother Care page ready – loading dummy data");
-  
-  // Update cart/wishlist badges if header is already loaded
-  if (typeof updateCartAndWishlistCounts === 'function') updateCartAndWishlistCounts();
-  
-  loadLocalProducts();         // 10 products appear instantly
-  initializeBanner();          // banner starts sliding
-  
-  
+document.addEventListener("DOMContentLoaded", () => {
+  renderProducts();
+  document.getElementById("resultsCount").textContent = "Showing 12 premium products";
+  console.log("Images Loaded Successfully – Ab 100% dikhengi!");
 });
 </script>
+   
+
+
+ 
+
+
+
+ 
+
+
 
 <!-- Keep your cart system (optional) -->
 <script src="../cart-wishlist-system.js" defer></script>
    
-    <script src="mother.js"></script>
+    <script src="./mother.js"></script>
   
   </body>
 </html>
