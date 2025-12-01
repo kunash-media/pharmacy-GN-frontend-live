@@ -48,6 +48,40 @@
       font-family: 'Poppins', sans-serif;
     }
 
+    /* Back Arrow for Forms */
+    .form-back-arrow {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      width: 36px;
+      height: 36px;
+      background-color: #f0f0f0;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      z-index: 10;
+      transition: all 0.3s;
+      border: none;
+      font-size: 16px;
+      color: #555;
+    }
+
+    .form-back-arrow:hover {
+      background-color: #56DFCF;
+      color: white;
+      transform: scale(1.1);
+    }
+
+    .sign-in-container .form-back-arrow {
+      left: 20px;
+    }
+
+    .sign-up-container .form-back-arrow {
+      left: 20px;
+    }
+
     .form-container {
       position: absolute;
       top: 0;
@@ -112,6 +146,7 @@
       flex-direction: column;
       text-align: center;
       width: 100%;
+      position: relative;
     }
 
     /* SIGN-IN FORM SPECIFIC STYLES */
@@ -494,6 +529,14 @@
       .sign-in-container form {
         padding: 25px 40px; /* Adjusted */
       }
+      
+      .form-back-arrow {
+        top: 15px;
+        left: 15px;
+        width: 32px;
+        height: 32px;
+        font-size: 14px;
+      }
     }
 
     @media (max-width: 768px) {
@@ -550,6 +593,11 @@
         font-size: 22px; /* Adjusted */
         margin-bottom: 12px;
       }
+      
+      .form-back-arrow {
+        top: 10px;
+        left: 10px;
+      }
     }
     
     @media (max-width: 480px) {
@@ -587,6 +635,14 @@
         padding: 11px;
         font-size: 14px;
       }
+      
+      .form-back-arrow {
+        top: 8px;
+        left: 8px;
+        width: 30px;
+        height: 30px;
+        font-size: 13px;
+      }
     }
   </style>
 </head>
@@ -595,6 +651,10 @@
     <div class="container" id="container">
       <!-- Sign Up Form -->
       <div class="form-container sign-up-container">
+        <!-- Back Arrow -->
+        <button class="form-back-arrow" id="backFromSignup">
+          <i class="fas fa-arrow-left"></i>
+        </button>
         <form id="signupForm">
           <h1>Create Account</h1>
           
@@ -700,6 +760,10 @@
 
       <!-- Sign In Form -->
       <div class="form-container sign-in-container">
+        <!-- Back Arrow -->
+        <button class="form-back-arrow" id="backFromSignin">
+          <i class="fas fa-arrow-left"></i>
+        </button>
         <form id="signinForm">
           <h1>Welcome Back!</h1>
           
@@ -764,6 +828,8 @@
     const signUpButton = document.getElementById('signUp');
     const signInButton = document.getElementById('signIn');
     const switchToSignup = document.getElementById('switchToSignup');
+    const backFromSignin = document.getElementById('backFromSignin');
+    const backFromSignup = document.getElementById('backFromSignup');
     
     // Password toggle buttons
     const toggleLoginPassword = document.getElementById('toggleLoginPassword');
@@ -783,6 +849,23 @@
     signInButton.addEventListener('click', () => {
       container.classList.remove("right-panel-active");
     });
+    
+    // Back arrow functionality
+    if (backFromSignin) {
+      backFromSignin.addEventListener('click', (e) => {
+        e.preventDefault();
+        // If on sign-in form, go back to overlay (center position)
+        container.classList.remove("right-panel-active");
+      });
+    }
+    
+    if (backFromSignup) {
+      backFromSignup.addEventListener('click', (e) => {
+        e.preventDefault();
+        // If on sign-up form, go back to overlay (center position)
+        container.classList.remove("right-panel-active");
+      });
+    }
     
     // Additional signup link in signin form
     if (switchToSignup) {
@@ -1073,6 +1156,31 @@
       
       // Set remember me as checked by default for demo
       document.getElementById('rememberMe').checked = true;
+      
+      // Hide back arrows when in center position (overlay visible)
+      const updateArrowVisibility = () => {
+        const isCentered = !container.classList.contains("right-panel-active");
+        if (backFromSignin) {
+          backFromSignin.style.display = isCentered ? 'none' : 'flex';
+        }
+        if (backFromSignup) {
+          backFromSignup.style.display = 'none'; // Hide on signup form since overlay is hidden
+        }
+      };
+      
+      // Initial update
+      updateArrowVisibility();
+      
+      // Update on panel switch
+      const observer = new MutationObserver(function(mutations) {
+        mutations.forEach(function(mutation) {
+          if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
+            updateArrowVisibility();
+          }
+        });
+      });
+      
+      observer.observe(container, { attributes: true });
     });
   </script>
 </body>
