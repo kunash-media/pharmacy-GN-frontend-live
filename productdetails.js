@@ -231,7 +231,7 @@ function initCartButtons() {
             addToCart(currentProduct);
 
             // Change button to "Go to Bag" after adding
-            addBtn.textContent = 'Go to Bag';
+            addBtn.textContent = 'Added';
             addBtn.classList.remove('bg-pharmeasy-green', 'hover:bg-green-700');
             addBtn.classList.add('bg-orange-500', 'hover:bg-orange-600');
             addBtn.onclick = () => window.location.href = '/cart.html';
