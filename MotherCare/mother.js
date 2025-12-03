@@ -157,7 +157,7 @@ function createProductCard(p) {
         <img src="${p.mainImageUrl}" alt="${p.title}"
              class="w-full h-full object-contain p-5 transition-transform duration-500 group-hover:scale-110">
 
-        ${p.discount ? `<div class="absolute top-2 left-2 bg-pink-600 text-white text-xs font-bold px-2 py-1 rounded">${p.discount}% OFF</div>` : ''}
+        ${p.discount ? `<div class="absolute top-2 left-2 bg-[#F5AFAF] text-white text-xs font-bold px-2 py-1 rounded">${p.discount}% OFF</div>` : ''}
 
         <button onclick="event.stopPropagation(); toggleWishlist(${p.id})"
                 class="absolute top-2 right-2 w-9 h-9 bg-white rounded-full shadow-lg flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity z-10">
@@ -178,7 +178,7 @@ function createProductCard(p) {
         </div>
 
         <button onclick="event.stopPropagation(); addToCart(${p.id})"
-                class="mt-3 w-full bg-pink-600 hover:bg-pink-700 text-white font-medium text-sm py-2.5 rounded-lg transition">
+                class="mt-3 w-full bg-[#E0A8A8] hover:bg-[#] text-white font-medium text-sm py-2.5 rounded-lg transition">
           Add to Cart
         </button>
       </div>
@@ -211,7 +211,7 @@ function renderPagination() {
   for (let i = 1; i <= totalPages; i++) {
     const btn = document.createElement("button");
     btn.textContent = i;
-    btn.className = `px-4 py-2 rounded border mx-1 ${i === currentPage ? 'bg-pink-600 text-white' : 'bg-blue text-pink-600'}`;
+    btn.className = `px-4 py-2 rounded border mx-1 ${i === currentPage ? 'bg-[#9A3F3F] text-white' : 'bg-blue text-pink-600'}`;
     btn.onclick = () => { currentPage = i; renderProducts(); };
     container.appendChild(btn);
   }
