@@ -30,6 +30,10 @@
 
       .in-stock { color: #10B981; font-weight: 600; }
 
+      #mainImage{
+        height: 50%;
+      }
+
       @media (max-width: 640px) {
         .product-image { height: 250px; }
         .add-to-cart, .add-to-wishlist { width: 100%; margin-bottom: 0.75rem; }
@@ -55,6 +59,25 @@
               <p>Loading image...</p>
             </div>
           </div>
+
+          <!-- THUMBNAILS - Add this right after <div id="mainImage"> -->
+<div class="mt-4 grid grid-cols-5 gap-3">
+  <div class="thumbnail cursor-pointer border-2 border-transparent rounded-lg overflow-hidden hover:border-blue-500 transition">
+    <img src="" alt="thumb1" class="w-full h-24 object-contain bg-gray-50">
+  </div>
+  <div class="thumbnail cursor-pointer border-2 border-transparent rounded-lg overflow-hidden hover:border-blue-500 transition">
+    <img src="" alt="thumb2" class="w-full h-24 object-contain bg-gray-50">
+  </div>
+  <div class="thumbnail cursor-pointer border-2 border-transparent rounded-lg overflow-hidden hover:border-blue-500 transition">
+    <img src="" alt="thumb3" class="w-full h-24 object-contain bg-gray-50">
+  </div>
+  <div class="thumbnail cursor-pointer border-2 border-transparent rounded-lg overflow-hidden hover:border-blue-500 transition">
+    <img src="" alt="thumb4" class="w-full h-24 object-contain bg-gray-50">
+  </div>
+  <div class="thumbnail cursor-pointer border-2 border-transparent rounded-lg overflow-hidden hover:border-blue-500 transition">
+    <img src="" alt="thumb5" class="w-full h-24 object-contain bg-gray-50">
+  </div>
+</div>
         </div>
 
         <div>

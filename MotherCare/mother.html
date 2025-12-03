@@ -1,175 +1,147 @@
-
-
 <!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>
-      Mother Care & Maternity - Premium Products for Expecting Mothers
-    </title>
+    <title>Mother Care & Maternity - Premium Products for Expecting Mothers</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
-    />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
     <link rel="stylesheet" href="./mother.css" />
-      <link rel="stylesheet" href="../Header/header.css">
-      <link rel="stylesheet" href="../Footer/footer.css">
-      
-       
-        <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          colors: {
-            primary: '#36C2CE',
-            secondary: '#0ea5e9',
-            accent: '#10b981',
-            dark: '#1e293b',
+    <link rel="stylesheet" href="../Header/header.css">
+    <link rel="stylesheet" href="../Footer/footer.css">
+    
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              primary: '#36C2CE',
+              secondary: '#0ea5e9',
+              accent: '#10b981',
+              dark: '#1e293b',
+            }
           }
         }
       }
-    }
-  </script>
+    </script>
 
-  <style>
-  /* Hide footer only on mobile & tablet (≤1024px) */
-  @media (max-width: 1024px) {
-    #footer-placeholder {
-      display: none !important;
-    }
-  }
-</style>
     <style>
-      /* ==========================
-   General Hover Effects
-========================== */
+      /* Hide footer only on mobile & tablet (≤1024px) */
+      @media (max-width: 1024px) {
+        #footer-placeholder {
+          display: none !important;
+        }
+      }
+      @media (max-width: 1023px) {
+        body { padding-bottom: 90px !important; }
+      }
+
+      /* General Hover Effects */
       .product-card:hover {
         transform: translateY(-6px);
         transition: transform 0.3s ease, box-shadow 0.3s ease;
         box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
       }
-
       .image-zoom:hover {
         transform: scale(1.05);
         transition: transform 0.3s ease;
       }
+      .sub-level-1:not(.hidden) ~ .flex > i,
+      .sub-level-2:not(.hidden) ~ .flex > i,
+      [sub-level-1]:not(.hidden) ~ .flex > i,
+      [sub-level-2]:not(.hidden) ~ .flex > i {
+        transform: rotate(180deg) !important;
+      }
+      @media (min-width: 1024px) {
+        .sub-level-1 { display: block !important; }
+      }
 
-      
+      /* Dual Thumb Price Slider Styling */
+       .price-slider-container h4 {
+        font-size: 16px;
+        font-weight: 600;
+        color: #831843;
+        margin-bottom: 16px;
+      }
+      .slider-wrapper {
+        position: relative;
+        height: 6px;
+        background: #fce7f3;
+        border-radius: 4px;
+        margin: 40px 10px 30px;
+      }
+      .slider-fill {
+        position: absolute;
+        height: 100%;
+        background: linear-gradient(90deg, #f9a8d4, #ec4899);
+        border-radius: 4px;
+        top: 0;
+      }
+      input[type="range"] {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 100%;
+        background: transparent;
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 100%;
+        margin: 0;
+        pointer-events: none;
+      }
+      input[type="range"]::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        height: 24px;
+        width: 24px;
+        border-radius: 50%;
+        background: #ec4899;
+        border: 4px solid white;
+        cursor: pointer;
+        pointer-events: all;
+        box-shadow: 0 4px 12px rgba(236, 72, 153, 0.4);
+      }
+      input[type="range"]::-moz-range-thumb {
+        height: 24px;
+        width: 24px;
+        border-radius: 50%;
+        background: #ec4899;
+        border: 4px solid white;
+        cursor: pointer;
+        pointer-events: all;
+        box-shadow: 0 4px 12px rgba(236, 72, 153, 0.4);
+        border: none;
+      }
+      .price-values {
+        display: flex;
+        justify-content: space-between;
+        font-weight: 600;
+        color: #9f1239;
+        font-size: 14px;
+        padding: 0 10px;
+      }
 
-  /* Rotate chevron when sub-menu is open */
-    .sub-level-1:not(.hidden) ~ .flex > i,
-    .sub-level-2:not(.hidden) ~ .flex > i,
-    [sub-level-1]:not(.hidden) ~ .flex > i,
-    [sub-level-2]:not(.hidden) ~ .flex > i {
-      transform: rotate(180deg) !important;
-    }
-    @media (min-width: 1024px) {
-      .sub-level-1 { display: block !important; }
-    }
-    @media (max-width: 1023px) {
-      body { padding-bottom: 90px !important; }
-    }
-
-    /* Dual Thumb Price Slider Styling */
-    .price-slider-container h4 {
-    font-size: 16px;
-    font-weight: 600;
-    color: #831843;
-    margin-bottom: 16px;
-  }
-
-  .slider-wrapper {
-    position: relative;
-    height: 6px;
-    background: #fce7f3;
-    border-radius: 4px;
-    margin: 40px 10px 30px;
-  }
-
-  .slider-fill {
-    position: absolute;
-    height: 100%;
-    background: linear-gradient(90deg, #f9a8d4, #ec4899);
-    border-radius: 4px;
-    top: 0;
-  }
-
-  input[type="range"] {
-    -webkit-appearance: none;
-    appearance: none;
-    width: 100%;
-    background: transparent;
-    position: absolute;
-    top: 0;
-    left: 0;
-    height: 100%;
-    margin: 0;
-    pointer-events: none;
-  }
-
-  input[type="range"]::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    height: 24px;
-    width: 24px;
-    border-radius: 50%;
-    background: #ec4899;
-    border: 4px solid white;
-    cursor: pointer;
-    pointer-events: all;
-    box-shadow: 0 4px 12px rgba(236, 72, 153, 0.4);
-  }
-
-  input[type="range"]::-moz-range-thumb {
-    height: 24px;
-    width: 24px;
-    border-radius: 50%;
-    background: #ec4899;
-    border: 4px solid white;
-    cursor: pointer;
-    pointer-events: all;
-    box-shadow: 0 4px 12px rgba(236, 72, 153, 0.4);
-    border: none;
-  }
-
-  .price-values {
-    display: flex;
-    justify-content: space-between;
-    font-weight: 600;
-    color: #9f1239;
-    font-size: 14px;
-    padding: 0 10px;
-  }
-      /* ==========================
-   Product Card
-========================== */
+      /* Product Card */
       .product-card {
         display: flex;
         flex-direction: column;
         justify-content: space-between;
-        width: 280px; /* wider card */
-        min-height: 360px; /* balanced height */
+        width: 280px;
+        min-height: 360px;
         background: #fff;
-        border: 1px solid #f9a8d4; /* pink border */
-        border-radius: 16px; /* smooth rounded edges */
+        border: 1px solid #f9a8d4;
+        border-radius: 16px;
         overflow: hidden;
         margin: 0;
         cursor: pointer;
         transition: transform 0.3s ease, box-shadow 0.3s ease;
       }
-
-      /* Card Image */
-      .product-card img,
-      .product-image {
+      .product-card img, .product-image {
         width: 100%;
         height: 250px;
-        object-fit: contain; /* ensures full image visible */
-        background: #fdf2f8; /* soft pink background for empty space */
+        object-fit: contain;
+        background: #fdf2f8;
         padding: 0.5rem;
       }
-
-      /* Card Content */
       .product-card .content {
         padding: 1rem;
         flex-grow: 1;
@@ -177,23 +149,15 @@
         flex-direction: column;
         justify-content: space-between;
       }
-
-      /* Text Content */
       .text-content {
         display: flex;
         flex-direction: column;
-        gap: 0.5rem; /* Consistent spacing between text elements */
+        gap: 0.5rem;
       }
-
-      /* Left-align text */
-      .text-content h3,
-      .text-content p,
-      .text-content .flex {
+      .text-content h3, .text-content p, .text-content .flex {
         text-align: left;
-        margin-bottom: 0; /* Reset margins for consistency */
+        margin-bottom: 0;
       }
-
-      /* Button Container */
       .button-container {
         display: flex;
         justify-content: center;
@@ -202,609 +166,412 @@
         gap: 0.5rem;
         flex-wrap: wrap;
       }
-
-      /* View Details Button Only */
       .view-details {
-        padding: 0.6rem 1.5rem; /* more padding */
-        font-size: 0.95rem; /* slightly larger text */
-        font-weight: 400; /* bold for contrast */
-        border-radius: 25px; /* pill shape */
-        background: linear-gradient(
-          135deg,
-          #ffe4ec,
-          #f9a8d4
-        ); /* baby pink gradient */
-        color: #485468; /* dark font */
-        border: 1px solid #f9a8d4; /* pink border */
+        padding: 0.6rem 1.5rem;
+        font-size: 0.95rem;
+        font-weight: 400;
+        border-radius: 25px;
+        background: linear-gradient(135deg, #ffe4ec, #f9a8d4);
+        color: #485468;
+        border: 1px solid #f9a8d4;
         transition: all 0.3s ease;
         flex: none;
-        min-width: 220px; /* wider button */
+        min-width: 220px;
         text-align: center;
       }
-
       .view-details:hover {
-        background: linear-gradient(
-          135deg,
-          #f9a8d4,
-          #fbcfe8
-        ); /* brighter pink gradient */
-        color: #111827; /* darker font on hover */
+        background: linear-gradient(135deg, #f9a8d4, #fbcfe8);
+        color: #111827;
       }
-
-      /* Animation*/
       @keyframes fade-in-up {
-        0% {
-          opacity: 0;
-          transform: translateY(20px);
-        }
-        100% {
-          opacity: 1;
-          transform: translateY(0);
-        }
+        0% { opacity: 0; transform: translateY(20px); }
+        100% { opacity: 1; transform: translateY(0); }
       }
-
-      .animate-fade-in-up {
-        animation: fade-in-up 1s ease forwards;
-      }
-
-      .delay-200 {
-        animation-delay: 0.2s;
-      }
-
-      /* Banner Navigation Dots*/
+      .animate-fade-in-up { animation: fade-in-up 1s ease forwards; }
+      .delay-200 { animation-delay: 0.2s; }
       .active-dot {
         width: 0.75rem;
         height: 0.75rem;
         opacity: 1 !important;
       }
-
-      /* Responsive Cards & Buttons */
       @media (max-width: 640px) {
-        .button-container {
-          flex-direction: column; /* Stack buttons on mobile */
-          align-items: center;
-        }
-
-        .view-details {
-          width: 100%; /* full width on mobile */
-          max-width: 250px; /* limit width */
-        }
-
-        .product-card {
-          width: 100%; /* full width for smaller screens */
-          min-height: auto;
-        }
+        .button-container { flex-direction: column; align-items: center; }
+        .view-details { width: 100%; max-width: 250px; }
+        .product-card { width: 100%; min-height: auto; }
       }
-
-      /* Sidebar background gradient for the categories section */
       .filter-sidebar {
-        background: linear-gradient(
-          135deg,
-          #ffe4ec,
-          #ffc7e6
-        ); /* baby pink gradient */
+        background: linear-gradient(135deg, #ffe4ec, #ffc7e6);
       }
-
-     
+      .banner-slide {
+        opacity: 0;
+        transition: opacity 1s ease;
+        position: absolute;
+        inset: 0;
+        background-size: cover;
+        background-position: center;
+      }
+      .banner-slide.active {
+        opacity: 1;
+      }
+      .banner-dot {
+        transition: all 0.3s;
+      }
+      .banner-dot.active {
+        width: 1rem;
+        height: 1rem;
+        background-color: white;
+      }
     </style>
-
-    
-    
   </head>
- <body class="bg-[#FFF2EF]">
-    
 
+  <body class="bg-[#FFF2EF]">
     <div id="header-placeholder"></div>
-    <!-- Main Content -->
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <!-- ✅ Auto Scrolling Banner with Dots -->
-      <section
-        class="mt-36 relative w-full h-[300px] sm:h-[350px] mb-6 overflow-hidden rounded-xl shadow-lg"
-      >
-        <!-- Slides wrapper -->
-        <div id="bannerWrapper" class="w-full h-full relative">
-          <!-- Slide 1 -->
-          <div
-            class="absolute inset-0 w-full h-full bg-cover bg-center transition-opacity duration-1000 opacity-100 slide"
-            style="background-image: url('../Images/IMG/banner1.png')"
-          >
-            <!-- <div class="absolute inset-0 bg-white/20"></div> -->
-            <div
-              class="relative z-10 flex flex-col items-center justify-center h-full text-center text-white px-4"
-            >
-              <!-- <h2
-                class="text-2xl sm:text-3xl text-gray-600 font-bold animate-fade-in-up"
-              >
-                Mother Care & Maternity
-              </h2> -->
-              <!-- <p
-                class="mt-2 text-gray-600 text-sm sm:text-base max-w-xl animate-fade-in-up delay-200"
-              >
-                Comfort and confidence through every stage of motherhood.
-              </p> -->
-            </div>
-          </div>
 
-          <!-- Slide 2 -->
-          <div
-            class="absolute inset-0 w-full h-full bg-cover bg-center transition-opacity duration-1000 opacity-0 slide"
-            style="
-              background-image: url('../Images/IMG/banner2.png');
-            "
-          >
-            <!-- <div class="absolute inset-0 bg-white/40"></div> -->
-            <div
-              class="relative z-10 flex flex-col items-center justify-center h-full text-center text-white px-4"
-            >
-              <!-- <h2 class="text-2xl sm:text-3xl font-bold text-gray-600 animate-fade-in-up">
-                Because Motherhood Has Many Moods
-              </h2>
-              <p
-                class="mt-2 text-sm text-gray-600 sm:text-base max-w-xl animate-fade-in-up delay-200"
-              >
-                Soft wear, soothing care, and joyful essentials to match every stage and feeling.
-              </p> -->
-            </div>
-          </div>
+   
+      <!-- Banner -->
+      <section class="relative w-full h-[320px] md:h-[420px] mt- md:mt-32 mx-auto max-w-7xl rounded-2xl overflow-hidden shadow-2xl">
+    <div id="bannerWrapper" class="relative w-full h-full mt-12">
+      <div class="banner-slide active" style="background-image: url('../Images/IMG/banner1.png')"></div>
+      <div class="banner-slide" style="background-image: url('../Images/IMG/banner2.png')"></div>
+      <div class="banner-slide" style="background-image: url('../Images/IMG/banner3.png')"></div>
+    </div>
+    <div class="absolute bottom-5 left-1/2 -translate-x-1/2 flex gap-3 z-10">
+      <button class="banner-dot w-3 h-3 rounded-full bg-white/70 active"></button>
+      <button class="banner-dot w-3 h-3 rounded-full bg-white/50"></button>
+      <button class="banner-dot w-3 h-3 rounded-full bg-white/50"></button>
+    </div>
+  </section>
 
-          <!-- Slide 3 -->
-          <div
-            class="absolute inset-0 w-full h-full bg-cover bg-center transition-opacity duration-1000 opacity-0 slide"
-            style="
-              background-image: url('../Images/IMG/banner3.png');
-            "
-          >
-            <!-- <div class="absolute inset-0 bg-black/40"></div> -->
-            <div
-              class="relative z-10 flex flex-col items-center justify-center h-full text-center text-white px-4"
-            >
-              <!-- <h2 class="text-2xl sm:text-3xl font-bold animate-fade-in-up">
-                Caring for Mothers
-              </h2>
-              <p
-                class="mt-2 text-sm sm:text-base max-w-xl animate-fade-in-up delay-200"
-              >
-                Essentials to make your journey stress-free and joyful.
-              </p> -->
-            </div>
-          </div>
-        </div>
+       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8"></div>
 
-        <!-- ✅ Navigation Dots -->
-        <div
-          class="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2 z-20"
-        >
-          <button
-            class="w-3 h-3 rounded-full bg-white opacity-70 active-dot transition-all duration-300"
-          ></button>
-          <button
-            class="w-3 h-3 rounded-full bg-white/50 hover:opacity-80 transition-all duration-300"
-          ></button>
-          <button
-            class="w-3 h-3 rounded-full bg-white/50 hover:opacity-80 transition-all duration-300"
-          ></button>
-        </div>
-      </section>
+      <!-- Desktop filter + Products -->
+      <div class="flex flex-col lg:flex-row gap-8">
 
-     
+      <aside id="filterSidebar" class="hidden lg:block lg:w-80 bg-pink-200 ml-6 rounded-2xl shadow-xl p-6 sticky top-24 h-fit">
+        <form id="filterForm" class="space-y-8">
 
-      <!-- desktop filter -->
-    <div class="flex flex-col lg:flex-row gap-8 mt-8">
-      <!-- Sidebar Filters (Desktop) -->
-      <aside id="filterSidebar" class="hidden lg:block lg:w-80 bg-[#FFE8DB] rounded-lg shadow-lg border p-6">
-        <form class="space-y-8">
           <!-- Categories -->
-          <div class="border-b border-gray-200 pb-7">
-            <div class="flex items-center justify-between cursor-pointer select-none"
-                 onclick="this.nextElementSibling.classList.toggle('hidden'); this.querySelector('i').classList.toggle('rotate-180')">
-              <h3 class="text-sm font-bold text-gray-800 uppercase tracking-wider">Categories</h3>
-              <i class="fas fa-chevron-down text-gray-500 transition-transform duration-200"></i>
+          <div class="border-b pb-6">
+            <div class="flex justify-between cursor-pointer select-none" onclick="this.nextElementSibling.classList.toggle('hidden'); this.querySelector('i').classList.toggle('rotate-180')">
+              <h3 class="font-bold text-lg">Categories</h3>
+              <i class="fas fa-chevron-down transition-transform"></i>
             </div>
-            <div class="mt-5 space-y-3 hidden">
-
-              <!-- all categories -->
+            <div class="mt-5 space-y-3">
               <label class="flex items-center text-sm cursor-pointer">
-        <input type="radio" name="category" class="w-4 h-4 text-primary rounded border-gray-300 focus:ring-primary" checked>
-        <span class="ml-3 text-gray-700">All categories</span>
-      </label>
+                <input type="radio" name="category" value="all" class="w-4 h-4 text-primary rounded border-gray-300 focus:ring-primary" checked>
+                <span class="ml-3 text-gray-700">All categories</span>
+              </label>
 
-      <!-- Numismatics -->
-      <div>
-        <div class="flex items-center justify-between cursor-pointer py-2"
-             onclick="event.stopPropagation(); this.nextElementSibling.classList.toggle('hidden'); this.querySelector('i').classList.toggle('rotate-180')">
-          <label class="flex items-center text-sm cursor-pointer">
+              <!-- Antenatal or Pregnancy Care -->
+              <div>
+                <div class="flex items-center justify-between cursor-pointer py-2" onclick="event.stopPropagation(); this.nextElementSibling.classList.toggle('hidden'); this.querySelector('i').classList.toggle('rotate-180')">
+                  <label class="flex items-center text-sm cursor-pointer">
+                    <span class="ml-3 text-gray-700 font-medium">Antenatal or Pregnancy Care</span>
+                  </label>
+                  <i class="fas fa-chevron-down text-xs text-gray-500 transition-transform duration-200"></i>
+                </div>
+                <div class="ml-8 mt-2 space-y-2 hidden">
+                  <label class="flex items-center text-sm">
+                    <input type="radio" name="category" value="Test Kits" class="w-4 h-4 text-primary rounded">
+                    <span class="ml-3 text-gray-600">Test Kits</span>
+                  </label>
+                  <label class="flex items-center text-sm">
+                    <input type="radio" name="category" value="Skin Care" class="w-4 h-4 text-primary rounded">
+                    <span class="ml-3 text-gray-600">Skin Care</span>
+                  </label>
+                  <label class="flex items-center text-sm">
+                    <input type="radio" name="category" value="Vitamins & Supplements" class="w-4 h-4 text-primary rounded">
+                    <span class="ml-3 text-gray-600">Vitamins & Supplements</span>
+                  </label>
+                  <label class="flex items-center text-sm">
+                    <input type="radio" name="category" value="Personal Care & Hygiene" class="w-4 h-4 text-primary rounded">
+                    <span class="ml-3 text-gray-600">Personal Care & Hygiene</span>
+                  </label>
+                  <label class="flex items-center text-sm">
+                    <input type="radio" name="category" value="Trimester Kits" class="w-4 h-4 text-primary rounded">
+                    <span class="ml-3 text-gray-600">Trimester Kits</span>
+                  </label>
+                  <label class="flex items-center text-sm">
+                    <input type="radio" name="category" value="Garbhsanskar Essentials & Ayurvedic Medicines" class="w-4 h-4 text-primary rounded">
+                    <span class="ml-3 text-gray-600">Garbhsanskar Essentials & Ayurvedic Medicines</span>
+                  </label>
+                  <label class="flex items-center text-sm">
+                    <input type="radio" name="category" value="Accessories & Maternity Wear" class="w-4 h-4 text-primary rounded">
+                    <span class="ml-3 text-gray-600">Accessories & Maternity Wear</span>
+                  </label>
+                </div>
+              </div>
 
-            <span class="ml-3 text-gray-700 font-medium">Antenatal or Pregnancy Care</span>
-          </label>
-          <i class="fas fa-chevron-down text-xs text-gray-500 transition-transform duration-200"></i>
-        </div>
+              <!-- Delivery & PostPartum Care -->
+              <div>
+                <div class="flex items-center justify-between cursor-pointer py-2" onclick="event.stopPropagation(); this.nextElementSibling.classList.toggle('hidden'); this.querySelector('i').classList.toggle('rotate-180')">
+                  <label class="flex items-center text-sm cursor-pointer">
+                    <span class="ml-3 text-gray-700 font-medium">Delivery & PostPartum Care</span>
+                  </label>
+                  <i class="fas fa-chevron-down text-xs text-gray-500 transition-transform duration-200"></i>
+                </div>
+                <div class="ml-8 mt-2 space-y-2 hidden">
+                  <label class="flex items-center text-sm">
+                    <input type="radio" name="category" value="Delivery Kits" class="w-4 h-4 text-primary rounded">
+                    <span class="ml-3 text-gray-600">Delivery Kits</span>
+                  </label>
+                  <label class="flex items-center text-sm">
+                    <input type="radio" name="category" value="Post delivery recovery" class="w-4 h-4 text-primary rounded">
+                    <span class="ml-3 text-gray-600">Post delivery recovery</span>
+                  </label>
+                  <label class="flex items-center text-sm">
+                    <input type="radio" name="category" value="Breastfeeding Essentials" class="w-4 h-4 text-primary rounded">
+                    <span class="ml-3 text-gray-600">Breastfeeding Essentials</span>
+                  </label>
+                  <label class="flex items-center text-sm">
+                    <input type="radio" name="category" value="Postpartum Hygiene" class="w-4 h-4 text-primary rounded">
+                    <span class="ml-3 text-gray-600">Postpartum Hygiene</span>
+                  </label>
+                  <label class="flex items-center text-sm">
+                    <input type="radio" name="category" value="Postpartum Nutrition" class="w-4 h-4 text-primary rounded">
+                    <span class="ml-3 text-gray-600">Postpartum Nutrition</span>
+                  </label>
+                  <label class="flex items-center text-sm">
+                    <input type="radio" name="category" value="Pain & Healing Support" class="w-4 h-4 text-primary rounded">
+                    <span class="ml-3 text-gray-600">Pain & Healing Support</span>
+                  </label>
+                </div>
+              </div>
 
-         <div class="ml-8 mt-2 space-y-2 hidden">
-          <label class="flex items-center text-sm">
-            <input type="radio" name="category" class="w-4 h-4 text-primary rounded">
-            <span class="ml-3 text-gray-600">Test Kits</span>
-          </label>
-          <label class="flex items-center text-sm">
-            <input type="radio" name="category" class="w-4 h-4 text-primary rounded">
-            <span class="ml-3 text-gray-600">Skin Care</span>
-          </label>
-          <label class="flex items-center text-sm">
-            <input type="radio" name="category" class="w-4 h-4 text-primary rounded">
-            <span class="ml-3 text-gray-600">Vitamins & Supplements</span>
-          </label>
-          <label class="flex items-center text-sm">
-            <input type="radio" name="category" class="w-4 h-4 text-primary rounded">
-            <span class="ml-3 text-gray-600">Personal Care & Hygiene</span>
-          </label>
-          <label class="flex items-center text-sm">
-            <input type="radio" name="category" class="w-4 h-4 text-primary rounded">
-            <span class="ml-3 text-gray-600">Trimester Kits</span>
-          </label>
-          <label class="flex items-center text-sm">
-            <input type="radio" name="category" class="w-6 h-6 text-primary rounded">
-            <span class="ml-3 text-gray-600">Garbhsanskar Essentials & Ayurvedic Medicines</span>
-          </label>
-          <label class="flex items-center text-sm">
-            <input type="radio" name="category" class="w-4 h-4 text-primary rounded">
-            <span class="ml-3 text-gray-600">Accessories & Maternity Wear</span>
-          </label>
-        </div>
-      </div>
-      <!-- Bonistics -->
-      <div>
-        <div class="flex items-center justify-between cursor-pointer py-2"
-             onclick="event.stopPropagation(); this.nextElementSibling.classList.toggle('hidden'); this.querySelector('i').classList.toggle('rotate-180')">
-          <label class="flex items-center text-sm cursor-pointer">
-           
-            <span class="ml-3 text-gray-700 font-medium">Delivery & PostPartum Care</span>
-          </label>
-          <i class="fas fa-chevron-down text-xs text-gray-500 transition-transform duration-200"></i>
-        </div>
-        <div class="ml-8 mt-2 space-y-2 hidden">
-          <label class="flex items-center text-sm">
-            <input type="radio" name="category" class="w-4 h-4 text-primary rounded">
-            <span class="ml-3 text-gray-600">Delivery Kits</span>
-          </label>
-          <label class="flex items-center text-sm">
-            <input type="radio" name="category" class="w-4 h-4 text-primary rounded">
-            <span class="ml-3 text-gray-600">Post delivery recovery</span>
-          </label>
-          <label class="flex items-center text-sm">
-            <input type="radio" name="category" class="w-4 h-4 text-primary rounded">
-            <span class="ml-3 text-gray-600">Breastfeeding Essentials</span>
-          </label>
-          <label class="flex items-center text-sm">
-            <input type="radio" name="category" class="w-4 h-4 text-primary rounded">
-            <span class="ml-3 text-gray-600">Postpartum Hygiene</span>
-          </label>
-          <label class="flex items-center text-sm">
-            <input type="radio" name="category" class="w-4 h-4 text-primary rounded">
-            <span class="ml-3 text-gray-600">Postpartum Nutrition</span>
-          </label>
-          <label class="flex items-center text-sm">
-            <input type="radio" name="category" class="w-4 h-4 text-primary rounded">
-            <span class="ml-3 text-gray-600">Pain & Healing Support</span>
-          </label>
-        </div>
-        </div>
-        <!-- womens health -->
-        <div>
-            <div class="flex items-center justify-between cursor-pointer py-2"
-             onclick="event.stopPropagation(); this.nextElementSibling.classList.toggle('hidden'); this.querySelector('i').classList.toggle('rotate-180')">
-          <label class="flex items-center text-sm cursor-pointer">
-           
-            <span class="ml-3 text-gray-700 font-medium">Women's Health</span>
-          </label>
-          <i class="fas fa-chevron-down text-xs text-gray-500 transition-transform duration-200"></i>
-        </div>
-        <div class="ml-8 mt-2 space-y-2 hidden">
-          <label class="flex items-center text-sm">
-            <input type="radio" name="category" class="w-4 h-4 text-primary rounded">
-            <span class="ml-3 text-gray-600">Uterine Health</span>
-          </label>
-          <label class="flex items-center text-sm">
-            <input type="radio" name="category" class="w-4 h-4 text-primary rounded">
-            <span class="ml-3 text-gray-600">Menstruation Essentials and Hygiene</span>
-          </label>
-          <label class="flex items-center text-sm">
-            <input type="radio" name="category" class="w-4 h-4 text-primary rounded">
-            <span class="ml-3 text-gray-600">PCOS and Preconception</span>
-          </label>
-          <label class="flex items-center text-sm">
-            <input type="radio" name="category" class="w-4 h-4 text-primary rounded">
-            <span class="ml-3 text-gray-600">MenoPausal Medicines</span>
-          </label>
-         
-         
-        </div>
-        </div>
+              <!-- Women's Health -->
+              <div>
+                <div class="flex items-center justify-between cursor-pointer py-2" onclick="event.stopPropagation(); this.nextElementSibling.classList.toggle('hidden'); this.querySelector('i').classList.toggle('rotate-180')">
+                  <label class="flex items-center text-sm cursor-pointer">
+                    <span class="ml-3 text-gray-700 font-medium">Women's Health</span>
+                  </label>
+                  <i class="fas fa-chevron-down text-xs text-gray-500 transition-transform duration-200"></i>
+                </div>
+                <div class="ml-8 mt-2 space-y-2 hidden">
+                  <label class="flex items-center text-sm">
+                    <input type="radio" name="category" value="Uterine Health" class="w-4 h-4 text-primary rounded">
+                    <span class="ml-3 text-gray-600">Uterine Health</span>
+                  </label>
+                  <label class="flex items-center text-sm">
+                    <input type="radio" name="category" value="Menstruation Essentials and Hygiene" class="w-4 h-4 text-primary rounded">
+                    <span class="ml-3 text-gray-600">Menstruation Essentials and Hygiene</span>
+                  </label>
+                  <label class="flex items-center text-sm">
+                    <input type="radio" name="category" value="PCOS and Preconception" class="w-4 h-4 text-primary rounded">
+                    <span class="ml-3 text-gray-600">PCOS and Preconception</span>
+                  </label>
+                  <label class="flex items-center text-sm">
+                    <input type="radio" name="category" value="MenoPausal Medicines" class="w-4 h-4 text-primary rounded">
+                    <span class="ml-3 text-gray-600">MenoPausal Medicines</span>
+                  </label>
+                </div>
+              </div>
             </div>
           </div>
 
-          <!-- Price Range Slider (0 - 10,000) -->
+          <!-- Price Range -->
           <div class="price-slider-container">
-  <h4>Price Range</h4>
-  <div class="slider-wrapper">
-    <div class="slider-fill" id="desktopFill"></div>
-    <input type="range" min="0" max="10000" value="0"    id="minThumb">
-    <input type="range" min="0" max="10000" value="10000" id="maxThumb">
-  </div>
-  <div class="price-values">
-    <span id="minValue">₹0</span>
-    <span id="maxValue">₹10,000</span>
-  </div>
-</div>
-
-           <!-- ====================== BRANDS ====================== -->
-  <div class="border-b border-gray-200 pb-7">
-    <div class="flex items-center justify-between cursor-pointer select-none"
-         onclick="this.nextElementSibling.classList.toggle('hidden'); this.querySelector('i').classList.toggle('rotate-180')">
-      <h3 class="text-sm font-bold text-gray-800 uppercase tracking-wider">Brands</h3>
-      <i class="fas fa-chevron-down text-gray-500 transition-transform duration-200"></i>
-    </div>
-    <div class="mt-5 space-y-3 hidden">
-      <label class="flex items-center text-sm">
-        <input type="radio" name="brand" class="w-4 h-4 text-primary rounded" checked>
-        <span class="ml-3 text-gray-700">All Brands</span>
-      </label>
-      <label class="flex items-center text-sm">
-        <input type="radio" name="brand" class="w-4 h-4 text-primary rounded">
-        <span class="ml-3 text-gray-700">Heritage Auctions</span>
-      </label>
-      <label class="flex items-center text-sm">
-        <input type="radio" name="brand" class="w-4 h-4 text-primary rounded">
-        <span class="ml-3 text-gray-700">NumisBids</span>
-      </label>
-    </div>
-  </div>
-
-           <!-- ====================== DISCOUNT ====================== -->
-  <div class="border-b border-gray-200 pb-7">
-    <div class="flex items-center justify-between cursor-pointer select-none"
-         onclick="this.nextElementSibling.classList.toggle('hidden'); this.querySelector('i').classList.toggle('rotate-180')">
-      <h3 class="text-sm font-bold text-gray-800 uppercase tracking-wider">Discount</h3>
-      <i class="fas fa-chevron-down text-gray-500 transition-transform duration-200"></i>
-    </div>
-    <div class="mt-5 space-y-3 hidden">
-      <label class="flex items-center text-sm">
-        <input type="radio" name="discount" class="w-4 h-4 text-primary rounded" checked>
-        <span class="ml-3 text-gray-700">All Products</span>
-      </label>
-      <label class="flex items-center text-sm">
-        <input type="radio" name="discount" class="w-4 h-4 text-primary rounded">
-        <span class="ml-3 text-gray-700">10% or more</span>
-      </label>
-      <label class="flex items-center text-sm">
-        <input type="radio" name="discount" class="w-4 h-4 text-primary rounded">
-        <span class="ml-3 text-gray-700">25% or more</span>
-      </label>
-      <label class="flex items-center text-sm">
-        <input type="radio" name="discount" class="w-4 h-4 text-primary rounded">
-        <span class="ml-3 text-gray-700">50% or more</span>
-      </label>
-    </div>
-  </div>
-
-          <!-- ====================== SHOW RESULTS BUTTON ====================== -->
-  <button type="submit" class="w-full bg-[#8FABD4] hover:bg-[#4A70A9] text-white font-semibold py-3.5 rounded-md transition-all duration-200 shadow-sm">
-    Show results
-  </button>
-
-  </form>
-</aside>
-
-<!-- Main Products Area -->
-      <main class="flex-1">
-        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4">
-          <div>
-            <h2 id="categoryTitle" class="text-2xl font-bold text-gray-900">All Products</h2>
-            <p id="resultsCount" class="text-gray-600 mt-1">Showing all products</p>
+            <h4 class="font-bold text-lg mb-4">Price Range</h4>
+            <div class="slider-wrapper">
+              <div class="slider-fill" id="desktopFill"></div>
+              <input type="range" min="0" max="10000" value="0" id="minThumb">
+              <input type="range" min="0" max="10000" value="10000" id="maxThumb">
+            </div>
+            <div class="price-values text-sm">
+              <span id="minValue">₹0</span>
+              <span id="maxValue">₹10,000</span>
+            </div>
           </div>
-          <select id="sortSelect" class="hidden sm:block border border-gray-300 rounded-lg px-5 py-3 text-sm focus:ring-2 focus:ring-pink-500 focus:outline-none cursor-pointer">
-            <option value="default">Sort by: Featured</option>
+
+          <!-- Brands -->
+          <div class="border-b pb-6">
+            <div class="flex justify-between cursor-pointer select-none" onclick="this.nextElementSibling.classList.toggle('hidden'); this.querySelector('i').classList.toggle('rotate-180')">
+              <h3 class="font-bold text-lg">Brands</h3>
+              <i class="fas fa-chevron-down transition-transform"></i>
+            </div>
+            <div class="mt-4 space-y-3 hidden">
+              <label class="flex items-center"><input type="radio" name="brand" value="all" checked class="w-5 h-5 text-pink-600"> <span class="ml-3">All Brands</span></label>
+              <label class="flex items-center"><input type="radio" name="brand" value="BabyHug" class="w-5 h-5 text-pink-600"> <span class="ml-3">BabyHug</span></label>
+              <label class="flex items-center"><input type="radio" name="brand" value="Pampers" class="w-5 h-5 text-pink-600"> <span class="ml-3">Pampers</span></label>
+              <label class="flex items-center"><input type="radio" name="brand" value="Himalaya" class="w-5 h-5 text-pink-600"> <span class="ml-3">Himalaya</span></label>
+              <label class="flex items-center"><input type="radio" name="brand" value="MeeMee" class="w-5 h-5 text-pink-600"> <span class="ml-3">Mee Mee</span></label>
+              <label class="flex items-center"><input type="radio" name="brand" value="Frida Mom" class="w-5 h-5 text-pink-600"> <span class="ml-3">Frida Mom</span></label>
+              <label class="flex items-center"><input type="radio" name="brand" value="MomCozy" class="w-5 h-5 text-pink-600"> <span class="ml-3">MomCozy</span></label>
+              <label class="flex items-center"><input type="radio" name="brand" value="The Moms Co" class="w-5 h-5 text-pink-600"> <span class="ml-3">The Moms Co</span></label>
+              <label class="flex items-center"><input type="radio" name="brand" value="Clearblue" class="w-5 h-5 text-pink-600"> <span class="ml-3">Clearblue</span></label>
+              <label class="flex items-center"><input type="radio" name="brand" value="Stayfree" class="w-5 h-5 text-pink-600"> <span class="ml-3">Stayfree</span></label>
+              <label class="flex items-center"><input type="radio" name="brand" value="Tucks" class="w-5 h-5 text-pink-600"> <span class="ml-3">Tucks</span></label>
+              <label class="flex items-center"><input type="radio" name="brand" value="Natracare" class="w-5 h-5 text-pink-600"> <span class="ml-3">Natracare</span></label>
+              <label class="flex items-center"><input type="radio" name="brand" value="Myo-Inositol" class="w-5 h-5 text-pink-600"> <span class="ml-3">Myo-Inositol</span></label>
+              <label class="flex items-center"><input type="radio" name="brand" value="Black Cohosh" class="w-5 h-5 text-pink-600"> <span class="ml-3">Black Cohosh</span></label>
+            </div>
+          </div>
+
+          <!-- Discount -->
+          <div>
+            <div class="flex justify-between cursor-pointer select-none" onclick="this.nextElementSibling.classList.toggle('hidden'); this.querySelector('i').classList.toggle('rotate-180')">
+              <h3 class="font-bold text-lg">Discount</h3>
+              <i class="fas fa-chevron-down transition-transform"></i>
+            </div>
+            <div class="mt-4 space-y-3 hidden">
+              <label class="flex items-center"><input type="radio" name="discount" value="0" checked class="w-5 h-5 text-pink-600"> <span class="ml-3">All Products</span></label>
+              <label class="flex items-center"><input type="radio" name="discount" value="10" class="w-5 h-5 text-pink-600"> <span class="ml-3">10% or more</span></label>
+              <label class="flex items-center"><input type="radio" name="discount" value="25" class="w-5 h-5 text-pink-600"> <span class="ml-3">25% or more</span></label>
+              <label class="flex items-center"><input type="radio" name="discount" value="50" class="w-5 h-5 text-pink-600"> <span class="ml-3">50% or more</span></label>
+            </div>
+          </div>
+
+          <button type="button" id="applyDesktopFilters" class="w-full bg-pink-600 hover:bg-pink-700 text-white font-bold py-4 rounded-xl transition">
+            Apply Filters
+          </button>
+        </form>
+      </aside>
+
+      <!-- Main Content -->
+      <main class="flex-1">
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8">
+          <div>
+            <h2 class="text-3xl font-bold text-gray-800">All Mother Products</h2>
+            <p id="resultsCount" class="text-gray-600 mt-2">Loading...</p>
+          </div>
+          <select id="sortSelect" class="mt-4 md:mt-0 mr-6 cursor-pointer border rounded-xl px-6 py-3 text-sm font-medium">
+            <option value="default">Sort: Featured</option>
             <option value="price-low">Price: Low to High</option>
             <option value="price-high">Price: High to Low</option>
-            <option value="rating">Customer Rating</option>
+            <option value="rating">Rating</option>
             <option value="newest">Newest First</option>
           </select>
         </div>
 
-        <div id="productsGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          <!-- Products loaded via JS -->
-        </div>
+        <div id="productsGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8"></div>
+        <div id="pagination" class="flex justify-center mt-12 gap-3"></div>
       </main>
     </div>
+    </div>
 
-   <!-- Mobile Bottom Bar -->
-     <div class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 px-4 py-3 flex gap-3 z-50 lg:hidden shadow-2xl">
-    <button id="openSortSheet" class="flex-1 bg-blue-500 text-white font-bold py-3.5 rounded-lg flex items-center justify-center gap-2 hover:bg-green-700 transition">
-      Sort
-    </button>
-    <button id="openFilterSheet" class="flex-1 bg-blue-500 text-white font-bold py-3.5 rounded-lg flex items-center justify-center gap-2 hover:bg-red-700 transition">
-      Filters
-    </button>
+      <!-- Mobile Bottom Bar -->
+  <div class="fixed bottom-0 left-0 right-0 bg-white border-t px-4 py-3 flex gap-4 z-50 lg:hidden shadow-2xl">
+    <button id="openSortSheet" class="flex-1 bg-gradient-to-r from-blue-600 to-blue-700 text-white font-bold py-4 rounded-xl">Sort</button>
+    <button id="openFilterSheet" class="flex-1 bg-gradient-to-r from-pink-600 to-pink-700 text-white font-bold py-4 rounded-xl">Filters</button>
   </div>
 
- <div id="filterSheet" class="fixed inset-x-0 bottom-0 bg-white rounded-t-3xl shadow-2xl max-h-[90vh] overflow-y-auto z-50 transform translate-y-full transition-transform duration-300">
-      <div class="sticky top-0 bg-white border-b px-6 py-4 flex justify-between items-center">
-        <h3 class="text-lg font-bold">Filters</h3>
-        <button id="closeFilterSheet" class="text-2xl">X</button>
-      </div>
-      <div class="p-6 space-y-8">
+    <!-- Mobile Filter Sheet -->
+  <div id="filterSheet" class="fixed inset-x-0 bottom-0 bg-white rounded-t-3xl shadow-2xl max-h-[90vh] overflow-y-auto z-50 translate-y-full transition-transform duration-300">
+    <div class="sticky top-0 bg-white border-b px-6 py-4 flex justify-between items-center">
+      <h3 class="text-xl font-bold">Filters</h3>
+      <button id="closeFilterSheet" class="text-2xl">X</button>
+    </div>
+    <div class="p-6 space-y-8">
+      <!-- Copy the same categories, price, brands, discount as desktop -->
+      <form id="mobileFilterForm" class="space-y-8">
+        <!-- Categories (same as desktop) -->
+        <div class="border-b pb-6">
+          <div class="flex justify-between cursor-pointer select-none" onclick="this.nextElementSibling.classList.toggle('hidden'); this.querySelector('i').classList.toggle('rotate-180')">
+            <h3 class="font-bold text-lg">Categories</h3>
+            <i class="fas fa-chevron-down transition-transform"></i>
+          </div>
+          <div class="mt-5 space-y-3">
+            <label class="flex items-center text-sm cursor-pointer">
+              <input type="radio" name="category" value="all" class="w-4 h-4 text-primary rounded border-gray-300 focus:ring-primary" checked>
+              <span class="ml-3 text-gray-700">All categories</span>
+            </label>
 
-
-        <!-- Mobile Price Slider (inside filter sheet) -->
-
-<div class="price-slider-container">
-  <h4 class="font-semibold mb-4">Price Range</h4>
-  <div class="slider-wrapper">
-    <div class="slider-fill" id="mobileFill"></div>
-    <input type="range" min="0" max="10000" value="0"    id="mobileMinThumb">
-    <input type="range" min="0" max="10000" value="10000" id="mobileMaxThumb">
-  </div>
-  <div class="price-values">
-    <span id="mobileMinValue">₹0</span>
-    <span id="mobileMaxValue">₹10,000</span>
-  </div>
-</div>
-   <div class="flex gap-3 pt-6 border-t">
-          <button id="clearMobileFilters" class="flex-1 border border-pink-600 text-pink-600 py-3 rounded-lg font-bold">Clear All</button>
-          <button id="applyMobileFilters" class="flex-1 bg-pink-600 text-white py-3 rounded-lg font-bold">Apply Filters</button>
+            <!-- Antenatal or Pregnancy Care -->
+            <div>
+              <div class="flex items-center justify-between cursor-pointer py-2" onclick="event.stopPropagation(); this.nextElementSibling.classList.toggle('hidden'); this.querySelector('i').classList.toggle('rotate-180')">
+                <label class="flex items-center text-sm cursor-pointer">
+                  <span class="ml-3 text-gray-700 font-medium">Antenatal or Pregnancy Care</span>
+                </label>
+                <i class="fas fa-chevron-down text-xs text-gray-500 transition-transform duration-200"></i>
+              </div>
+              <div class="ml-8 mt-2 space-y-2 hidden">
+                <!-- same sub radios as desktop -->
+                <label class="flex items-center text-sm">
+                  <input type="radio" name="category" value="Test Kits" class="w-4 h-4 text-primary rounded">
+                  <span class="ml-3 text-gray-600">Test Kits</span>
+                </label>
+                <!-- ... all others ... -->
+              </div>
+            </div>
+            <!-- ... Delivery and Women's Health same ... -->
+          </div>
         </div>
+
+        <!-- Price Range (same) -->
+        <div class="price-slider-container">
+          <h4 class="font-bold text-lg mb-4">Price Range</h4>
+          <div class="slider-wrapper">
+            <div class="slider-fill" id="mobileFill"></div>
+            <input type="range" min="0" max="10000" value="0" id="mobileMinThumb">
+            <input type="range" min="0" max="10000" value="10000" id="mobileMaxThumb">
+          </div>
+          <div class="price-values text-sm">
+            <span id="mobileMinValue">₹0</span>
+            <span id="mobileMaxValue">₹10,000</span>
+          </div>
+        </div>
+
+        <!-- Brands (same) -->
+        <div class="border-b pb-6">
+          <div class="flex justify-between cursor-pointer select-none" onclick="this.nextElementSibling.classList.toggle('hidden'); this.querySelector('i').classList.toggle('rotate-180')">
+            <h3 class="font-bold text-lg">Brands</h3>
+            <i class="fas fa-chevron-down transition-transform"></i>
+          </div>
+          <div class="mt-4 space-y-3 hidden">
+            <!-- same as desktop -->
+          </div>
+        </div>
+
+        <!-- Discount (same) -->
+        <div>
+          <div class="flex justify-between cursor-pointer select-none" onclick="this.nextElementSibling.classList.toggle('hidden'); this.querySelector('i').classList.toggle('rotate-180')">
+            <h3 class="font-bold text-lg">Discount</h3>
+            <i class="fas fa-chevron-down transition-transform"></i>
+          </div>
+          <div class="mt-4 space-y-3 hidden">
+            <!-- same as desktop -->
+          </div>
+        </div>
+      </form>
+
+      <div class="flex gap-4 pt-6">
+        <button id="clearMobileFilters" class="flex-1 border-2 border-pink-600 text-pink-600 py-4 rounded-xl font-bold">Clear All</button>
+        <button id="applyMobileFilters" class="flex-1 bg-pink-600 text-white py-4 rounded-xl font-bold">Apply Filters</button>
       </div>
     </div>
+  </div>
 
-  <!-- ===================== BACKDROP ===================== -->
-  <div id="mobileSheetBackdrop" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden lg:hidden"></div>
-
-  <!-- ===================== SORT SHEET ===================== -->
-   <div id="sortSheet" class="fixed inset-x-0 bottom-0 bg-white rounded-t-3xl shadow-2xl max-h-[90vh] overflow-y-auto z-50 transform translate-y-full transition-transform duration-300">
-      <div class="sticky top-0 bg-white border-b px-6 py-4 flex justify-between items-center">
-        <h3 class="text-lg font-bold">Sort By</h3>
-        <button id="closeSortSheet" class="text-2xl">&times;</button>
-      </div>
-      <div class="p-6 space-y-4">
-        <label class="flex items-center p-3 hover:bg-gray-50 rounded-lg cursor-pointer">
-          <input type="radio" name="mobileSort" value="default" checked class="w-5 h-5 text-pink-600">
-          <span class="ml-4 font-medium">Featured</span>
-        </label>
-        <label class="flex items-center p-3 hover:bg-gray-50 rounded-lg cursor-pointer">
-          <input type="radio" name="mobileSort" value="price-low" class="w-5 h-5 text-pink-600">
-          <span class="ml-4 font-medium">Price: Low to High</span>
-        </label>
-        <label class="flex items-center p-3 hover:bg-gray-50 rounded-lg cursor-pointer">
-          <input type="radio" name="mobileSort" value="price-high" class="w-5 h-5 text-pink-600">
-          <span class="ml-4 font-medium">Price: High to Low</span>
-        </label>
-        <label class="flex items-center p-3 hover:bg-gray-50 rounded-lg cursor-pointer">
-          <input type="radio" name="mobileSort" value="rating" class="w-5 h-5 text-pink-600">
-          <span class="ml-4 font-medium">Customer Rating</span>
-        </label>
-        <label class="flex items-center p-3 hover:bg-gray-50 rounded-lg cursor-pointer">
-          <input type="radio" name="mobileSort" value="newest" class="w-5 h-5 text-pink-600">
-          <span class="ml-4 font-medium">Newest First</span>
-        </label>
-      </div>
-      <div class="p-4 border-t bg-white sticky bottom-0">
-        <button id="applySortBtn" class="w-full bg-pink-600 hover:bg-pink-700 text-white font-bold py-3.5 rounded-lg">
-          Apply Sort
-        </button>
-      </div>
+     <!-- Mobile Sort Sheet -->
+  <div id="sortSheet" class="fixed inset-x-0 bottom-0 bg-white rounded-t-3xl shadow-2xl z-50 translate-y-full transition-transform">
+    <div class="sticky top-0 bg-white border-b px-6 py-4 flex justify-between items-center">
+      <h3 class="text-xl font-bold">Sort By</h3>
+      <button id="closeSortSheet" class="text-2xl">X</button>
     </div>
+    <div class="p-6 space-y-4">
+      <label class="flex items-center p-4 bg-gray-50 rounded-xl cursor-pointer"><input type="radio" name="mobileSort" value="default" checked class="w-5 h-5 text-pink-600"> <span class="ml-4 font-medium">Featured</span></label>
+      <label class="flex items-center p-4 bg-gray-50 rounded-xl cursor-pointer"><input type="radio" name="mobileSort" value="price-low" class="w-5 h-5 text-pink-600"> <span class="ml-4 font-medium">Price: Low to High</span></label>
+      <label class="flex items-center p-4 bg-gray-50 rounded-xl cursor-pointer"><input type="radio" name="mobileSort" value="price-high" class="w-5 h-5 text-pink-600"> <span class="ml-4 font-medium">Price: High to Low</span></label>
+      <label class="flex items-center p-4 bg-gray-50 rounded-xl cursor-pointer"><input type="radio" name="mobileSort" value="rating" class="w-5 h-5 text-pink-600"> <span class="ml-4 font-medium">Customer Rating</span></label>
+      <label class="flex items-center p-4 bg-gray-50 rounded-xl cursor-pointer"><input type="radio" name="mobileSort" value="newest" class="w-5 h-5 text-pink-600"> <span class="ml-4 font-medium">Newest First</span></label>
+    </div>
+    <div class="p-4 bg-white border-t">
+      <button id="applySortBtn" class="w-full bg-pink-600 text-white font-bold py-4 rounded-xl">Apply Sort</button>
+    </div>
+  </div>
 
-
-
-        
-      </div>
+      <!-- Backdrop -->
+       <div id="mobileSheetBackdrop" class="fixed inset-0 bg-black/50 z-40 hidden"></div>
     
-
-    <!-- Mobile Filter Overlay -->
-    <div
-      id="filterOverlay"
-      class="fixed inset-0 bg-black bg-opacity-50 z-40 hidden lg:hidden"
-    ></div>
-
-    <!-- Cart Modal -->
-    <div
-      id="cartModal"
-      class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden"
-    >
-      <div class="flex items-center justify-center min-h-screen p-4">
-        <div
-          class="bg-white rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-hidden"
-        >
-          <!-- Cart Header -->
-          <div class="flex items-center justify-between p-6 border-b">
-            <h2 class="text-2xl font-bold text-gray-900">Shopping Cart</h2>
-            <button
-              id="closeCartModal"
-              class="text-gray-500 hover:text-gray-700"
-            >
-              <i class="fas fa-times text-xl"></i>
-            </button>
-          </div>
-
-          <!-- Cart Content -->
-          <div id="cartContent" class="p-6 overflow-y-auto max-h-96">
-            <!-- Cart items will be dynamically loaded here -->
-          </div>
-
-          <!-- Cart Footer -->
-          <div id="cartFooter" class="border-t p-6">
-            <div class="flex items-center justify-between mb-4">
-              <span class="text-lg font-semibold">Total: </span>
-              <span id="cartTotal" class="text-2xl font-bold text-pink-600"
-                >₹0.00</span
-              >
-            </div>
-            <div class="flex space-x-4">
-              <button
-                id="clearCart"
-                class="flex-1 bg-gray-200 text-gray-700 py-3 px-4 rounded-md hover:bg-gray-300 transition-colors"
-              >
-                Clear Cart
-              </button>
-              <button
-                id="checkoutBtn"
-                class="flex-1 bg-pink-600 text-white py-3 px-4 rounded-md hover:bg-pink-700 transition-colors"
-              >
-                Checkout
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Wishlist Modal -->
-    <div
-      id="wishlistModal"
-      class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden"
-    >
-      <div class="flex items-center justify-center min-h-screen p-4">
-        <div
-          class="bg-white rounded-lg shadow-xl max-w-4xl w-full max-h-[90vh] overflow-hidden"
-        >
-          <!-- Wishlist Header -->
-          <div class="flex items-center justify-between p-6 border-b">
-            <h2 class="text-2xl font-bold text-gray-900">My Wishlist</h2>
-            <button
-              id="closeWishlistModal"
-              class="text-gray-500 hover:text-gray-700"
-            >
-              <i class="fas fa-times text-xl"></i>
-            </button>
-          </div>
-
-          <!-- Wishlist Content -->
-          <div id="wishlistContent" class="p-6 overflow-y-auto max-h-96">
-            <!-- Wishlist items will be dynamically loaded here -->
-          </div>
-
-          <!-- Wishlist Footer -->
-          <div id="wishlistFooter" class="border-t p-6">
-            <button
-              id="clearWishlist"
-              class="bg-gray-200 text-gray-700 py-2 px-4 rounded-md hover:bg-gray-300 transition-colors"
-            >
-              Clear Wishlist
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-
 
     <div id="footer-placeholder"></div>
-    
-<script>
-    function loadHeader() {
-        fetch('../../Header/header.html')
+
+    <script>
+     function loadHeader() {
+        fetch('../Header/header.html')
             .then(r => { if (!r.ok) throw r; return r.text(); })
             .then(html => {
                 document.getElementById('header-placeholder').innerHTML = html;
                 const script = document.createElement('script');
-                script.src = '../../Header/header.js';
+                script.src = '../Header/header.js';
                 script.onload = () => console.log('Header JS loaded');
                 document.body.appendChild(script);
             })
@@ -812,7 +579,7 @@
     }
 
     function loadFooter() {
-        fetch('../../Footer/footer.html')
+        fetch('../Footer/footer.html')
             .then(r => { if (!r.ok) throw r; return r.text(); })
             .then(html => {
                 document.getElementById('footer-placeholder').innerHTML = html;
@@ -825,147 +592,12 @@
         loadFooter();
         // ... rest of your code
     });
-</script>
+  </script>
 
-<script>
-// 12 PRODUCTS — AB IMAGES 101% DIKHENGI (FAST & RELIABLE LINKS)
+   <script src="../cart-wishlist-system.js" defer></script>
 
-const allProducts = [
-  { id: 101, title: "Pregnancy Support Belt", price: 1899, originalPrice: 2799, discount: 32, rating: 4.7, reviewCount: 342,
-    mainImageUrl: "https://i.ibb.co.com/0jR1Y3h/pregnancy-belt.jpg",
-    description: "Adjustable belt for back & pelvic pain relief", category: "Maternity Support" },
-
-  { id: 102, title: "Organic Stretch Mark Cream 200ml", price: 1399, originalPrice: 1999, discount: 30, rating: 4.9, reviewCount: 628,
-    mainImageUrl: "https://i.ibb.co.com/3hxkK3Y/stretchmark-cream.jpg",
-    description: "Cocoa + Shea butter for deep moisturizing", category: "Skin Care" },
-
-  { id: 103, title: "Wireless Wearable Breast Pump", price: 8999, originalPrice: 12999, discount: 31, rating: 4.6, reviewCount: 512,
-    mainImageUrl: "https://i.ibb.co.com/9hVJ7Y Wearable-pump.jpg",
-    description: "Silent & hands-free double pump", category: "Breastfeeding" },
-
-  { id: 104, title: "Frida Mom Postpartum Recovery Kit", price: 2999, originalPrice: 4499, discount: 33, rating: 5.0, reviewCount: 298,
-    mainImageUrl: "https://i.ibb.co.com/4pY3h9k/frida-kit.jpg",
-    description: "Peri bottle, pads, underwear – full recovery kit", category: "Post Delivery" },
-
-  { id: 105, title: "Maternity Nursing Night Dress (Set of 2)", price: 2299, originalPrice: 3499, discount: 34, rating: 4.5, reviewCount: 421,
-    mainImageUrl: "https://i.ibb.co.com/6P3vK7m/nursing-dress.jpg",
-    description: "Super soft cotton with easy feeding access", category: "Maternity Wear" },
-
-  { id: 106, title: "Prenatal DHA Gummies (90 pcs)", price: 1699, originalPrice: 2499, discount: 32, rating: 4.8, reviewCount: 734,
-    mainImageUrl: "https://i.ibb.co.com/8Xq7g5N/dha-gummies.jpg",
-    description: "Tasty lemon-orange vegetarian gummies", category: "Supplements" },
-
-  { id: 107, title: "Bamboo Nursing Pads (8 pcs)", price: 799, originalPrice: 1499, discount: 47, rating: 4.7, reviewCount: 892,
-    mainImageUrl: "https://i.ibb.co.com/7tQ3jYp/nursing-pads.jpg",
-    description: "Reusable, ultra-absorbent & eco-friendly", category: "Breastfeeding" },
-
-  { id: 108, title: "Hospital Delivery Gown + Robe", price: 2599, originalPrice: 3799, discount: 31, rating: 4.8, reviewCount: 267,
-    mainImageUrl: "https://i.ibb.co.com/LQH2n9m/delivery-gown.jpg",
-    description: "Stylish gown with skin-to-skin access", category: "Delivery Wear" },
-
-  { id: 109, title: "Postpartum Belly Binder", price: 1799, originalPrice: 2999, discount: 40, rating: 4.6, reviewCount: 389,
-    mainImageUrl: "https://i.ibb.co.com/8gQ3vKp/belly-binder.jpg",
-    description: "Supports core recovery after delivery", category: "Recovery" },
-
-  { id: 110, title: "MomCozy S12 Pro Double Pump", price: 11999, originalPrice: 16999, discount: 29, rating: 4.9, reviewCount: 981,
-    mainImageUrl: "https://i.ibb.co.com/5YhJ7Kp/momcozy-pump.jpg",
-    description: "App-controlled wearable double pump", category: "Premium Breast Pump" },
-
-  { id: 111, title: "Garbhsanskar Music & Book Combo", price: 1299, originalPrice: 1999, discount: 35, rating: 4.9, reviewCount: 156,
-    mainImageUrl: "https://i.ibb.co.com/3y7g5Kp/garbhsanskar.jpg",
-    description: "Classical music + pregnancy journal", category: "Wellness" },
-
-  { id: 112, title: "Trimester 1 Nutrition Kit", price: 3499, originalPrice: 4999, discount: 30, rating: 4.8, reviewCount: 189,
-    mainImageUrl: "https://i.ibb.co.com/7t3v9Yp/trimester-kit.jpg",
-    description: "Folic acid, DHA, nausea bands & journal", category: "Trimester Kits" }
-];
-
-// Baki sab same rahega (wishlist, render, etc.) – bas images badli hain
-
-let products = [...allProducts];
-let filteredProducts = [...allProducts];
-let wishlist = JSON.parse(localStorage.getItem("wishlist")) || [];
-
-function getDiscountBadge(d) { return d ? `<div class="absolute top-2 left-2 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded z-10">${d}% OFF</div>` : ''; }
-function getWishlistIcon(f) { return f ? "fas fa-heart text-pink-500" : "far fa-heart text-gray-400"; }
-
-function generateStars(r) {
-  let html = '';
-  for(let i=1; i<=5; i++){
-    if(i <= Math.floor(r)) html += '<i class="fas fa-star text-yellow-400"></i>';
-    else if(i - 0.5 <= r) html += '<i class="fas fa-star-half-alt text-yellow-400"></i>';
-    else html += '<i class="far fa-star text-yellow-400"></i>';
-  }
-  return html;
-}
-
-function createProductCard(p) {
-  const inWishlist = wishlist.some(x => x.id === p.id);
-  return `
-    <div class="product-card group cursor-pointer" onclick="viewProductDetails(${p.id})">
-      <div class="relative overflow-hidden rounded-xl">
-        ${getDiscountBadge(p.discount)}
-        <button onclick="event.stopPropagation(); toggleWishlist(${p.id})" class="absolute top-3 right-3 z-20 p-2.5 bg-white rounded-full shadow-lg">
-          <i class="${getWishlistIcon(inWishlist)} text-lg"></i>
-        </button>
-        <img src="${p.mainImageUrl}" alt="${p.title}" class="w-full h-64 object-cover bg-pink-50 rounded-t-xl group-hover:scale-110 transition duration-500">
-      </div>
-      <div class="p-4">
-        <h3 class="font-semibold text-lg line-clamp-2">${p.title}</h3>
-        <p class="text-sm text-gray-600 mt-1">${p.description}</p>
-        <div class="flex items-center gap-2 mt-2">${generateStars(p.rating)} <span class="text-sm text-gray-500">(${p.reviewCount})</span></div>
-        <div class="mt-3 flex items-center gap-3">
-          <span class="text-2xl font-bold text-pink-600">₹${p.price.toLocaleString()}</span>
-          ${p.originalPrice > p.price ? `<span class="text-gray-500 line-through">₹${p.originalPrice.toLocaleString()}</span>` : ''}
-        </div>
-        <button onclick="event.stopPropagation(); viewProductDetails(${p.id})" class="mt-4 w-full bg-pink-600 hover:bg-pink-700 text-white py-3 rounded-lg font-medium transition">
-          View Details
-        </button>
-      </div>
-    </div>
-  `;
-}
-
-function renderProducts() {
-  const grid = document.getElementById("productsGrid");
-  if(grid) grid.innerHTML = filteredProducts.map(createProductCard).join("");
-}
-
-function toggleWishlist(id) {
-  const idx = wishlist.findIndex(x => x.id === id);
-  if(idx > -1) wishlist.splice(idx, 1);
-  else wishlist.push(allProducts.find(x => x.id === id));
-  localStorage.setItem("wishlist", JSON.stringify(wishlist));
-  renderProducts();
-}
-
-function viewProductDetails(id) {
-  localStorage.setItem("selectedProductId", id);
-  localStorage.setItem("allProducts", JSON.stringify(allProducts));
-  window.location.href = "mother-product-details.html";
-}
-
-document.addEventListener("DOMContentLoaded", () => {
-  renderProducts();
-  document.getElementById("resultsCount").textContent = "Showing 12 premium products";
-  console.log("Images Loaded Successfully – Ab 100% dikhengi!");
-});
-</script>
+    <!-- Scripts -->
+    <script src="./mother.js" defer></script>
    
-
-
- 
-
-
-
- 
-
-
-
-<!-- Keep your cart system (optional) -->
-<script src="../cart-wishlist-system.js" defer></script>
-   
-    <script src="./mother.js"></script>
-  
   </body>
 </html>

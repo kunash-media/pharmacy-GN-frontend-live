@@ -4,17 +4,38 @@ let selectedSize = "30";
 let quantity = 1;
 
 document.addEventListener('DOMContentLoaded', () => {
-    // Product data
-    const product = {
-        title: "Pampers Active Baby Diaper Pants - Large",
-        price: 899,
-        image: "https://via.placeholder.com/400x400/3B82F6/white?text=Pampers"
-    };
+    const stored = sessionStorage.getItem('currentProduct');
+    if (!stored) {
+        alert("Product not found!");
+        window.history.back();
+        return;
+    }
 
-    // Fill details
+    const product = JSON.parse(stored);
+    let quantity = 1;
+    let selectedSize = "";
+
+    // Optional: fallback image if not present
+    if (!product.image) {
+        product.image = `https://via.placeholder.com/500x500/EC4899/white?text=${encodeURIComponent(product.title.slice(0,2))}`;
+    }
+
+ // Fill basic info
     document.getElementById('productTitle').textContent = product.title;
     document.getElementById('productPrice').textContent = `₹${product.price}`;
-    document.getElementById('mainImage').innerHTML = `<img src="${product.image}" class="w-full h-full object-contain">`;
+    document.getElementById('productBrand').textContent = product.brand;
+    document.getElementById('productCategory').textContent = product.category.replace(/-/g, ' ').toUpperCase();
+    document.getElementById('productDescription').textContent = product.description || "No description available.";
+    document.getElementById('productRating').innerHTML = `★ ${product.rating} <span class="text-gray-500 text-sm">(1,200+ reviews)</span>`;
+
+    // Discount badge
+    if (product.discount > 0) {
+        const original = Math.round(product.price / (1 - product.discount / 100));
+        document.getElementById('originalPrice').textContent = `₹${original}`;
+        document.getElementById('discountBadge').textContent = `${product.discount}% OFF`;
+        document.getElementById('discountBadge').classList.remove('hidden');
+        document.getElementById('originalPrice').classList.remove('hidden');
+    }
 
     // Size selection
     document.querySelectorAll('.size-option').forEach(el => {
@@ -76,6 +97,43 @@ if (addToCartButton) {
                 el.style.display = totalItems > 0 ? 'inline-flex' : 'none';
             }
         });
+
+            // Main Image
+    document.getElementById('mainImage').innerHTML = `
+        <img id="mainProductImage" src="${product.image}" alt="${product.title}" 
+             class="w-full h-full object-contain rounded-lg hover:scale-105 transition duration-500">
+    `;
+
+    // SUB IMAGES (THUMBNAILS)
+    const thumbnails = [
+        product.image, // main image
+        "https://m.media-amazon.com/images/I/81extra1.jpg", // dummy
+        "https://m.media-amazon.com/images/I/81extra2.jpg",
+        "https://m.media-amazon.com/images/I/81extra3.jpg",
+        "https://m.media-amazon.com/images/I/81extra4.jpg"
+    ];
+
+    // Agar chahte ho har product ke apne thumbnails ho toh products array mein ek field add kar dena:
+    // thumbnails: ["url1", "url2", ...]
+    const finalThumbs = product.thumbnails || thumbnails;
+
+    const thumbContainers = document.querySelectorAll('.thumbnail img');
+    thumbContainers.forEach((img, index) => {
+        if (finalThumbs[index]) {
+            img.src = finalThumbs[index];
+            img.onclick = () => {
+                document.getElementById('mainProductImage').src = finalThumbs[index];
+                // Active border
+                document.querySelectorAll('.thumbnail').forEach(t => t.classList.remove('border-blue-500'));
+                img.parentElement.classList.add('border-blue-500');
+            };
+        }
+    });
+
+    // First thumbnail ko active kar do by default
+    if (thumbContainers[0]) {
+        thumbContainers[0].parentElement.classList.add('border-blue-500');
+    }
 
         // Optional: dispatch event so other scripts bhi update ho jaye
         window.dispatchEvent(new Event('cartUpdated'));

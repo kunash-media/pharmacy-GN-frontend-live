@@ -13,28 +13,221 @@
   const $ = id => document.getElementById(id);
 
   const loadProducts = () => {
-    products = [
-      {id:1, title:"Pampers Premium Diapers Pack", price:899, discount:30, category:"diapers-hygiene", brand:"Pampers", rating:4.5},
-      {id:4, title:"Mee Mee Gentle Wet Wipes", price:199, discount:33, category:"diapers-hygiene", brand:"MeeMee", rating:4.2},
-      {id:7, title:"Pampers Baby Wipes", price:299, discount:15, category:"diapers-hygiene", brand:"Pampers", rating:4.5},
-      {id:10, title:"MeeMee Diaper Bag", price:1299, discount:25, category:"diapers-hygiene", brand:"MeeMee", rating:4.6},
-      {id:12, title:"Pampers Pants Diapers", price:1499, discount:28, category:"diapers-hygiene", brand:"Pampers", rating:4.7},
-      
-      {id:2, title:"Himalaya Baby Shampoo", price:349, discount:25, category:"bath-body", brand:"Himalaya", rating:4.3},
-      {id:5, title:"Johnson's Baby Oil 200ml", price:449, discount:20, category:"bath-body", brand:"Johnsons", rating:4.6},
-      {id:8, title:"Himalaya Baby Lotion", price:275, discount:10, category:"bath-body", brand:"Himalaya", rating:4.1},
-      {id:11, title:"Himalaya Baby Powder", price:180, discount:50, category:"bath-body", brand:"Himalaya", rating:4.8},
-      {id:14, title:"Himalaya Baby Soap Pack", price:120, discount:20, category:"bath-body", brand:"Himalaya", rating:4.2},
-      
-      {id:3, title:"Babyhug Feeding Bottle Set", price:599, discount:0, category:"nutrition-feeding", brand:"BabyHug", rating:4.7},
-      {id:6, title:"Chicco Pacifier Orthodontic", price:399, discount:0, category:"nutrition-feeding", brand:"Chicco", rating:4.4},
-      {id:9, title:"BabyHug Sipper Bottle", price:450, discount:12, category:"nutrition-feeding", brand:"BabyHug", rating:4.3},
-      {id:15, title:"BabyHug Feeding Bowl Set", price:350, discount:18, category:"nutrition-feeding", brand:"BabyHug", rating:4.5},
-      {id:16, title:"Chicco Baby Spoon Set", price:250, discount:0, category:"nutrition-feeding", brand:"Chicco", rating:4.2},
-      
-      {id:13, title:"BabyHug Gift Hamper", price:2999, discount:15, category:"gift-hampers", brand:"BabyHug", rating:4.9},
-      {id:17, title:"Himalaya Baby Care Combo", price:1499, discount:30, category:"gift-hampers", brand:"Himalaya", rating:4.6},
-    ];
+    // baby.js - FULL FINAL VERSION (17 Products – No Missing)
+
+products = [
+  // ==================== DIAPERS & HYGIENE ====================
+  {
+    id: 1,
+    title: "Pampers Premium Care Pants - Newborn (78 Count)",
+    price: 1299,
+    discount: 35,
+    rating: 4.6,
+    brand: "Pampers",
+    category: "diapers-hygiene",
+    image: "https://m.media-amazon.com/images/I/71N3kZZyZAL._SL1500_.jpg",
+    description: "India's softest diaper with magic gel. 12-hour leak-lock. Wetness indicator. Ideal for 0-5 kg babies.",
+    availableSizes: ["Newborn", "Small (S)", "Medium (M)", "Large (L)", "XL", "XXL"]
+  },
+  {
+    id: 4,
+    title: "Huggies Wonder Pants - Large (64 Count)",
+    price: 999,
+    discount: 30,
+    rating: 4.7,
+    brand: "Huggies",
+    category: "diapers-hygiene",
+    image: "https://m.media-amazon.com/images/I/81fF2n7kMGL._SL1500_.jpg",
+    description: "Bubble bed technology. Double leak guard. Overnight protection up to 12 hours.",
+    availableSizes: ["Small (S)", "Medium (M)", "Large (L)", "XL", "XXL"]
+  },
+  {
+    id: 7,
+    title: "MamyPoko Pants Extra Absorb - XL (56 Count)",
+    price: 1099,
+    discount: 28,
+    rating: 4.5,
+    brand: "MamyPoko",
+    category: "diapers-hygiene",
+    image: "https://m.media-amazon.com/images/I/81X5o2d2KZL._SL1500_.jpg",
+    description: "Crisscross sheet absorbs 12 hours. Prevents redness. Easy to wear & remove.",
+    availableSizes: ["Small (S)", "Medium (M)", "Large (L)", "XL", "XXL", "XXXL"]
+  },
+  {
+    id: 10,
+    title: "Pampers Fresh Clean Baby Wipes (72 × 4 Packs)",
+    price: 399,
+    discount: 20,
+    rating: 4.5,
+    brand: "Pampers",
+    category: "diapers-hygiene",
+    image: "https://m.media-amazon.com/images/I/81s7K9m1JUL._SL1500_.jpg",
+    description: "Gentle on skin. Refreshing scent. Alcohol-free. Dermatologically tested.",
+    availableSizes: ["72×2 Pack", "72×4 Pack", "72×6 Pack", "72×8 Pack"]
+  },
+  {
+    id: 12,
+    title: "Mee Mee Caring Baby Wet Wipes (72 × 3)",
+    price: 249,
+    discount: 35,
+    rating: 4.3,
+    brand: "MeeMee",
+    category: "diapers-hygiene",
+    image: "https://m.media-amazon.com/images/I/81Q4QbA8kUL._SL1500_.jpg",
+    description: "99% purified water. Aloe vera & vitamin E. Extra thick. Paraben free.",
+    availableSizes: ["72×1 Pack", "72×3 Pack", "72×5 Pack"]
+  },
+
+  // ==================== BATH & BODY ====================
+  {
+    id: 2,
+    title: "Himalaya Gentle Baby Shampoo 400ml",
+    price: 349,
+    discount: 25,
+    rating: 4.3,
+    brand: "Himalaya",
+    category: "bath-body",
+    image: "https://m.media-amazon.com/images/I/71pIlb8rKUL._SL1500_.jpg",
+    description: "Tear-free formula. Natural proteins. Chickpea & fenugreek extract. No parabens.",
+    availableSizes: ["200 ml", "400 ml", "700 ml"]
+  },
+  {
+    id: 5,
+    title: "Johnson's Baby Oil 500ml",
+    price: 499,
+    discount: 22,
+    rating: 4.6,
+    brand: "Johnson's",
+    category: "bath-body",
+    image: "https://m.media-amazon.com/images/I/61o2hL8T6GL._SL1000_.jpg",
+    description: "Locks in 10x more moisture. Clinically proven mild. Ideal for baby massage.",
+    availableSizes: ["100 ml", "200 ml", "500 ml"]
+  },
+  {
+    id: 8,
+    title: "Himalaya Baby Lotion 400ml",
+    price: 299,
+    discount: 15,
+    rating: 4.4,
+    brand: "Himalaya",
+    category: "bath-body",
+    image: "https://m.media-amazon.com/images/I/71dXt+2fKLL._SL1500_.jpg",
+    description: "24-hour moisturization. Almond & olive oil. Hypoallergenic. No mineral oil.",
+    availableSizes: ["200 ml", "400 ml", "700 ml"]
+  },
+  {
+    id: 11,
+    title: "Himalaya Baby Powder 400g",
+    price: 285,
+    discount: 18,
+    rating: 4.5,
+    brand: "Himalaya",
+    category: "bath-body",
+    image: "https://m.media-amazon.com/images/I/71a9Z7Z7Z7L._SL1500_.jpg",
+    description: "Keeps baby fresh & cool. Yashada bhasma protects skin. No talc.",
+    availableSizes: ["100g", "200g", "400g"]
+  },
+  {
+    id: 14,
+    title: "Sebamed Baby Cleansing Bar 100g (Pack of 3)",
+    price: 699,
+    discount: 12,
+    rating: 4.7,
+    brand: "Sebamed",
+    category: "bath-body",
+    image: "https://m.media-amazon.com/images/I/71K5Z7Z7Z7L._SL1500_.jpg",
+    description: "pH 5.5. Tear-free. 100% soap-free. Clinically proven.",
+    availableSizes: ["100g × 1", "100g × 3", "100g × 5"]
+  },
+
+  // ==================== NUTRITION & FEEDING ====================
+  {
+    id: 3,
+    title: "Babyhug Feeding Bottle 250ml - Anti Colic",
+    price: 499,
+    discount: 0,
+    rating: 4.7,
+    brand: "BabyHug",
+    category: "nutrition-feeding",
+    image: "https://m.media-amazon.com/images/I/61fF9vJ2KHL._SL1000_.jpg",
+    description: "BPA-free. Wide neck. Slow flow silicone nipple. Easy to clean.",
+    availableSizes: ["125 ml", "250 ml", "330 ml"]
+  },
+  {
+    id: 6,
+    title: "Chicco Natural Feeling Feeding Bottle 250ml",
+    price: 799,
+    discount: 10,
+    rating: 4.6,
+    brand: "Chicco",
+    category: "nutrition-feeding",
+    image: "https://m.media-amazon.com/images/I/71gG9vJ2KHL._SL1500_.jpg",
+    description: "Angled nipple for natural latch. Anti-colic valve. Soft silicone.",
+    availableSizes: ["150 ml", "250 ml", "330 ml"]
+  },
+  {
+    id: 9,
+    title: "Pigeon Peristaltic Nipple - Medium Flow",
+    price: 299,
+    discount: 15,
+    rating: 4.5,
+    brand: "Pigeon",
+    category: "nutrition-feeding",
+    image: "https://m.media-amazon.com/images/I/71hH9vJ2KHL._SL1200_.jpg",
+    description: "Promotes natural tongue movement. Super stretchable. Pack of 2.",
+    availableSizes: ["Slow Flow", "Medium Flow", "Fast Flow", "Y-Cut"]
+  },
+  {
+    id: 15,
+    title: "Babyhug Stainless Steel Sipper 300ml",
+    price: 649,
+    discount: 20,
+    rating: 4.4,
+    brand: "BabyHug",
+    category: "nutrition-feeding",
+    image: "https://m.media-amazon.com/images/I/81jJ9vJ2KHL._SL1500_.jpg",
+    description: "Leak-proof. Double wall insulated. Keeps liquid warm/cool.",
+    availableSizes: ["200 ml", "300 ml", "400 ml"]
+  },
+  {
+    id: 16,
+    title: "Mee Mee Silicone Fruit Feeder",
+    price: 349,
+    discount: 25,
+    rating: 4.3,
+    brand: "MeeMee",
+    category: "nutrition-feeding",
+    image: "https://m.media-amazon.com/images/I/71kK9vJ2KHL._SL1200_.jpg",
+    description: "Safe way to introduce solids. BPA-free. Easy grip handle.",
+    availableSizes: ["Small", "Medium", "Large"]
+  },
+
+  // ==================== GIFT HAMPERS ====================
+  {
+    id: 13,
+    title: "BabyHug Premium Newborn Gift Hamper (15 Items)",
+    price: 2999,
+    discount: 20,
+    rating: 4.9,
+    brand: "BabyHug",
+    category: "gift-hampers",
+    image: "https://m.media-amazon.com/images/I/81eWvP0XhGL._SL1500_.jpg",
+    description: "Complete newborn kit: Rompers, blanket, bottle, toys, bibs, mittens & more.",
+    availableSizes: ["0-3 Months", "3-6 Months", "6-12 Months"]
+  },
+  {
+    id: 17,
+    title: "Himalaya Baby Care Complete Gift Pack",
+    price: 1499,
+    discount: 30,
+    rating: 4.6,
+    brand: "Himalaya",
+    category: "gift-hampers",
+    image: "https://m.media-amazon.com/images/I/81X5o0d2KZL._SL1500_.jpg",
+    description: "Shampoo, lotion, powder, oil, soap, cream & wipes – full combo.",
+    availableSizes: ["Standard Pack", "Deluxe Pack"]
+  }
+];
     filteredProducts = [...products];
     render();
   };
@@ -44,23 +237,17 @@
     const items = filteredProducts.slice(start, start + itemsPerPage);
     const grid = $("productsGrid");
 
-    if (items.length === 0) {
-      grid.innerHTML = `<div class="col-span-full text-center py-20">
-        <i class="fas fa-box-open text-6xl text-gray-300 mb-4"></i>
-        <p class="text-2xl text-gray-500 font-semibold">No products found</p>
-        <p class="text-gray-400 mt-2">Try adjusting your filters</p>
-      </div>`;
-      $("resultsCount").textContent = "0 products found";
-      renderPagination();
-      return;
-    }
+    
 
     grid.innerHTML = items.map(p => `
-  <div class="product-card bg-white rounded-2xl shadow-lg overflow-hidden transition-all duration-300 cursor-pointer"
+  <div class="product-card bg-white rounded-lg  shadow-lg overflow-hidden transition-all duration-300 cursor-pointer"
        onclick="openProductDetails(${p.id})">
-    <div class="relative h-64 bg-gradient-to-br from-pink-50 to-blue-50 flex items-center justify-center overflow-hidden">
-      <div class="image-zoom transition-transform duration-300 text-5xl font-bold text-gray-300">${p.title.slice(0,2)}</div>
-      ${p.discount ? `<span class="absolute top-3 right-3 bg-red-500 text-white px-3 py-1 rounded-full text-sm font-bold">${p.discount}% OFF</span>` : ''}
+    <div class="cursor-pointer relative bg-gray-50 aspect-[6/4] overflow-hidden">
+
+     <img src="${p.mainImageUrl}" alt="${p.title}"
+             class="w-full h-full object-contain p-5 transition-transform duration-500 group-hover:scale-110">
+
+        ${p.discount ? `<div class="absolute top-2 left-2 bg-pink-600 text-white text-xs font-bold px-2 py-1 rounded">${p.discount}% OFF</div>` : ''}
     </div>
     <button 
   class="absolute top-3 left-3 bg-white/90 backdrop-blur hover:bg-white p-3 rounded-full shadow-lg transition-all duration-300 z-10"
