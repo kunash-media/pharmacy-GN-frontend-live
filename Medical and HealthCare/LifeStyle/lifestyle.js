@@ -1,570 +1,438 @@
+// =============== LIFESTYLE DISORDER PRODUCTS ===============
+const fakeProducts = [
+  { id: 1, name: "Sugar-Free Gold", brand: "Dabur", price: 280, originalPrice: 350, discount: 20, category: "diabetes", image: "https://images.unsplash.com/photo-1587854692152-cbe660dbde88?w=400&h=400&fit=crop", prescription: false, description: "Sugar substitute for diabetes management" },
+  { id: 2, name: "Diabetic Multivitamin", brand: "Abbott", price: 420, originalPrice: 550, discount: 24, category: "diabetes", image: "https://images.unsplash.com/photo-1584017911766-d451b3d0e843?w=400&h=400&fit=crop", prescription: false, description: "Essential vitamins for diabetic patients" },
+  { id: 3, name: "Blood Pressure Monitor", brand: "Dr. Reddy's", price: 850, originalPrice: 1200, discount: 29, category: "heart-bp", image: "https://images.unsplash.com/photo-1559757148-5c350d0d3c56?w=400&h=400&fit=crop", prescription: false, description: "Digital BP monitor for home use" },
+  { id: 4, name: "Heart Care Capsules", brand: "Himalaya", price: 315, originalPrice: 420, discount: 25, category: "heart-bp", image: "https://images.unsplash.com/photo-1550572017-4876b7788da6?w=400&h=400&fit=crop", prescription: false, description: "Natural support for heart health" },
+  { id: 5, name: "Thyroid Support Tablets", brand: "Baidyanath", price: 295, originalPrice: 395, discount: 25, category: "thyroid", image: "https://images.unsplash.com/photo-1599932887768-d6cb80133949?w=400&h=400&fit=crop", prescription: false, description: "Ayurvedic support for thyroid function" },
+  { id: 6, name: "Iodine Supplement", brand: "Abbott", price: 180, originalPrice: 240, discount: 25, category: "thyroid", image: "https://images.unsplash.com/photo-1584622650111-993a426fbf0a?w=400&h=400&fit=crop", prescription: false, description: "Essential iodine for thyroid health" },
+  { id: 7, name: "Vitamin D3 60K IU", brand: "Dr. Reddy's", price: 145, originalPrice: 195, discount: 26, category: "vitamins", image: "https://images.unsplash.com/photo-1584622650111-993a426fbf0a?w=400&h=400&fit=crop", prescription: false, description: "High potency Vitamin D supplement" },
+  { id: 8, name: "Multivitamin Complex", brand: "Himalaya", price: 325, originalPrice: 450, discount: 28, category: "vitamins", image: "https://images.unsplash.com/photo-1584017911766-d451b3d0e843?w=400&h=400&fit=crop", prescription: false, description: "Complete daily multivitamin formula" },
+  { id: 9, name: "Diabetic Foot Cream", brand: "Dabur", price: 195, originalPrice: 260, discount: 25, category: "diabetes", image: "https://images.unsplash.com/photo-1607619056574-7b8d3ee536b2?w=400&h=400&fit=crop", prescription: false, description: "Moisturizing cream for diabetic skin" },
+  { id: 10, name: "Omega-3 Fish Oil", brand: "Abbott", price: 480, originalPrice: 650, discount: 26, category: "heart-bp", image: "https://images.unsplash.com/photo-1627483262268-9c2b5b2834b5?w=400&h=400&fit=crop", prescription: false, description: "Supports heart and brain health" },
+  { id: 11, name: "Calcium + Vitamin D", brand: "Dabur", price: 225, originalPrice: 300, discount: 25, category: "vitamins", image: "https://images.unsplash.com/photo-1559757148-5c350d0d3c56?w=400&h=400&fit=crop", prescription: false, description: "Bone health supplement" },
+  { id: 12, name: "Thyroid Care Tea", brand: "Himalaya", price: 165, originalPrice: 220, discount: 25, category: "thyroid", image: "https://images.unsplash.com/photo-1599932887768-d6cb80133949?w=400&h=400&fit=crop", prescription: false, description: "Herbal tea for thyroid support" }
+];
+
+let products = [...fakeProducts];
+let filteredProducts = [...fakeProducts];
+let productGrid, sortSelect;
+
+let currentFilters = {
+  category: 'all',
+  brand: 'all',
+  discount: 'all',
+  minPrice: 0,
+  maxPrice: 5000
+};
+
+// ======================================================
 document.addEventListener('DOMContentLoaded', () => {
-  // ================
-  // Data & Configuration
-  // ================
-  let cart = JSON.parse(localStorage.getItem('cart')) || [];
-  let products = []; // Will be populated from backend
-  const API_BASE_URL = 'http://localhost:8083/api/products';
+  productGrid = document.getElementById('productGrid');
+  sortSelect = document.getElementById('sortSelect');
 
-  // ================
-  // DOM Elements
-  // ================
-  const productGrid = document.getElementById('productGrid');
-  const categoryList = document.getElementById('categoryList');
-  const brandList = document.getElementById('brandList');
-  const brandToggle = (brandList && brandList.previousElementSibling) ? brandList.previousElementSibling.querySelector('span') : null;
-  const brandFilters = document.querySelectorAll('.brand-filter');
-  const sortSelect = document.getElementById('sortSelect');
-  const uploadModal = document.getElementById('uploadModal');
-  const validPrescriptionModal = document.getElementById('validPrescriptionModal');
-  const validPrescriptionBtn = document.getElementById('validPrescriptionBtn');
-  const cartCountElement = document.getElementById('cart-count');
+  sessionStorage.setItem('currentPageProducts', JSON.stringify(fakeProducts));
 
-  // keep track of active filters
-  let activeCategory = null;
-  let activeSort = null;
-  let allBrands = new Set();
+  render(filteredProducts);
+  updateResultsCount();
+  initSlider();
+  initSorting();
+  initMobileSheets();
+  initFilters();
 
-  // ================
-  // API Functions
-  // ================
-  async function fetchProducts() {
-    try {
-      showLoadingState();
-      
-      // Fetch products ONLY by subcategory "first"
-      const encodedSubCategory = encodeURIComponent('First Aid');
-      const response = await fetch(`${API_BASE_URL}/get-by-sub-category/${encodedSubCategory}`);
-      
-      if (!response.ok) throw new Error('Failed to fetch products by subcategory');
-      
-      const data = await response.json();
-      products = Array.isArray(data) ? data : [];
-      
-      // Transform backend data to frontend format
-      products = products.map(product => transformProductData(product));
-      
-      // Extract unique brands for filtering
-      allBrands = new Set(products.map(p => p.brand).filter(Boolean));
-      updateBrandFilters();
-      
-      displayProducts(products);
-      updateCategoryList();
-      
-    } catch (error) {
-      console.error('Error fetching products:', error);
-      showErrorState('Failed to load products. Please try again later.');
-      products = [];
-    }
-  }
+  // ONE single delegated listener for the whole grid – solves the duplicate-heart bug
+  productGrid.addEventListener('click', (e) => {
+    const btn = e.target.closest('.wishlist-btn');
+    if (!btn) return;
 
-  // Transform backend product data to frontend format
-  function transformProductData(backendProduct) {
-    return {
-      id: backendProduct.productId,
-      productId: backendProduct.productId,
-      name: backendProduct.productName,
-      productName: backendProduct.productName,
-      price: backendProduct.productPrice || backendProduct.price,
-      originalPrice: backendProduct.productOldPrice || backendProduct.mrp,
-      mrp: backendProduct.productOldPrice || backendProduct.mrp,
-      discount: calculateDiscount(backendProduct.productPrice, backendProduct.productOldPrice || backendProduct.mrp),
-      category: backendProduct.productCategory,
-      subCategory: backendProduct.productSubCategory,
-      brand: backendProduct.brandName || backendProduct.brand,
-      image: backendProduct.productMainImage || backendProduct.image,
-      productMainImage: backendProduct.productMainImage,
-      prescriptionRequired: backendProduct.prescriptionRequired || false,
-      description: backendProduct.productDescription,
-      stock: backendProduct.productStock,
-      status: backendProduct.productStatus,
-      ...backendProduct
-    };
-  }
+    e.preventDefault();
+    e.stopPropagation();
 
-  function calculateDiscount(currentPrice, originalPrice) {
-    if (!originalPrice || originalPrice <= currentPrice) return '';
-    const discountPercent = Math.round(((originalPrice - currentPrice) / originalPrice) * 100);
-    return `${discountPercent}% off`;
-  }
-
-  // ================
-  // UI Helpers
-  // ================
-  function showLoadingState() {
-    if (!productGrid) return;
-    productGrid.innerHTML = `
-      <div class="col-span-full flex justify-center items-center py-8">
-        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
-        <span class="ml-3 text-gray-600">Loading products...</span>
-      </div>
-    `;
-  }
-
-  function showErrorState(message) {
-    if (!productGrid) return;
-    productGrid.innerHTML = `
-      <div class="col-span-full text-center py-8">
-        <p class="text-red-600 mb-4">${message}</p>
-        <button onclick="fetchProducts()" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition">
-          Retry
-        </button>
-      </div>
-    `;
-  }
-
-  function updateBrandFilters() {
-    if (!brandList) return;
-    
-    const brandFilterContainer = brandList.querySelector('.space-y-2');
-    if (brandFilterContainer) {
-      brandFilterContainer.innerHTML = '';
-      
-      allBrands.forEach(brand => {
-        if (brand) {
-          const label = document.createElement('label');
-          label.className = 'flex items-center space-x-2';
-          label.innerHTML = `
-            <input type="checkbox" class="brand-filter rounded text-blue-600" value="${escapeHtml(brand)}">
-            <span class="text-sm text-gray-700">${escapeHtml(brand)}</span>
-          `;
-          brandFilterContainer.appendChild(label);
-        }
-      });
-      
-      const newBrandFilters = brandFilterContainer.querySelectorAll('.brand-filter');
-      newBrandFilters.forEach(filter => {
-        filter.addEventListener('change', () => {
-          applyFilters();
-        });
-      });
-    }
-  }
-
-  function updateCategoryList() {
-    if (!categoryList) return;
-    
-    const categories = [...new Set(products.map(p => p.category).filter(Boolean))];
-    
-    const categoryLinks = categoryList.querySelectorAll('.category-link');
-    categoryLinks.forEach(link => {
-      const categoryText = link.textContent.trim();
-      if (!categories.includes(categoryText)) {
-        link.parentElement.style.display = 'none';
-      } else {
-        link.parentElement.style.display = 'block';
-      }
-    });
-  }
-
-  function updateCartCount() {
-    if (!cartCountElement) return;
-    const totalItems = cart.reduce((sum, item) => sum + (item.quantity || 1), 0);
-    cartCountElement.textContent = totalItems;
-    localStorage.setItem('cartCount', totalItems);
-  }
-
-  // Initialize cart from localStorage
-  (function loadCart() {
-    const stored = JSON.parse(localStorage.getItem('cart') || 'null');
-    if (Array.isArray(stored)) cart = stored;
-    updateCartCount();
-  })();
-
-  // ================
-  // Product Rendering
-  // ================
-  function createProductCard(product) {
-    const productDiv = document.createElement('div');
-    productDiv.className = 'product-card bg-white p-4 shadow rounded-lg flex flex-col justify-between relative cursor-pointer hover:shadow-lg transition-shadow';
-
-    const prescriptionBadge = product.prescriptionRequired
-      ? '<div class="absolute top-2 right-2 bg-red-500 text-white text-xs px-2 py-1 rounded-full">Rx Required</div>'
-      : '';
-
-    const imageUrl = product.productMainImage && !product.productMainImage.startsWith('http')
-      ? `${API_BASE_URL}/${product.productId}/image`
-      : product.image || product.productMainImage || 'https://via.placeholder.com/150?text=No+Image';
-
-    const originalPrice = product.originalPrice || product.mrp || product.productOldPrice;
-    const currentPrice = product.price || product.productPrice;
-    const discount = product.discount || calculateDiscount(currentPrice, originalPrice);
-
-    const formattedPrice = currentPrice ? currentPrice.toFixed(2) : '0.00';
-    const formattedOriginalPrice = originalPrice ? originalPrice.toFixed(2) : null;
-
-    const actionButton = product.prescriptionRequired
-      ? `<button 
-            class="mt-3 w-full bg-red-600 hover:bg-red-700 text-white py-2 rounded-lg transition flex items-center justify-center gap-2 upload-pres-btn" 
-            data-product='${escapeHtml(JSON.stringify(product))}'>
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
-            </svg>
-            Upload Prescription
-          </button>`
-      : `<button 
-            class="mt-3 w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-lg transition flex items-center justify-center gap-2 add-to-cart-btn" 
-            data-id="${product.id}">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
-            </svg>
-            View Details
-          </button>`;
-
-    productDiv.innerHTML = `
-      ${prescriptionBadge}
-      <img src="${imageUrl}" alt="${escapeHtml(product.name)}" class="product-image w-full h-32 object-cover rounded-lg mb-3" onerror="this.src='https://via.placeholder.com/150?text=Image+Error'">
-      <p class="text-sm text-gray-600 font-medium">${escapeHtml(product.name)}</p>
-      <p class="text-xs text-gray-500">${escapeHtml(product.brand)}</p>
-      ${product.prescriptionRequired ? '<p class="text-red-600 text-xs mt-1 font-semibold">⚠️ Prescription needed</p>' : ''}
-      <p class="text-green-600 font-bold mt-2">₹${formattedPrice} 
-        ${formattedOriginalPrice ? `<span class="text-gray-500 line-through text-sm">₹${formattedOriginalPrice}</span> <span class="text-green-600 text-sm">${discount}</span>` : ''}</p>
-      ${actionButton}
-    `;
-
-    productDiv.addEventListener('click', (event) => {
-      if (event.target.tagName === 'BUTTON' || event.target.closest('button')) return;
-      if (product.prescriptionRequired) {
-        openUploadModalForProduct(product);
-      } else {
-        openProductDetails(product);
-      }
-    });
-
-    return productDiv;
-  }
-
-  function displayProducts(list) {
-    if (!productGrid) return;
-    productGrid.innerHTML = '';
-    
-    if (list.length === 0) {
-      productGrid.innerHTML = `
-        <div class="col-span-full text-center py-8">
-          <p class="text-gray-500">No products found.</p>
-          <p class="text-sm text-gray-400 mt-2">Try checking back later or browse other categories</p>
-        </div>
-      `;
-      return;
-    }
-    
-    list.forEach(product => productGrid.appendChild(createProductCard(product)));
-  }
-
-  // ================
-  // Product interactions
-  // ================
-  function openProductDetails(product) {
-    const productDetailsUrl = `/productdetails.html?id=${product.id}`;
-    window.location.href = productDetailsUrl;
-  }
-  window.openProductDetails = openProductDetails;
-
-  function addToCartById(productId) {
-    const product = products.find(p => p.id == productId);
-    if (!product) return;
-    const existing = cart.find(item => item.id === productId);
-    if (existing) existing.quantity = (existing.quantity || 1) + 1;
-    else cart.push({ ...product, quantity: 1 });
-    localStorage.setItem('cart', JSON.stringify(cart));
-    updateCartCount();
-  }
-  window.addToCart = addToCartById;
-
-  // ================
-  // Category & Brand Filters
-  // ================
-  categoryList?.addEventListener('click', async (e) => {
-    if (e.target.classList.contains('expand-toggle')) {
-      const li = e.target.parentElement;
-      const subcategory = li.querySelector('.subcategory');
-      if (subcategory) {
-        subcategory.classList.toggle('hidden');
-      }
-      e.target.textContent = e.target.textContent === '+' ? '-' : '+';
-      return;
-    }
-
-    if (e.target.classList.contains('category-link') || e.target.classList.contains('subcategory-link')) {
-      e.preventDefault();
-      const text = e.target.textContent.trim();
-      
-      if (e.target.classList.contains('subcategory-link')) {
-        const filtered = products.filter(p => p.name === text);
-        activeCategory = text;
-        applyFilters(filtered);
-      } else {
-        activeCategory = text;
-        const filtered = products.filter(p => p.category === text);
-        applyFilters(filtered);
-      }
-    }
+    const productId = Number(btn.dataset.id);
+    toggleWishlist(productId, btn);
   });
+});
 
-  if (brandToggle) {
-    brandToggle.addEventListener('click', () => {
-      brandList.classList.toggle('hidden');
-      brandToggle.textContent = brandToggle.textContent === '+' ? '-' : '+';
-    });
+// =============== CARD CREATION (now safe) ===============
+function createCard(p) {
+  const div = document.createElement('div');
+  div.className = 'bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition cursor-pointer relative';
+
+  const priceLine = p.originalPrice
+    ? `₹${p.price} <s class="text-gray-400 text-sm">₹${p.originalPrice}</s> <span class="text-green-600 text-sm font-bold">${p.discount}% off</span>`
+    : `₹${p.price}`;
+
+  // check current wishlist state
+  const wishlist = JSON.parse(localStorage.getItem('wishlist') || '[]');
+  const isWishlisted = wishlist.some(item => item.id === p.id);
+
+  div.innerHTML = `
+    <div class="relative">
+      <img src="${p.image}" alt="${p.name}" class="w-full h-48 object-cover">
+      
+      <!-- Wishlist button – data-id is the only thing we need -->
+      <button class="wishlist-btn ${isWishlisted ? 'active' : ''}" data-id="${p.id}">
+        <i class="fa-${isWishlisted ? 'solid' : 'regular'} fa-heart"></i>
+      </button>
+    </div>
+    <div class="p-2">
+      <h3 class="font-semibold text-sm">${p.name}</h3>
+      <p class="text-xs text-gray-500 mt-1">${p.brand}</p>
+      <div class="mt-2 font-bold text-lg text-green-600">${priceLine}</div>
+      <button onclick="navigateToProductDetails(${p.id})" class="mt-4 w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-lg font-bold transition">
+        View Details
+      </button>
+    </div>
+  `;
+  return div;
+}
+
+// =============== WISHLIST TOGGLE (single listener ===============
+function toggleWishlist(productId, buttonElement) {
+  let wishlist = JSON.parse(localStorage.getItem('wishlist') || '[]');
+  const product = products.find(p => p.id === productId);
+
+  const index = wishlist.findIndex(item => item.id === productId);
+
+  if (index === -1) {
+    // add
+    wishlist.push(product);
+    buttonElement.classList.add('active');
+    buttonElement.innerHTML = '<i class="fa-solid fa-heart"></i>';
+  } else {
+    // remove
+    wishlist.splice(index, 1);
+    buttonElement.classList.remove('active');
+    buttonElement.innerHTML = '<i class="fa-regular fa-heart"></i>';
   }
 
-  sortSelect?.addEventListener('change', () => {
-    activeSort = sortSelect.value;
-    applyFilters();
-  });
+  localStorage.setItem('wishlist', JSON.stringify(wishlist));
 
-  function applyFilters(startList) {
-    let list = Array.isArray(startList) ? [...startList] : [...products];
+  // let header badge know that wishlist changed
+  window.dispatchEvent(new CustomEvent('wishlistUpdated'));
+}
 
-    const selectedBrands = Array.from(document.querySelectorAll('.brand-filter:checked')).map(f => f.value);
-    if (selectedBrands.length > 0) {
-      list = list.filter(p => selectedBrands.includes(p.brand));
-    }
-
-    if (activeSort === 'Price: Low to High') {
-      list.sort((a, b) => (a.price || 0) - (b.price || 0));
-    } else if (activeSort === 'Price: High to Low') {
-      list.sort((a, b) => (b.price || 0) - (a.price || 0));
-    } else if (activeSort === 'Discount') {
-      list.sort((a, b) => {
-        const discountA = a.mrp ? ((a.mrp - a.price) / a.mrp) * 100 : 0;
-        const discountB = b.mrp ? ((b.mrp - b.price) / b.mrp) * 100 : 0;
-        return discountB - discountA;
-      });
-    }
-    displayProducts(list);
+// =============== RENDER (unchanged except calling createCard) ===============
+function render(list) {
+  productGrid.innerHTML = ''; // clear
+  if (list.length === 0) {
+    productGrid.innerHTML = '<div class="col-span-full text-center py-20 text-gray-500 text-xl">No products found</div>';
+    return;
   }
+  list.forEach(p => productGrid.appendChild(createCard(p)));
+}
 
-  // ================
-  // Upload Prescription Modal Integration
-  // ================
-  function openUploadModalForProduct(product) {
-    if (!uploadModal) {
-      window.location.href = `/prescribed.html?id=${product.id}`;
-      return;
-    }
-
-    uploadModal.dataset.productId = product.id;
-    const modalProductName = uploadModal.querySelector('#modalProductName') || document.getElementById('modalProductName');
-    if (modalProductName) modalProductName.textContent = `Upload Prescription for: ${product.name}`;
-
-    const modalProductImage = uploadModal.querySelector('.modal-product-image');
-    if (modalProductImage) {
-      const imageUrl = product.productMainImage && !product.productMainImage.startsWith('http')
-        ? `${API_BASE_URL}/${product.id}/image`
-        : product.image || product.productMainImage || 'https://via.placeholder.com/150?text=No+Image';
-      modalProductImage.src = imageUrl;
-    }
-
-    let fileInput = uploadModal.querySelector('#prescriptionFile');
-    if (!fileInput) {
-      fileInput = uploadModal.querySelector('input[type="file"]');
-    }
-    if (!fileInput) {
-      fileInput = document.createElement('input');
-      fileInput.type = 'file';
-      fileInput.accept = 'image/*,.pdf';
-      fileInput.id = 'prescriptionFile';
-      fileInput.className = 'hidden';
-      uploadModal.querySelector('label')?.appendChild(fileInput) || uploadModal.appendChild(fileInput);
-    }
-
-    const fileNameDisplay = uploadModal.querySelector('#fileNameDisplay') || document.getElementById('fileNameDisplay');
-
-    const newFileInput = fileInput.cloneNode();
-    newFileInput.id = fileInput.id;
-    newFileInput.accept = fileInput.accept;
-    newFileInput.className = fileInput.className;
-    fileInput.parentNode.replaceChild(newFileInput, fileInput);
-    fileInput = newFileInput;
-
-    fileInput.addEventListener('change', function () {
-      const file = fileInput.files[0];
-      if (!file) {
-        if (fileNameDisplay) fileNameDisplay.textContent = '';
-        return;
-      }
-      if (fileNameDisplay) fileNameDisplay.textContent = file.name;
-
-      if (file.type.startsWith('image/')) {
-        const previewImg = uploadModal.querySelector('#prescriptionPreviewImg');
-        const reader = new FileReader();
-        reader.onload = (evt) => {
-          if (previewImg) {
-            previewImg.src = evt.target.result;
-            previewImg.classList.remove('hidden');
-          }
-          uploadModal.dataset.tempDataURL = evt.target.result;
-          uploadModal.dataset.tempFileName = file.name;
-        };
-        reader.readAsDataURL(file);
-      } else {
-        uploadModal.dataset.tempDataURL = '';
-        uploadModal.dataset.tempFileName = file.name;
-      }
-    });
-
-    const label = uploadModal.querySelector('label');
-    if (label) {
-      label.addEventListener('click', (ev) => {
-        ev.preventDefault();
-        const fi = uploadModal.querySelector('#prescriptionFile');
-        if (fi) fi.click();
-      }, { once: true });
-    }
-
-    const submitBtn = uploadModal.querySelector('#submitPrescription') || document.getElementById('submitPrescription');
-    if (submitBtn) {
-      const newBtn = submitBtn.cloneNode(true);
-      submitBtn.parentNode.replaceChild(newBtn, submitBtn);
-      newBtn.addEventListener('click', () => {
-        const prodId = uploadModal.dataset.productId;
-        const tmpName = uploadModal.dataset.tempFileName;
-        const tmpData = uploadModal.dataset.tempDataURL || null;
-        
-        const fi = uploadModal.querySelector('#prescriptionFile');
-        if (!tmpName && fi && fi.files[0]) {
-          const file = fi.files[0];
-          const reader = new FileReader();
-          reader.onload = function (evt) {
-            savePrescription(prodId, file.name, evt.target.result);
-            uploadModal.classList.add('hidden');
-            clearModalTempState();
-          };
-          reader.readAsDataURL(file);
-          return;
-        }
-
-        if (!tmpName) {
-          alert('Please choose a prescription file before submitting.');
-          return;
-        }
-
-        savePrescription(prodId, tmpName, tmpData);
-        uploadModal.classList.add('hidden');
-        clearModalTempState();
-        alert('Prescription uploaded successfully.');
-      });
-    }
-
-    uploadModal.classList.remove('hidden');
+function updateResultsCount() {
+  const countEl = document.getElementById('resultsCount');
+  if (countEl) {
+    countEl.textContent = `${filteredProducts.length} products found`;
   }
+  updateTitle();
+}
 
-  function savePrescription(productId, fileName, dataURL) {
-    if (!productId) return;
-    const prescriptions = JSON.parse(localStorage.getItem('prescriptions') || '{}');
-    prescriptions[productId] = {
-      fileName,
-      dataURL: dataURL || null,
-      uploadedAt: new Date().toISOString()
-    };
-    localStorage.setItem('prescriptions', JSON.stringify(prescriptions));
-  }
+function updateTitle() {
+  const titleEl = document.querySelector('h2.text-3xl');
+  if (!titleEl) return;
 
-  function clearModalTempState() {
-    if (!uploadModal) return;
-    delete uploadModal.dataset.tempFileName;
-    delete uploadModal.dataset.tempDataURL;
-    const previewImg = uploadModal.querySelector('#prescriptionPreviewImg');
-    if (previewImg) {
-      previewImg.src = '';
-      previewImg.classList.add('hidden');
-    }
-    const fileNameDisplay = uploadModal.querySelector('#fileNameDisplay');
-    if (fileNameDisplay) fileNameDisplay.textContent = '';
-    const fi = uploadModal.querySelector('#prescriptionFile');
-    if (fi) fi.value = '';
-  }
-
-  // Event delegation for dynamic buttons
-  document.body.addEventListener('click', (e) => {
-    const up = e.target.closest('.upload-pres-btn');
-    if (up) {
-      e.stopPropagation();
-      const productData = up.getAttribute('data-product');
-      if (productData) {
-        try {
-          const product = JSON.parse(unescapeHtml(productData));
-          openUploadModalForProduct(product);
-        } catch (err) {
-          window.location.href = `/prescribed.html`;
-        }
-      }
-      return;
-    }
-
-    const atc = e.target.closest('.add-to-cart-btn');
-    if (atc) {
-      e.stopPropagation();
-      const pid = atc.getAttribute('data-id');
-      if (pid) {
-        const product = products.find(p => p.id == pid);
-        if (product) openProductDetails(product);
-      }
-      return;
-    }
-  });
-
-  // Modal close handlers
-  if (uploadModal) {
-    uploadModal.addEventListener('click', (e) => {
-      if (e.target === uploadModal) {
-        uploadModal.classList.add('hidden');
-        clearModalTempState();
-      }
-    });
-
-    const closeUploadModalBtn = document.getElementById('closeUploadModal');
-    if (closeUploadModalBtn) {
-      closeUploadModalBtn.addEventListener('click', () => {
-        uploadModal.classList.add('hidden');
-        clearModalTempState();
-      });
-    }
-  }
-
-  if (validPrescriptionBtn && validPrescriptionModal) {
-    validPrescriptionBtn.addEventListener('click', () => validPrescriptionModal.classList.remove('hidden'));
-    validPrescriptionModal.addEventListener('click', (e) => { if (e.target === validPrescriptionModal) validPrescriptionModal.classList.add('hidden'); });
-    const validClose = validPrescriptionModal.querySelector('#closeValidPrescriptionModal') || validPrescriptionModal.querySelector('button');
-    if (validClose) validClose.addEventListener('click', () => validPrescriptionModal.classList.add('hidden'));
-  }
-
-  // ================
-  // Utility functions
-  // ================
-  function escapeHtml(str) {
-    if (typeof str !== 'string') return str;
-    return str.replace(/&/g, '&amp;')
-              .replace(/</g, '&lt;')
-              .replace(/>/g, '&gt;')
-              .replace(/"/g, '&quot;')
-              .replace(/'/g, '&#039;');
-  }
-
-  function unescapeHtml(encoded) {
-    if (!encoded) return encoded;
-    return encoded.replace(/&quot;/g, '"').replace(/&amp;/g, '&');
-  }
-
-  // ================
-  // Initialize App
-  // ================
-  window.uploadPrescription = function (productObjOrId) {
-    if (typeof productObjOrId === 'number' || typeof productObjOrId === 'string') {
-      const p = products.find(x => x.id == productObjOrId);
-      if (p) openUploadModalForProduct(p);
-      else window.location.href = `/prescribed.html?id=${productObjOrId}`;
-    } else if (typeof productObjOrId === 'object' && productObjOrId !== null) {
-      openUploadModalForProduct(productObjOrId);
-    } else {
-      window.location.href = '/prescribed.html';
-    }
+  const categoryNames = {
+    'all': 'Lifestyle Disorder Products',
+    'diabetes': 'Diabetes Care Products',
+    'heart-bp': 'Heart & Blood Pressure Support',
+    'thyroid': 'Thyroid Support Products',
+    'vitamins': 'Vitamins & Supplements'
   };
 
-  window.addToCart = addToCartById;
+  let title = categoryNames[currentFilters.category] || 'Lifestyle Disorder Products';
 
-  // Start the application - ONLY fetches "first" subcategory products
-  fetchProducts();
-});
+  // Add brand to title if selected
+  if (currentFilters.brand !== 'all') {
+    title += ` - ${currentFilters.brand}`;
+  }
+
+  titleEl.textContent = title;
+}
+
+// Apply Filters Function
+function applyFilters() {
+  filteredProducts = products.filter(product => {
+    // Category filter
+    if (currentFilters.category !== 'all' && product.category !== currentFilters.category) {
+      return false;
+    }
+
+    // Brand filter
+    if (currentFilters.brand !== 'all' && product.brand !== currentFilters.brand) {
+      return false;
+    }
+
+    // Price filter
+    if (product.price < currentFilters.minPrice || product.price > currentFilters.maxPrice) {
+      return false;
+    }
+
+    // Discount filter
+    if (currentFilters.discount !== 'all') {
+      const requiredDiscount = parseInt(currentFilters.discount);
+      if (product.discount < requiredDiscount) {
+        return false;
+      }
+    }
+
+    return true;
+  });
+
+  render(filteredProducts);
+  updateResultsCount();
+}
+
+// Initialize Desktop Filters
+function initFilters() {
+  // Desktop form submit
+  const desktopForm = document.getElementById('filterForm');
+  if (desktopForm) {
+    desktopForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      
+      currentFilters.category = document.querySelector('input[name="category"]:checked')?.value || 'all';
+      currentFilters.brand = document.querySelector('input[name="brand"]:checked')?.value || 'all';
+      currentFilters.discount = document.querySelector('input[name="discount"]:checked')?.value || 'all';
+      
+      applyFilters();
+    });
+
+    // Live filter on radio change
+    desktopForm.querySelectorAll('input[type="radio"]').forEach(radio => {
+      radio.addEventListener('change', () => {
+        currentFilters.category = document.querySelector('input[name="category"]:checked')?.value || 'all';
+        currentFilters.brand = document.querySelector('input[name="brand"]:checked')?.value || 'all';
+        currentFilters.discount = document.querySelector('input[name="discount"]:checked')?.value || 'all';
+        applyFilters();
+      });
+    });
+  }
+
+  // Mobile filters apply button
+  const applyMobileBtn = document.getElementById('applyMobileFilters');
+  if (applyMobileBtn) {
+    applyMobileBtn.addEventListener('click', () => {
+      currentFilters.category = document.querySelector('input[name="mobileCategory"]:checked')?.value || 'all';
+      currentFilters.brand = document.querySelector('input[name="mobileBrand"]:checked')?.value || 'all';
+      currentFilters.discount = document.querySelector('input[name="mobileDiscount"]:checked')?.value || 'all';
+      
+      applyFilters();
+      closeFilterSheet();
+    });
+  }
+
+  // Mobile clear filters
+  const clearMobileBtn = document.getElementById('clearMobileFilters');
+  if (clearMobileBtn) {
+    clearMobileBtn.addEventListener('click', () => {
+      document.querySelectorAll('input[name="mobileCategory"], input[name="mobileBrand"], input[name="mobileDiscount"]').forEach(radio => {
+        if (radio.value === 'all') radio.checked = true;
+      });
+      
+      // Reset desktop filters too
+      document.querySelectorAll('input[name="category"], input[name="brand"], input[name="discount"]').forEach(radio => {
+        if (radio.value === 'all') radio.checked = true;
+      });
+
+      currentFilters = {
+        category: 'all',
+        brand: 'all',
+        discount: 'all',
+        minPrice: 0,
+        maxPrice: 5000
+      };
+
+      // Reset price sliders
+      document.getElementById('minThumb').value = 0;
+      document.getElementById('maxThumb').value = 5000;
+      document.getElementById('mobileMinThumb').value = 0;
+      document.getElementById('mobileMaxThumb').value = 5000;
+      updateDesktopSlider();
+      updateMobileSlider();
+
+      applyFilters();
+    });
+  }
+}
+
+// Navigate to Product Details Page with URL parameters
+window.navigateToProductDetails = function(id) {
+  const product = products.find(p => p.id === id);
+  if (!product) {
+    console.error('Product not found with id:', id);
+    return;
+  }
+
+  // Store current page name/category for reference
+  const currentPageName = document.title || 'Lifestyle Disorder';
+  
+  sessionStorage.setItem('selectedProduct', JSON.stringify(product));
+  sessionStorage.setItem('currentPageProducts', JSON.stringify(products));
+  sessionStorage.setItem('currentPageName', currentPageName);
+
+  const params = new URLSearchParams({
+    id: product.id,
+    name: product.name,
+    brand: product.brand,
+    price: product.price,
+    originalPrice: product.originalPrice || '',
+    discount: product.discount || '',
+    image: product.image,
+    description: product.description || '',
+    prescription: product.prescription,
+    category: product.category || '',
+    sourcePage: currentPageName
+  });
+
+  window.location.href = `/productdetails.html?${params.toString()}`;
+}
+
+function initSorting() {
+  sortSelect.addEventListener('change', () => {
+    const val = sortSelect.value;
+    let sorted = [...filteredProducts];
+    if (val === 'price-low') sorted.sort((a,b) => a.price - b.price);
+    if (val === 'price-high') sorted.sort((a,b) => b.price - a.price);
+    if (val === 'rating') sorted.sort((a,b) => (b.rating || 0) - (a.rating || 0));
+    if (val === 'newest') sorted.sort((a,b) => b.id - a.id);
+    render(sorted);
+  });
+
+  // Mobile sort apply
+  const applySortBtn = document.getElementById('applySortBtn');
+  if (applySortBtn) {
+    applySortBtn.addEventListener('click', () => {
+      const selectedSort = document.querySelector('input[name="mobileSort"]:checked')?.value || 'default';
+      sortSelect.value = selectedSort;
+      sortSelect.dispatchEvent(new Event('change'));
+      closeSortSheet();
+    });
+  }
+}
+
+// Desktop Price Slider
+function initSlider() {
+  const minThumb = document.getElementById('minThumb');
+  const maxThumb = document.getElementById('maxThumb');
+  const mobileMinThumb = document.getElementById('mobileMinThumb');
+  const mobileMaxThumb = document.getElementById('mobileMaxThumb');
+
+  const updateDesktopSlider = () => {
+    const minVal = parseInt(minThumb.value);
+    const maxVal = parseInt(maxThumb.value);
+    
+    if (minVal > maxVal - 200) {
+      minThumb.value = maxVal - 200;
+    }
+    
+    const fill = document.getElementById('desktopFill');
+    if (fill) {
+      fill.style.left = (minVal / 5000) * 100 + '%';
+      fill.style.width = ((maxVal - minVal) / 5000) * 100 + '%';
+    }
+    
+    const minValue = document.getElementById('minValue');
+    const maxValue = document.getElementById('maxValue');
+    if (minValue) minValue.textContent = '₹' + minVal;
+    if (maxValue) maxValue.textContent = '₹' + maxVal;
+    
+    currentFilters.minPrice = minVal;
+    currentFilters.maxPrice = maxVal;
+  };
+
+  const updateMobileSlider = () => {
+    const minVal = parseInt(mobileMinThumb.value);
+    const maxVal = parseInt(mobileMaxThumb.value);
+    
+    if (minVal > maxVal - 200) {
+      mobileMinThumb.value = maxVal - 200;
+    }
+    
+    const fill = document.getElementById('mobileFill');
+    if (fill) {
+      fill.style.left = (minVal / 5000) * 100 + '%';
+      fill.style.width = ((maxVal - minVal) / 5000) * 100 + '%';
+    }
+    
+    const minValue = document.getElementById('mobileMinValue');
+    const maxValue = document.getElementById('mobileMaxValue');
+    if (minValue) minValue.textContent = '₹' + minVal;
+    if (maxValue) maxValue.textContent = '₹' + maxVal;
+    
+    currentFilters.minPrice = minVal;
+    currentFilters.maxPrice = maxVal;
+  };
+
+  if (minThumb && maxThumb) {
+    minThumb.oninput = () => {
+      updateDesktopSlider();
+      applyFilters();
+    };
+    maxThumb.oninput = () => {
+      updateDesktopSlider();
+      applyFilters();
+    };
+    updateDesktopSlider();
+  }
+
+  if (mobileMinThumb && mobileMaxThumb) {
+    mobileMinThumb.oninput = updateMobileSlider;
+    mobileMaxThumb.oninput = updateMobileSlider;
+    updateMobileSlider();
+  }
+
+  window.updateDesktopSlider = updateDesktopSlider;
+  window.updateMobileSlider = updateMobileSlider;
+}
+
+// Mobile Sheets
+function initMobileSheets() {
+  const backdrop = document.getElementById('mobileSheetBackdrop');
+  const filterSheet = document.getElementById('filterSheet');
+  const sortSheet = document.getElementById('sortSheet');
+  
+  // Open Filter Sheet
+  document.getElementById('openFilterSheet')?.addEventListener('click', () => {
+    backdrop.classList.remove('hidden');
+    filterSheet.classList.remove('translate-y-full');
+  });
+
+  // Close Filter Sheet
+  const closeFilterSheet = () => {
+    backdrop.classList.add('hidden');
+    filterSheet.classList.add('translate-y-full');
+  };
+
+  document.getElementById('closeFilterSheet')?.addEventListener('click', closeFilterSheet);
+  window.closeFilterSheet = closeFilterSheet;
+
+  // Open Sort Sheet
+  document.getElementById('openSortSheet')?.addEventListener('click', () => {
+    backdrop.classList.remove('hidden');
+    sortSheet.classList.remove('translate-y-full');
+  });
+
+  // Close Sort Sheet
+  const closeSortSheet = () => {
+    backdrop.classList.add('hidden');
+    sortSheet.classList.add('translate-y-full');
+  };
+
+  document.getElementById('closeSortSheet')?.addEventListener('click', closeSortSheet);
+  window.closeSortSheet = closeSortSheet;
+
+  // Click backdrop to close
+  backdrop.addEventListener('click', () => {
+    closeFilterSheet();
+    closeSortSheet();
+  });
+}
+
+window.sortProducts = function(type) {
+  sortSelect.value = type;
+  sortSelect.dispatchEvent(new Event('change'));
+  document.getElementById('mobileSheetBackdrop')?.click();
+};

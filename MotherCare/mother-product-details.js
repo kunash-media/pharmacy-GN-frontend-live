@@ -424,7 +424,8 @@ function toggleWishlist() {
             price: selectedVariant?.price || currentProduct.price,
             originalPrice: selectedVariant?.originalPrice || currentProduct.originalPrice || null,
             image: currentProduct.mainImageUrl,
-            size: selectedVariant?.size || "Standard"
+            size: selectedVariant?.size || "Standard",
+            
         };
         wishlist.push(item);
         document.querySelector("#addToWishlistBtn i").className = "fas fa-heart text-pink-600";

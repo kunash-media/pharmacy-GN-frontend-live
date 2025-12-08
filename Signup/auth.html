@@ -1109,31 +1109,34 @@
       }
     });
 
-    signinForm.addEventListener('submit', function(e) {
-      e.preventDefault();
+   signinForm.addEventListener('submit', function(e) {
+  e.preventDefault();
+  
+  if (validateSigninForm()) {
+    // Show loading state
+    const submitBtn = this.querySelector('.auth-btn');
+    const originalText = submitBtn.textContent;
+    submitBtn.textContent = 'Signing In...';
+    submitBtn.disabled = true;
+    
+    // Simulate API call
+    setTimeout(() => {
+      alert('Sign in successful! Welcome back.');
       
-      if (validateSigninForm()) {
-        // Show loading state
-        const submitBtn = this.querySelector('.auth-btn');
-        const originalText = submitBtn.textContent;
-        submitBtn.textContent = 'Signing In...';
-        submitBtn.disabled = true;
-        
-        // Simulate API call
-        setTimeout(() => {
-          alert('Sign in successful! Welcome back.');
-          
-          // Reset form (except if remember me is checked)
-          const rememberMe = document.getElementById('rememberMe').checked;
-          if (!rememberMe) {
-            signinForm.reset();
-          }
-          
-          submitBtn.textContent = originalText;
-          submitBtn.disabled = false;
-        }, 1500);
+      // Reset form (except if remember me is checked)
+      const rememberMe = document.getElementById('rememberMe').checked;
+      if (!rememberMe) {
+        signinForm.reset();
       }
-    });
+      
+      submitBtn.textContent = originalText;
+      submitBtn.disabled = false;
+      
+      // Redirect to index page after alert is closed
+      window.location.href = '/index.html'; // or just 'index' depending on your file structure
+    }, 1500);
+  }
+});
 
     // Forgot password link
     forgotPasswordLink.addEventListener('click', function(e) {

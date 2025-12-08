@@ -1,17 +1,17 @@
-// ==================== ENHANCED WISHLIST PAGE SCRIPT ====================
+// ==================== WISHLIST JS - UPDATED ====================
 
-// Utility: Show toast notification
-function showToast(message, type = 'success') {
-    const toast = document.getElementById('toast');
-    if (!toast) return;
+// Helper function to calculate discount percentage
+function calculateDiscountPercentage(originalPrice, currentPrice) {
+    if (!originalPrice || !currentPrice) return 0;
     
-    const icon = type === 'success' ? '<i class="fas fa-check-circle"></i>' : '<i class="fas fa-exclamation-circle"></i>';
-    toast.innerHTML = `${icon} ${message}`;
-    toast.className = `toast ${type} show`;
+    // Remove currency symbols if present
+    const orig = parseFloat(String(originalPrice).replace(/[₹$,]/g, ''));
+    const curr = parseFloat(String(currentPrice).replace(/[₹$,]/g, ''));
     
-    setTimeout(() => {
-        toast.classList.remove('show');
-    }, 3000);
+    if (orig <= curr || orig <= 0) return 0;
+    
+    const discount = ((orig - curr) / orig) * 100;
+    return Math.round(discount);
 }
 
 // Get wishlist from localStorage
@@ -25,38 +25,35 @@ function getWishlist() {
     }
 }
 
-// Save wishlist to localStorage
-function saveWishlist(wishlist) {
-    try {
-        localStorage.setItem('wishlist', JSON.stringify(wishlist));
-    } catch (e) {
-        console.error('Error saving wishlist:', e);
-    }
-}
-
-// Calculate discount percentage
-function calculateDiscount(originalPrice, currentPrice) {
-    if (!originalPrice || originalPrice === currentPrice) return 0;
-    const discount = ((parseFloat(originalPrice) - parseFloat(currentPrice)) / parseFloat(originalPrice)) * 100;
-    return Math.round(discount);
+// Update wishlist count in header
+function updateWishlistCount() {
+    const count = getWishlist().length;
+    
+    document.querySelectorAll('#desktop-wishlist-count, #mobile-wishlist-count, .wishlist-count, [class*="wishlist-count"]').forEach(el => {
+        if (el) {
+            el.textContent = count;
+            el.style.display = count > 0 ? 'flex' : 'none';
+        }
+    });
 }
 
 // Remove item from wishlist
 function removeFromWishlist(productId) {
     let wishlist = getWishlist();
-    const itemToRemove = wishlist.find(item => item.id == productId);
-    
-    if (!itemToRemove) return;
-    
     wishlist = wishlist.filter(item => item.id != productId);
-    saveWishlist(wishlist);
+    localStorage.setItem('wishlist', JSON.stringify(wishlist));
     
-    showToast('Item removed from wishlist', 'error');
-    renderWishlist(); // Re-render the wishlist
+    // Show notification
+    if (typeof showToast === 'function') {
+        showToast('Item removed from wishlist', 'error');
+    }
+    
+    renderWishlist();
     updateWishlistCount();
     
-    // Trigger storage event for other tabs
+    // Trigger event for other tabs
     window.dispatchEvent(new Event('storage'));
+    window.dispatchEvent(new CustomEvent('wishlistUpdated'));
 }
 
 // Move item to cart
@@ -82,7 +79,7 @@ function moveToCart(productId) {
         cart.push({
             id: item.id,
             name: item.name,
-            price: parseFloat(item.price),
+            price: parseFloat(String(item.price).replace(/[₹$,]/g, '')),
             image: item.image,
             quantity: 1
         });
@@ -93,7 +90,10 @@ function moveToCart(productId) {
     // Remove from wishlist
     removeFromWishlist(productId);
     
-    showToast('Item moved to cart!', 'success');
+    // Show notification
+    if (typeof showToast === 'function') {
+        showToast('Item moved to cart!', 'success');
+    }
     
     // Update cart count if function exists
     if (typeof updateCartCount === 'function') {
@@ -101,173 +101,135 @@ function moveToCart(productId) {
     }
 }
 
-// Update wishlist count in header
-function updateWishlistCount() {
-    const count = getWishlist().length;
-    
-    document.querySelectorAll('#desktop-wishlist-count, #mobile-wishlist-count, .wishlist-count, [class*="wishlist-count"]').forEach(el => {
-        if (el) {
-            el.textContent = count;
-            el.style.display = count > 0 ? 'flex' : 'none';
-        }
-    });
+// Navigate to product details
+function goToProduct(id) {
+    const product = getWishlist().find(p => p.id == id);
+    if (product) {
+        sessionStorage.setItem('selectedProduct', JSON.stringify(product));
+        
+        // Build URL parameters
+        const params = new URLSearchParams({
+            id: product.id,
+            name: encodeURIComponent(product.name || ''),
+            brand: encodeURIComponent(product.brand || ''),
+            price: product.price,
+            originalPrice: product.originalPrice || product.price,
+            image: encodeURIComponent(product.image || ''),
+            description: encodeURIComponent(product.description || ''),
+            category: product.category || 'all'
+        });
+        
+        window.location.href = `../productdetails.html?${params.toString()}`;
+    }
 }
 
-// Calculate and display wishlist statistics
-function updateWishlistStats(wishlist) {
-    const statsContainer = document.getElementById('wishlist-stats');
-    if (!statsContainer) return;
+// Main render function
+function renderWishlist() {
+    const container = document.getElementById('wishlistContainer');
+    const emptyState = document.getElementById('emptyState');
+    const wishlist = getWishlist();
+
+    console.log('Rendering wishlist with items:', wishlist);
 
     if (wishlist.length === 0) {
-        statsContainer.classList.add('hidden');
+        if (container) container.classList.add('hidden');
+        if (emptyState) emptyState.classList.remove('hidden');
         return;
     }
 
-    statsContainer.classList.remove('hidden');
+    if (container) container.classList.remove('hidden');
+    if (emptyState) emptyState.classList.add('hidden');
+    
+    if (!container) return;
+    
+    container.innerHTML = '';
 
-    // Calculate totals
-    let totalValue = 0;
-    let totalSavings = 0;
-
-    wishlist.forEach(item => {
-        const currentPrice = parseFloat(item.price) || 0;
-        const originalPrice = parseFloat(item.originalPrice) || currentPrice;
+    wishlist.forEach(product => {
+        // Parse prices properly
+        const currentPrice = parseFloat(String(product.price).replace(/[₹$,]/g, ''));
+        const originalPrice = product.originalPrice ? 
+            parseFloat(String(product.originalPrice).replace(/[₹$,]/g, '')) : currentPrice;
         
-        totalValue += currentPrice;
-        totalSavings += (originalPrice - currentPrice);
-    });
+        const discountPercentage = calculateDiscountPercentage(originalPrice, currentPrice);
+        const hasDiscount = originalPrice > currentPrice && discountPercentage > 0;
 
-    // Update DOM
-    document.getElementById('total-items').textContent = wishlist.length;
-    document.getElementById('total-value').textContent = `₹${totalValue.toFixed(0)}`;
-    document.getElementById('total-savings').textContent = `₹${totalSavings.toFixed(0)}`;
-}
+        const div = document.createElement('div');
+        div.className = 'wishlist-item bg-white rounded-xl shadow-lg overflow-hidden';
 
-// Create wishlist item card HTML
-function createWishlistCard(item, index) {
-    const currentPrice = parseFloat(item.price) || 0;
-    const originalPrice = parseFloat(item.originalPrice) || currentPrice;
-    const discount = calculateDiscount(originalPrice, currentPrice);
-    const savings = originalPrice - currentPrice;
+        const priceLine = hasDiscount ? 
+            `<div class="text-lg font-bold text-green-600">
+                ₹${currentPrice.toFixed(0)} 
+                <s class="text-gray-400 text-sm">₹${originalPrice.toFixed(0)}</s> 
+                <span class="text-sm font-bold">${discountPercentage}% off</span>
+            </div>` :
+            `<div class="text-lg font-bold text-green-600">₹${currentPrice.toFixed(0)}</div>`;
 
-    return `
-        <div class="wishlist-item fade-in h-40" style="animation-delay: ${index * 0.1}s">
-            <!-- Image Container -->
-            <div class="item-image-container">
-                <img src="${item.image || 'https://via.placeholder.com/300'}" 
-                     alt="${item.name}" 
-                     class="item-image">
-                
-                <!-- Discount Badge -->
-                ${discount > 0 ? `<div class="discount-badge">${discount}% OFF</div>` : ''}
-                
-                <!-- Remove Button -->
-                <button onclick="removeFromWishlist(${item.id})" 
-                        class="remove-btn"
-                        title="Remove from wishlist">
-                    <i class="fas fa-times"></i>
+        div.innerHTML = `
+            <div class="relative group">
+                <img src="${product.image || 'https://via.placeholder.com/300'}" 
+                     alt="${product.name}" 
+                     class="w-full h-48 object-cover">
+                <button onclick="removeFromWishlist(${product.id})" 
+                        class="absolute top-2 right-2 bg-white/90 hover:bg-red-500 text-red-600 hover:text-white w-10 h-10 rounded-full shadow-lg flex items-center justify-center transition">
+                    <i class="fas fa-trash-alt"></i>
                 </button>
             </div>
-            
-            <!-- Card Content -->
-            <div class="item-content">
-                <h3 class="item-name" title="${item.name}">
-                    ${item.name || 'Product Name'}
-                </h3>
-                
-                <!-- Price Container -->
-                <div class="price-container">
-                    <span class="current-price text-green-600 text-xl font-bold">₹${currentPrice}</span>
-                    ${originalPrice > currentPrice ? `
-                        <span class="original-price">₹${originalPrice}</span>
-                        <span class="savings-badge">Save ₹${savings.toFixed(0)}</span>
-                    ` : ''}
-                </div>
-                
-                <!-- Action Buttons -->
-                <div class="action-buttons">
-                    <button onclick="moveToCart(${item.id})" 
-                            class="btn-add-cart bg-blue-600"
-                            title="Move to cart">
-                        <i class="fas fa-shopping-cart"></i>
+            <div class="p-4">
+                <h3 class="font-semibold text-sm line-clamp-2 h-6 mb-1">${product.name || 'Product Name'}</h3>
+                ${product.brand ? `<p class="text-xs text-gray-500">${product.brand}</p>` : ''}
+                ${priceLine}
+                <div class="mt-4 flex gap-2">
+                    <button onclick="moveToCart(${product.id})" 
+                            class="flex-1 bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-lg font-bold text-sm transition">
                         Add to Cart
                     </button>
-                    
-                    <button onclick="removeFromWishlist(${item.id})" 
-                            class="btn-delete"
-                            title="Remove">
-                        <i class="fas fa-trash"></i>
+                    <button onclick="goToProduct(${product.id})" 
+                            class="bg-gray-200 hover:bg-gray-300 text-gray-800 py-2 px-3 rounded-lg font-bold text-sm transition">
+                        <i class="fas fa-eye"></i>
                     </button>
                 </div>
             </div>
-        </div>
-    `;
+        `;
+        container.appendChild(div);
+    });
 }
 
-// Main function to render wishlist
-function renderWishlist() {
-    const loadingState = document.getElementById('loading-state');
-    const emptyState = document.getElementById('empty-state');
-    const wishlistItems = document.getElementById('wishlist-items');
-    
-    // Hide loading state
-    if (loadingState) loadingState.classList.add('hidden');
-    
-    // Get wishlist data
+// Debug function to check localStorage
+function debugWishlist() {
     const wishlist = getWishlist();
-    
-    console.log('Rendering wishlist with', wishlist.length, 'items:', wishlist);
-    
-    // Update statistics
-    updateWishlistStats(wishlist);
-    
-    // Show empty state if no items
-    if (wishlist.length === 0) {
-        if (emptyState) emptyState.classList.remove('hidden');
-        if (wishlistItems) wishlistItems.classList.add('hidden');
-        return;
-    }
-    
-    // Show wishlist items
-    if (emptyState) emptyState.classList.add('hidden');
-    if (wishlistItems) {
-        wishlistItems.classList.remove('hidden');
-        wishlistItems.innerHTML = wishlist.map((item, index) => createWishlistCard(item, index)).join('');
-    }
-}
-
-// Clear entire wishlist
-function clearWishlist() {
-    if (!confirm('Are you sure you want to clear your entire wishlist?')) return;
-    
-    localStorage.removeItem('wishlist');
-    showToast('Wishlist cleared', 'error');
-    renderWishlist();
-    updateWishlistCount();
+    console.log('=== WISHLIST DEBUG ===');
+    console.log('Number of items:', wishlist.length);
+    console.log('Items:', wishlist);
+    console.log('LocalStorage key "wishlist":', localStorage.getItem('wishlist'));
+    console.log('=====================');
 }
 
 // Initialize on page load
 document.addEventListener('DOMContentLoaded', () => {
-    console.log('Wishlist page loaded');
+    console.log('Wishlist page initialized');
+    debugWishlist(); // Debug output
     
-    // Small delay to ensure localStorage is accessible
+    // Small delay to ensure everything is loaded
     setTimeout(() => {
         renderWishlist();
         updateWishlistCount();
+        
+        // Listen for wishlist updates
+        window.addEventListener('wishlistUpdated', renderWishlist);
+        window.addEventListener('storage', (e) => {
+            if (e.key === 'wishlist') {
+                console.log('Wishlist updated from another tab');
+                renderWishlist();
+                updateWishlistCount();
+            }
+        });
     }, 100);
-});
-
-// Listen for storage changes (from other tabs)
-window.addEventListener('storage', (e) => {
-    if (e.key === 'wishlist') {
-        console.log('Wishlist updated in another tab');
-        renderWishlist();
-        updateWishlistCount();
-    }
 });
 
 // Make functions globally accessible
 window.removeFromWishlist = removeFromWishlist;
 window.moveToCart = moveToCart;
-window.clearWishlist = clearWishlist;
+window.goToProduct = goToProduct;
 window.renderWishlist = renderWishlist;
+window.updateWishlistCount = updateWishlistCount;
+window.debugWishlist = debugWishlist;

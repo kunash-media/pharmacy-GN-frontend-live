@@ -42,7 +42,6 @@
   </div>
 
   <div id="footer-placeholder"></div>
-
   <script>
     function loadHeader() {
       fetch('../Header/header.html')
@@ -62,77 +61,16 @@
           document.getElementById('footer-placeholder').innerHTML = html;
         });
     }
-
-    function renderWishlist() {
-      const container = document.getElementById('wishlistContainer');
-      const emptyState = document.getElementById('emptyState');
-      const wishlist = JSON.parse(localStorage.getItem('wishlist') || '[]');
-
-      if (wishlist.length === 0) {
-        container.classList.add('hidden');
-        emptyState.classList.remove('hidden');
-        return;
-      }
-
-      container.classList.remove('hidden');
-      emptyState.classList.add('hidden');
-      container.innerHTML = '';
-
-      wishlist.forEach(product => {
-        const div = document.createElement('div');
-        div.className = 'wishlist-item bg-white rounded-xl shadow-lg overflow-hidden';
-
-        const priceLine = product.originalPrice
-          ? `<div class="text-lg font-bold  text-green-600">₹${product.price} <s class="text-gray-400 text-sm">₹${product.originalPrice}</s> <span class="text-sm font-bold">${product.discount}% off</span></div>`
-          : `<div class="text-lg font-bold text-green-600">₹${product.price}</div>`;
-
-        div.innerHTML = `
-          <div class="relative group">
-            <img src="${product.image}" alt="${product.name}" class="w-full h-full object-cover">
-            <button onclick="removeFromWishlist(${product.id})" class="absolute top-2 right-2 bg-white/90 hover:bg-red-500 text-red-600 hover:text-white w-10 h-10 rounded-full shadow-lg flex items-center justify-center transition">
-              <i class="fas fa-trash-alt"></i>
-            </button>
-          </div>
-          <div class="p-4">
-            <h3 class="font-semibold text-sm line-clamp-2 h-6">${product.name}</h3>
-            <p class="text-xs text-gray-500 mt-1">${product.brand}</p>
-            ${priceLine}
-            <button onclick="goToProduct(${product.id})" class="mt-4 w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-lg font-bold text-sm transition">
-              View Details
-            </button>
-          </div>
-        `;
-        container.appendChild(div);
-      });
-    }
-
-    function removeFromWishlist(id) {
-      let wishlist = JSON.parse(localStorage.getItem('wishlist') || '[]');
-      wishlist = wishlist.filter(item => item.id !== id);
-      localStorage.setItem('wishlist', JSON.stringify(wishlist));
-      renderWishlist();
-
-      // Update header badge
-      window.dispatchEvent(new CustomEvent('wishlistUpdated'));
-    }
-
-    function goToProduct(id) {
-      const product = JSON.parse(localStorage.getItem('wishlist') || '[]').find(p => p.id === id);
-      if (product) {
-        sessionStorage.setItem('selectedProduct', JSON.stringify(product));
-        window.location.href = `../productdetails.html?id=${id}`;
-      }
-    }
-
     // Load header/footer and render wishlist
     document.addEventListener('DOMContentLoaded', () => {
       loadHeader();
       loadFooter();
       renderWishlist();
-
-      // Listen for wishlist changes from other pages
-      window.addEventListener('wishlistUpdated', renderWishlist);
     });
   </script>
+
+ 
+  <script src="../Wishlist/wishlist.js"></script>
+ 
 </body>
 </html>

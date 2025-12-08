@@ -120,25 +120,34 @@ function renderFrequentlyBought(products) {
     const container = document.getElementById('frequently-bought-container');
     if (!container) return;
 
+    // Helper function to parse price
+    function parsePrice(priceStr) {
+        if (!priceStr) return 0;
+        const cleanStr = String(priceStr).replace(/[₹$,]/g, '').trim();
+        return parseFloat(cleanStr) || 0;
+    }
+
     container.innerHTML = products.length === 0
         ? '<p class="col-span-full text-center text-gray-500 py-8">No related products</p>'
         : '';
 
     products.forEach(p => {
-        const discount = p.originalPrice
-            ? Math.round(((p.originalPrice - p.price) / p.originalPrice) * 100)
+        const price = parsePrice(p.price);
+        const originalPrice = p.originalPrice ? parsePrice(p.originalPrice) : 0;
+        const discount = originalPrice && originalPrice > price
+            ? Math.round(((originalPrice - price) / originalPrice) * 100)
             : 0;
 
         const card = document.createElement('div');
         card.className = 'bg-white rounded-xl shadow-md p-4 hover:shadow-lg transition cursor-pointer';
         card.innerHTML = `
             <img src="${p.image}" class="w-full h-40 object-cover rounded-lg mb-3">
-            <h4 class="font-medium text-sm line-clamp-2 mb-1">${p.title}</h4>
+            <h4 class="font-medium text-sm line-clamp-2 mb-1">${p.name}</h4>
             <p class="text-xs text-gray-500">${p.brand || 'Generic'}</p>
             <div class="mt-2 flex items-center gap-2">
-                <span class="text-lg font-bold text-green-600">₹${p.price}</span>
-                ${p.originalPrice ? `
-                    <span class="text-sm text-gray-400 line-through">₹${p.originalPrice}</span>
+                <span class="text-lg font-bold text-green-600">₹${price.toFixed(0)}</span>
+                ${originalPrice && originalPrice > price ? `
+                    <span class="text-sm text-gray-400 line-through">₹${originalPrice.toFixed(0)}</span>
                     <span class="text-xs text-green-600 font-bold">${discount}% off</span>
                 ` : ''}
             </div>
@@ -171,42 +180,67 @@ window.navigateToProductDetails = function(id) {
     window.location.href = `productdetails.html?${params.toString()}`;
 };
 
-// Load product from URL parameters
+/// Update the loadFromUrlParams function - fix the price parsing
 function loadFromUrlParams() {
     const p = getUrlParams();
 
     if (!p.name || !p.price) return false;
 
+    // Helper function to safely parse price (remove ₹ symbol and commas)
+    function parsePrice(priceStr) {
+        if (!priceStr) return 0;
+        // Remove currency symbols and commas, then parse as float
+        const cleanStr = String(priceStr).replace(/[₹$,]/g, '').trim();
+        return parseFloat(cleanStr) || 0;
+    }
+
     currentProduct = {
         id: p.id || Date.now(),
         name: p.name,
         brand: p.brand || 'Generic',
-        price: parseFloat(p.price),
-        originalPrice: p.originalPrice ? parseFloat(p.originalPrice) : null,
+        price: parsePrice(p.price),
+        originalPrice: p.originalPrice ? parsePrice(p.originalPrice) : null,
         discount: p.discount ? parseInt(p.discount) : 0,
         image: p.image || 'https://via.placeholder.com/600',
         description: p.description || 'No description available.',
         category: p.category || 'all'
     };
 
+    // If discount is not provided, calculate it from prices
+    if (!p.discount && currentProduct.originalPrice && currentProduct.originalPrice > currentProduct.price) {
+        currentProduct.discount = Math.round(
+            ((currentProduct.originalPrice - currentProduct.price) / currentProduct.originalPrice) * 100
+        );
+    }
+
     // Update all UI elements
     document.getElementById('product-name').textContent = currentProduct.name;
     document.getElementById('selling-price').textContent = '₹' + currentProduct.price.toFixed(0);
 
-    if (currentProduct.originalPrice) {
-        document.getElementById('mrp-price').textContent = '₹' + currentProduct.originalPrice;
+    if (currentProduct.originalPrice && currentProduct.originalPrice > currentProduct.price) {
+        document.getElementById('mrp-price').textContent = '₹' + currentProduct.originalPrice.toFixed(0);
         document.getElementById('discount-badge').textContent = currentProduct.discount + '% OFF';
         document.getElementById('discount-badge').classList.remove('hidden');
-        document.querySelector('.line-through')?.classList.remove('hidden');
+        
+        // Ensure the original price container is visible
+        const originalPriceContainer = document.querySelector('.line-through');
+        if (originalPriceContainer) {
+            originalPriceContainer.classList.remove('hidden');
+        }
     } else {
         document.getElementById('discount-badge').classList.add('hidden');
-        document.querySelector('.line-through')?.classList.add('hidden');
+        
+        // Hide the original price container if there's no discount
+        const originalPriceContainer = document.querySelector('.line-through');
+        if (originalPriceContainer) {
+            originalPriceContainer.classList.add('hidden');
+        }
     }
 
     const mainImg = document.getElementById('main-product-image');
     if (mainImg && currentProduct.image) {
-        mainImg.src = currentProduct.image;
-        renderThumbnails(currentProduct.image);
+        mainImg.src = decodeURIComponent(currentProduct.image);
+        renderThumbnails(decodeURIComponent(currentProduct.image));
     }
 
     removeSkeleton();
