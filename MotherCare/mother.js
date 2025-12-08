@@ -168,7 +168,7 @@ function createProductCard(p) {
          ${!isOutOfStock ? `onclick="event.stopPropagation(); viewProductDetails(${p.id})"` : ''}
          style="${isOutOfStock ? 'pointer-events: none;' : ''}">
 
-      <div class="relative bg-gray-50 aspect-[6/4] overflow-hidden">
+      <div class="relative bg-gray-50 cursor-pointer aspect-[6/4] overflow-hidden">
         <img src="${p.mainImageUrl}" alt="${p.title}"
              class="w-full h-full object-contain p-5 transition-transform duration-500 ${!isOutOfStock ? 'group-hover:scale-110' : ''}">
 
@@ -189,17 +189,18 @@ function createProductCard(p) {
         <h3 class="text-sm font-medium text-gray-800 line-clamp-2 mt-1">${p.title}</h3>
 
         <div class="mt-2 flex items-center gap-2">
-          <span class="text-lg font-bold text-gray-900">₹${p.price.toLocaleString()}</span>
+          <span class="text-lg font-bold text-green-600">₹${p.price.toLocaleString()}</span>
           ${p.originalPrice > p.price ? `
             <span class="text-sm text-gray-500 line-through">₹${p.originalPrice.toLocaleString()}</span>
           ` : ''}
+          <span class="text-sm font-medium text-red-500">₹${p.discount}% OFF</span>
         </div>
 
         <button onclick="event.stopPropagation(); viewProductDetails(${p.id})"
                 class="mt-3 w-full font-medium text-sm py-2.5 rounded-lg transition
                         ${isOutOfStock 
                           ? 'bg-gray-300 text-gray-600 cursor-not-allowed' 
-                          : 'bg-[#CD2C58] hover:bg-[#AB886D] text-white'}">
+                          : 'bg-[#CD2C58] hover:bg-[#850E35] text-white'}">
           ${isOutOfStock ? 'Out of Stock' : 'View Details'}
         </button>
       </div>

@@ -68,6 +68,11 @@ img:not([src]) {
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
 }
 
+.product-card.opacity-60:hover {
+  transform: none;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
 /* Button hover effects */
 button:hover {
   transform: translateY(-1px);

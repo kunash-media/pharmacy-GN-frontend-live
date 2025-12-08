@@ -47,6 +47,136 @@
     animation: ping 2s cubic-bezier(0, 0, 0.2, 1) infinite;
   }
 </style>
+<style>
+ /* Myntra track container - Horizontal layout */
+#feminine-track, #medicine-track {
+    display: flex !important;
+    flex-direction: row !important;
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+    scroll-behavior: smooth;
+    padding: 10px 15px !important;
+    gap: 16px !important;
+    width: 100% !important;
+    scrollbar-width: thin;
+    scrollbar-color: #cbd5e0 transparent;
+}
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+#feminine-track::-webkit-scrollbar,
+#medicine-track::-webkit-scrollbar {
+    height: 4px;
+}
+/* Make sure cards are inline */
+.myntra-track .myntra-card {
+    flex: 0 0 auto;
+    width: 230px;
+    min-width: 230px;
+}
+
+#feminine-track::-webkit-scrollbar-track,
+#medicine-track::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+}
+
+#feminine-track::-webkit-scrollbar-thumb,
+#medicine-track::-webkit-scrollbar-thumb {
+    background: #cbd5e0;
+    border-radius: 10px;
+}
+
+#feminine-track::-webkit-scrollbar-thumb:hover,
+#medicine-track::-webkit-scrollbar-thumb:hover {
+    background: #a0aec0;
+    display: none;
+}
+
+/* Individual cards in track */
+#feminine-track .myntra-card,
+#medicine-track .myntra-card {
+    flex: 0 0 auto !important; /* Don't grow or shrink */
+    width: 230px !important;
+    min-width: 230px !important;
+    max-width: 230px !important;
+    margin: 0 !important;
+}
+
+/* Track container parent */
+.myntra-track {
+    display: flex;
+    gap: 16px;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    padding: 10px 5px;
+    scrollbar-width: none; /* Hide scrollbar for Firefox */
+    -ms-overflow-style: none; /* Hide scrollbar for IE/Edge */
+}
+
+
+/* Arrow buttons visibility */
+.myntra-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 100;
+    background: white;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    border: 1px solid #e5e7eb;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.myntra-arrow:hover {
+    background: #3b82f6;
+    color: white;
+    transform: translateY(-50%) scale(1.1);
+    box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+}
+
+.myntra-arrow-left {
+    left: 20px;
+}
+
+.myntra-arrow-right {
+    right: 10px;
+}
+
+/* Hide arrows on mobile */
+@media (max-width: 768px) {
+    .myntra-arrow {
+        width: 36px;
+        height: 36px;
+        display: flex !important;
+    }
+
+    .myntra-arrow-left {
+        left: -15px;
+    }
+    
+    .myntra-arrow-right {
+        right: -15px;
+    }
+  }
+
+.myntra-carousel {
+    position: relative;
+    padding: 0 30px; /* Add padding for arrows */
+}
+
+/* Ensure cards don't wrap */
+#feminine-track > div,
+#medicine-track > div {
+    display: inline-block;
+    vertical-align: top;
+}
+</style>
 
     <style>
 
@@ -462,6 +592,12 @@
                 transform: translateY(-5px) scale(1.01);
             }
         }
+
+        @media (max-width: 640px) {
+    .myntra-carousel {
+        padding: 0 25px;
+    }
+}
         
       
   /* ===== MOBILE VIEW ME BANNER CONTENT KO FIX KARNE KE LIYE ===== */
@@ -871,13 +1007,13 @@
     </label>
     
     <button 
-      id="submitBtn"
-      type="submit"
-      disabled
-      class="px-6 py-2 bg-gray-300 text-gray-500 rounded-lg font-medium cursor-not-allowed transition"
-    >
-      Submit
-    </button>
+  id="uploadPrescriptionBtn"
+  type="button"
+  disabled
+  class="px-6 py-2 bg-gray-300 text-gray-500 rounded-lg font-medium cursor-not-allowed transition hover:opacity-90"
+>
+  Upload Prescription
+</button>
   </div>
 </div>
 <!-- Urgent Order Info Box with Call Button -->
@@ -891,11 +1027,11 @@
          
           
           <li class="flex items-start gap-2">
-            <img src="https://assets.pharmeasy.in/web-assets/images/uploadStep4.png?dim=64x64&q=75" alt="Step 4" class="w-12 h-12">
+            <img src="https://assets.pharmeasy.in/web-assets/images/uploadStep2.png?dim=64x64&q=75" alt="Step 2" class="w-12 h-12">
             <span>Choose the earliest delivery date</span>
           </li>
           <li class="flex items-start gap-2">
-            <img src="https://assets.pharmeasy.in/web-assets/images/uploadStep5.png?dim=64x64&q=75" alt="Step 5" class="w-12 h-12">
+            <img src="https://assets.pharmeasy.in/web-assets/images/uploadStep3.png?dim=64x64&q=75" alt="Step 3" class="w-12 h-12">
             <span>Finally, Share payment methods options</span>
           </li>
         </ul>
@@ -968,7 +1104,7 @@
   </div>
 </div>
  <!-- Carousel Container -->
-                <div class="w-full max-w-5xl mx-auto ">
+                <div class="w-full max-w-5xl mx-auto">
                     <div class="carousel-container p-8  rounded-2xl ">
                         <!-- Carousel -->
                         <div class="relative w-full  overflow-hidden rounded-xl">
@@ -995,7 +1131,7 @@
         <h2 class="text-2xl font-bold text-center text-gray-800 mb-12 ">Browse by Health Categories</h2>
         
         <!-- Categories Section -->
-        <div class="relative max-w-7xl mx-auto">
+        <div class="relative max-w-7xl mx-auto mb-8">
             <!-- Navigation Arrows -->
             <button id="scrollLeft" class="absolute left-0 top-1/2 transform -translate-y-1/2 -translate-x-4 z-10 bg-white rounded-full w-12 h-12 flex items-center justify-center shadow-lg hover:bg-blue-500 hover:text-white transition-all duration-300">
                 <i class="fas fa-chevron-left"></i>
@@ -1016,44 +1152,37 @@
         </div>
     </div>
 
-        
-       
 
-<!-- Feminine Hygiene Section -->
 <!-- Feminine Hygiene Carousel -->
-    <section class="mb-8 overflow-hidden">
-  <h2 class="text-2xl font-bold text-center mb-6 text-gray-800 mt-8">Feminine Hygiene</h2>
- <div class="relative">
-  <div id="feminine-track" class="flex gap-6 overflow-x-auto scrollbar-hide pb-4 px-4 snap-x snap-mandatory"></div>
-
-  <!-- LEFT & RIGHT ARROWS -->
-  <button id="feminine-prev" class="absolute left-2 top-1/2 -translate-y-1/2 z-10 bg-white/90 hover:bg-white shadow-xl rounded-full p-3 transition-all">
-    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M15 19l-7-7 7-7"/></svg>
-  </button>
-  <button id="feminine-next" class="absolute right-2 top-1/2 -translate-y-1/2 z-10 bg-white/90 hover:bg-white shadow-xl rounded-full p-3 transition-all">
-    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M9 5l7 7-7 7"/></svg>
-  </button>
-</div>
-</section>
+   <section class="myntra-section mb-8">
+        <h2 class="myntra-title text-2xl font-bold text-center text-gray-800 mb-12">Feminine Hygiene</h2>
+        <div class="myntra-carousel">
+            <button class="myntra-arrow myntra-arrow-left" id="fem-prev">
+                <i class="fas fa-chevron-left"></i>
+            </button>
+            <div class="myntra-track" id="feminine-track"></div>
+            <button class="myntra-arrow myntra-arrow-right" id="fem-next">
+                <i class="fas fa-chevron-right"></i>
+            </button>
+        </div>
+    </section>
 
     <!-- Medicine Carousel -->
-  <section class="overflow-hidden">
-  <h2 class="text-2xl font-bold text-center mb-6 text-gray-800">Medicines & Healthcare</h2>
-  <div class="relative">
-  <div id="medicine-track" class="flex gap-6 overflow-x-auto scrollbar-hide pb-4 px-4 snap-x snap-mandatory"></div>
-
-  <!-- LEFT & RIGHT ARROWS -->
-  <button id="medicine-prev" class="absolute left-2 top-1/2 -translate-y-1/2 z-10 bg-white/90 hover:bg-white shadow-xl rounded-full p-3 transition-all">
-    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M15 19l-7-7 7-7"/></svg>
-  </button>
-  <button id="medicine-next" class="absolute right-2 top-1/2 -translate-y-1/2 z-10 bg-white/90 hover:bg-white shadow-xl rounded-full p-3 transition-all">
-    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M9 5l7 7-7 7"/></svg>
-  </button>
-</div>
-</section>
+  <section class="myntra-section mb-8">
+        <h2 class="myntra-title text-2xl font-bold text-center text-gray-800 mb-12">Medicines & Healthcare</h2>
+        <div class="myntra-carousel">
+            <button class="myntra-arrow myntra-arrow-left" id="med-prev">
+                <i class="fas fa-chevron-left"></i>
+            </button>
+            <div class="myntra-track" id="medicine-track"></div>
+            <button class="myntra-arrow myntra-arrow-right" id="med-next">
+                <i class="fas fa-chevron-right"></i>
+            </button>
+        </div>
+    </section>
     
         <!-- Articles Section -->
-        <section class="container mx-auto py-14" id="articlesSection">
+        <section class="text-2xl font-bold text-center text-gray-800 mb-12 container mx-auto py-14" id="articlesSection">
             <!-- Dynamic articles will be inserted here -->
         </section>
 
@@ -1140,47 +1269,56 @@
         }
     </script>
 
-    <script>
-  const doctorNameInput = document.getElementById('doctorName');
-  const uploadBtn = document.getElementById('uploadBtn');
-  
-  // Enable/disable upload button based on doctor's name input
-  doctorNameInput.addEventListener('input', function() {
-    const doctorName = this.value.trim();
-    
-    if (doctorName.length > 0) {
-      uploadBtn.disabled = false;
-      uploadBtn.classList.remove('bg-gray-300', 'text-gray-500', 'cursor-not-allowed');
-      uploadBtn.classList.add('bg-blue-600', 'text-white', 'cursor-pointer', 'hover:bg-blue-700');
-    } else {
-      uploadBtn.disabled = true;
-      uploadBtn.classList.remove('bg-blue-600', 'text-white', 'cursor-pointer', 'hover:bg-blue-700');
-      uploadBtn.classList.add('bg-gray-300', 'text-gray-500', 'cursor-not-allowed');
+   <script>
+// Fixed Upload Prescription Button Logic
+document.addEventListener('DOMContentLoaded', function () {
+    const doctorNameInput = document.getElementById('doctorName');
+    const uploadPrescriptionBtn = document.getElementById('uploadPrescriptionBtn');
+
+    if (!doctorNameInput || !uploadPrescriptionBtn) {
+        console.warn('Upload prescription elements not found');
+        return;
     }
-  });
-  
-  // Upload button click handler
-  uploadBtn.addEventListener('click', function() {
-    if (!this.disabled) {
-      // Create and trigger file input
-      const fileInput = document.createElement('input');
-      fileInput.type = 'file';
-      fileInput.accept = 'image/*,.pdf';
-      fileInput.click();
-      
-      fileInput.addEventListener('change', function(e) {
-        const file = e.target.files[0];
-        if (file) {
-          console.log('File selected:', file.name);
-          // Add your file upload logic here
+
+    // Enable button when doctor name is entered
+    doctorNameInput.addEventListener('input', function () {
+        const hasName = this.value.trim().length > 0;
+        if (hasName) {
+            uploadPrescriptionBtn.disabled = false;
+            uploadPrescriptionBtn.className = 'px-6 py-2 bg-blue-600 text-white rounded-lg font-medium cursor-pointer transition hover:bg-blue-700';
+        } else {
+            uploadPrescriptionBtn.disabled = true;
+            uploadPrescriptionBtn.className = 'px-6 py-2 bg-gray-300 text-gray-500 rounded-lg font-medium cursor-not-allowed transition';
         }
-      });
-    }
-  });
+    });
+
+    // Click → open file picker
+    uploadPrescriptionBtn.addEventListener('click', function () {
+        if (this.disabled) return;
+
+        const fileInput = document.createElement('input');
+        fileInput.type = 'file';
+        fileInput.accept = 'image/*,.pdf';
+        fileInput.style.display = 'none';
+
+        fileInput.onchange = function (e) {
+            const file = e.target.files[0];
+            if (file) {
+                alert(`Selected: ${file.name}\n\nIn real app: Upload to server now`);
+                console.log('Prescription file:', file);
+                // Here you would upload the file
+            }
+        };
+
+        document.body.appendChild(fileInput);
+        fileInput.click();
+        document.body.removeChild(fileInput);
+    });
+});
 </script>
     
 <script src="./cart-wishlist-system.js"></script>
-<script src="./cart.js"></script>
+<!-- <script src="./cart.js"></script> -->
  <script src="./index.js"></script>
 </body>
 </html>

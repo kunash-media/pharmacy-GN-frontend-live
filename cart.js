@@ -79,13 +79,13 @@
             return `
             <div class="cart-item bg-white border-b p-5 flex gap-4 items-start">
                 <div class="flex-shrink-0">
-                    <img src="${item.mainImageUrl || 'https://via.placeholder.com/100/3B82F6/white?text=Product'}" 
-                         alt="${item.title}" class="w-28 h-28 object-cover rounded-lg border">
+                    <img src="${item.image || 'https://via.placeholder.com/100/3B82F6/white?text=Product'}" 
+                         alt="${item.name}" class="w-28 h-28 object-cover rounded-lg border">
                 </div>
                 <div class="flex-1">
                     <div class="flex justify-between">
                         <div class="flex-1">
-                            <h3 class="font-semibold text-gray-800 text-base mb-1">${item.title || 'Unknown Product'}</h3>
+                            <h3 class="font-semibold text-gray-800 text-base mb-1">${item.name || 'Unknown Product'}</h3>
                             ${item.size ? `<p class="text-xs text-gray-500 mb-2">Pack Size: ${item.size} Pieces</p>` : ''}
                             
                             <div class="flex items-center gap-3 mb-3">
