@@ -249,86 +249,287 @@ function renderRelatedProducts(products) {
     });
 }
 
-// Render Specifications Table (Like the image example)
-function renderSpecificationsTable(product) {
-    const tableBody = document.getElementById('specs-table-body');
-    if (!tableBody) return;
+// Format date for display
+function formatDate(dateStr) {
+    if (!dateStr) return 'Not specified';
+    try {
+        const date = new Date(dateStr);
+        return date.toLocaleDateString('en-IN', {
+            day: '2-digit',
+            month: 'short',
+            year: 'numeric'
+        });
+    } catch {
+        return dateStr;
+    }
+}
+
+// Helper function to parse arrays
+function parseArray(str) {
+    try {
+        if (!str || str === 'undefined' || str === 'null') return [];
+        return JSON.parse(str);
+    } catch {
+        return [];
+    }
+}
+
+// Helper function to parse objects
+function parseObject(str) {
+    try {
+        if (!str || str === 'undefined' || str === 'null') return {};
+        return JSON.parse(str);
+    } catch {
+        return {};
+    }
+}
+
+// Render Product Details Tab (first tab)
+function renderProductDetailsTab() {
+    const tableBody = document.getElementById('specifications-table-body');
+    if (!tableBody || !currentProduct) return;
     
     tableBody.innerHTML = '';
     
-    // Helper function to parse arrays and objects
-    function parseArray(str) {
-        try {
-            if (!str) return [];
-            return JSON.parse(str);
-        } catch {
-            return [];
-        }
-    }
+    // Parse dynamic fields
+    const dynamicFields = typeof currentProduct.productDynamicFields === 'object' ? 
+        currentProduct.productDynamicFields : 
+        parseObject(currentProduct.productDynamicFields);
     
-    function parseObject(str) {
-        try {
-            if (!str) return {};
-            return JSON.parse(str);
-        } catch {
-            return {};
-        }
-    }
-    
-    const benefits = Array.isArray(product.benefitsList) ? product.benefitsList : parseArray(product.benefitsList);
-    const ingredients = Array.isArray(product.ingredientsList) ? product.ingredientsList : parseArray(product.ingredientsList);
-    const dynamicFields = typeof product.productDynamicFields === 'object' ? product.productDynamicFields : parseObject(product.productDynamicFields);
-    
-    // Extract suitable for information
-    let suitableFor = '';
-    if (dynamicFields.suitableFor) {
-        suitableFor = dynamicFields.suitableFor;
-    } else if (product.category === 'male') {
-        suitableFor = 'Men';
-    } else if (product.category === 'female') {
-        suitableFor = 'Women';
-    } else if (product.category === 'ayurvedic') {
-        suitableFor = 'Adults';
-    }
-    
-    // Create table rows like the image example
-    const specs = [
-        { label: 'Brand', value: product.brand || product.brandName || 'Generic' },
-        { label: 'Category', value: product.productSubCategory || product.category || 'Health Supplements' },
-        { label: 'Description', value: product.description || product.productDescription || 'No description available' },
-        { label: 'Suitable For', value: suitableFor },
-        { label: 'Form', value: dynamicFields.form || 'Capsule/Tablet' },
+    // Product Details Section
+    const productDetails = [
+        { label: 'Product Description', value: currentProduct.description || currentProduct.productDescription || 'No description available' },
+        { label: 'Brand', value: currentProduct.brand || currentProduct.brandName || 'Generic' },
+        { label: 'Category', value: currentProduct.productSubCategory || currentProduct.category || 'Health Supplements' },
+        { label: 'Manufacturing Date', value: formatDate(currentProduct.mfgDate) },
+        { label: 'Expiry Date', value: formatDate(currentProduct.expDate) },
+        { label: 'SKU', value: currentProduct.sku || 'N/A' },
+        { label: 'Batch Number', value: currentProduct.batchNo || 'Not specified' },
+        { label: 'Product Status', value: currentProduct.productQuantity > 0 ? 
+            '<span class="text-green-600 font-semibold">In Stock</span>' : 
+            '<span class="text-red-600 font-semibold">Out of Stock</span>' },
+        { label: 'Available Quantity', value: currentProduct.productQuantity || 0 },
+        { label: 'Product Unit', value: currentProduct.unit || 'Not specified' },
+        { label: 'Form', value: dynamicFields.form || 'Not specified' },
         { label: 'Strength', value: dynamicFields.strength || 'Not specified' },
-        { label: 'Dosage', value: dynamicFields.dosage || 'As directed by physician' },
         { label: 'Shelf Life', value: dynamicFields.shelfLife || '24 months' },
-        { label: 'Country of Origin', value: dynamicFields.countryOfOrigin || 'India' },
-        { label: 'Ingredients', value: ingredients.length > 0 ? ingredients.join(', ') : 'Not specified' },
-        { label: 'Key Benefits', value: benefits.length > 0 ? benefits.join(' • ') : 'Not specified' },
-        { label: 'Prescription Required', value: product.prescriptionRequired === true || product.prescription === 'true' ? 'Yes' : 'No' },
-        { label: 'Storage Instructions', value: dynamicFields.storage || 'Store in a cool dry place away from direct sunlight' }
+        { label: 'Country of Origin', value: dynamicFields.countryOfOrigin || 'India' }
     ];
     
-    specs.forEach(spec => {
-        if (spec.value && spec.value.trim() !== '') {
+    // Add product details rows
+    productDetails.forEach((detail, index) => {
+        if (detail.value && detail.value.toString().trim() !== '') {
             const row = document.createElement('tr');
+            row.className = index % 2 === 0 ? 'bg-gray-50' : 'bg-white';
             row.innerHTML = `
-                <td class="spec-label">${spec.label}</td>
-                <td class="spec-value">${spec.value}</td>
+                <td class="spec-label py-3 px-6 border-b border-gray-200">
+                    <span class="font-semibold text-gray-700">${detail.label}</span>
+                </td>
+                <td class="spec-value py-3 px-6 border-b border-gray-200">
+                    <div class="text-gray-600">${detail.value}</div>
+                </td>
             `;
             tableBody.appendChild(row);
         }
     });
+}
+
+// Render Benefits Tab (second tab)
+function renderBenefitsTab() {
+    const benefitsContent = document.getElementById('benefits-content');
+    if (!benefitsContent || !currentProduct) return;
     
-    // If no specifications found, show a message
-    if (tableBody.children.length === 0) {
-        const row = document.createElement('tr');
-        row.innerHTML = `
-            <td colspan="2" class="text-center text-gray-500 py-8">
-                No specifications available for this product
-            </td>
+    const benefits = Array.isArray(currentProduct.benefitsList) ? 
+        currentProduct.benefitsList : 
+        parseArray(currentProduct.benefitsList);
+    
+    benefitsContent.innerHTML = '';
+    
+    if (benefits.length === 0) {
+        benefitsContent.innerHTML = `
+            <div class="py-8">
+                <h3 class="text-xl font-bold text-gray-800 mb-6">Product Benefits</h3>
+                <p class="text-gray-600">No benefits information available for this product.</p>
+            </div>
         `;
-        tableBody.appendChild(row);
+        return;
     }
+    
+    benefitsContent.innerHTML = `
+        <div class="py-8">
+            <h3 class="text-xl font-bold text-gray-800 mb-6">Key Benefits</h3>
+            <div class="bg-white rounded-lg border border-gray-200 p-6">
+                <ul class="space-y-4">
+                    ${benefits.map((benefit, index) => `
+                        <li class="flex items-start">
+                            <span class="flex-shrink-0 w-8 h-8 bg-green-100 rounded-full flex items-center justify-center mr-3 mt-1">
+                                <i class="fas fa-check text-green-600 text-sm"></i>
+                            </span>
+                            <span class="text-gray-700">${benefit}</span>
+                        </li>
+                    `).join('')}
+                </ul>
+            </div>
+        </div>
+    `;
+}
+
+// Render Ingredients Tab (third tab)
+function renderIngredientsTab() {
+    const ingredientsContent = document.getElementById('ingredients-content');
+    if (!ingredientsContent || !currentProduct) return;
+    
+    const ingredients = Array.isArray(currentProduct.ingredientsList) ? 
+        currentProduct.ingredientsList : 
+        parseArray(currentProduct.ingredientsList);
+    
+    ingredientsContent.innerHTML = '';
+    
+    if (ingredients.length === 0) {
+        ingredientsContent.innerHTML = `
+            <div class="py-8">
+                <h3 class="text-xl font-bold text-gray-800 mb-6">Product Ingredients</h3>
+                <p class="text-gray-600">No ingredients information available for this product.</p>
+            </div>
+        `;
+        return;
+    }
+    
+    ingredientsContent.innerHTML = `
+        <div class="py-8">
+            <h3 class="text-xl font-bold text-gray-800 mb-6">Product Composition</h3>
+            <div class="bg-white rounded-lg border border-gray-200 p-6">
+                <ul class="space-y-3">
+                    ${ingredients.map((ingredient, index) => `
+                        <li class="flex items-start">
+                            <span class="flex-shrink-0 w-6 h-6 bg-blue-100 rounded-full flex items-center justify-center mr-3 mt-1">
+                                <span class="text-blue-600 text-xs font-bold">${index + 1}</span>
+                            </span>
+                            <span class="text-gray-700">${ingredient}</span>
+                        </li>
+                    `).join('')}
+                </ul>
+            </div>
+        </div>
+    `;
+}
+
+// Render Directions Tab (fourth tab)
+function renderDirectionsTab() {
+    const directionsContent = document.getElementById('directions-content');
+    if (!directionsContent || !currentProduct) return;
+    
+    const directions = Array.isArray(currentProduct.directionsList) ? 
+        currentProduct.directionsList : 
+        parseArray(currentProduct.directionsList);
+    
+    // Parse dynamic fields for additional information
+    const dynamicFields = typeof currentProduct.productDynamicFields === 'object' ? 
+        currentProduct.productDynamicFields : 
+        parseObject(currentProduct.productDynamicFields);
+    
+    directionsContent.innerHTML = '';
+    
+    let content = `
+        <div class="py-8">
+            <h3 class="text-xl font-bold text-gray-800 mb-6">Directions for Use</h3>
+    `;
+    
+    if (directions.length > 0) {
+        content += `
+            <div class="mb-8">
+                <div class="bg-white rounded-lg border border-gray-200 p-6">
+                    <ul class="space-y-4">
+                        ${directions.map((direction, index) => `
+                            <li class="flex items-start">
+                                <span class="flex-shrink-0 w-8 h-8 bg-orange-100 rounded-full flex items-center justify-center mr-3 mt-1">
+                                    <span class="text-orange-600 font-bold">${index + 1}</span>
+                                </span>
+                                <span class="text-gray-700">${direction}</span>
+                            </li>
+                        `).join('')}
+                    </ul>
+                </div>
+            </div>
+        `;
+    } else {
+        content += `
+            <div class="mb-8">
+                <p class="text-gray-600">No directions information available for this product.</p>
+            </div>
+        `;
+    }
+    
+    // Additional Information Section
+    const additionalInfo = [];
+    
+    if (dynamicFields.dosage) {
+        additionalInfo.push({ label: 'Recommended Dosage', value: dynamicFields.dosage });
+    }
+    
+    if (currentProduct.prescriptionRequired || currentProduct.prescription === 'true') {
+        additionalInfo.push({ 
+            label: 'Prescription Required', 
+            value: '<span class="text-red-600 font-semibold">Yes - Please consult a doctor before use</span>' 
+        });
+    } else if (currentProduct.prescriptionRequired === false || currentProduct.prescription === 'false') {
+        additionalInfo.push({ 
+            label: 'Prescription Required', 
+            value: '<span class="text-green-600 font-semibold">No - Available over the counter</span>' 
+        });
+    }
+    
+    if (dynamicFields.storage) {
+        additionalInfo.push({ label: 'Storage Instructions', value: dynamicFields.storage });
+    }
+    
+    if (dynamicFields.suitableFor) {
+        additionalInfo.push({ label: 'Suitable For', value: dynamicFields.suitableFor });
+    }
+    
+    if (additionalInfo.length > 0) {
+        content += `
+            <div>
+                <h4 class="text-lg font-bold text-gray-800 mb-4">Additional Information</h4>
+                <div class="bg-gray-50 rounded-lg border border-gray-200 p-6">
+                    <table class="w-full">
+                        <tbody>
+                            ${additionalInfo.map(info => `
+                                <tr class="border-b border-gray-200 last:border-b-0">
+                                    <td class="py-3 font-medium text-gray-700 w-1/3">${info.label}</td>
+                                    <td class="py-3 text-gray-600">${info.value}</td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        `;
+    }
+    
+    // Warning Section (if needed)
+    if (dynamicFields.warnings || dynamicFields.precautions) {
+        const warnings = dynamicFields.warnings || dynamicFields.precautions;
+        content += `
+            <div class="mt-8">
+                <h4 class="text-lg font-bold text-red-800 mb-4">⚠️ Important Warnings</h4>
+                <div class="bg-red-50 rounded-lg border border-red-200 p-6">
+                    <p class="text-red-700">${warnings}</p>
+                </div>
+            </div>
+        `;
+    }
+    
+    content += `</div>`;
+    directionsContent.innerHTML = content;
+}
+
+// Render all tabs content
+function renderAllTabs() {
+    renderProductDetailsTab();
+    renderBenefitsTab();
+    renderIngredientsTab();
+    renderDirectionsTab();
 }
 
 // Load product from URL parameters
@@ -338,26 +539,6 @@ function loadFromUrlParams() {
     if (!p.name || !p.price) {
         console.error('Missing required product parameters');
         return false;
-    }
-
-    // Parse arrays from URL parameters
-    function parseArray(str) {
-        try {
-            if (!str || str === 'undefined') return [];
-            return JSON.parse(str);
-        } catch {
-            return [];
-        }
-    }
-    
-    // Parse object from URL parameters
-    function parseObject(str) {
-        try {
-            if (!str || str === 'undefined') return {};
-            return JSON.parse(str);
-        } catch {
-            return {};
-        }
     }
 
     currentProduct = {
@@ -386,8 +567,8 @@ function loadFromUrlParams() {
         productSizes: parseArray(p.sizes),
         productQuantity: p.quantity ? parseInt(p.quantity) : 0,
         productStatus: p.quantity > 0 ? 'Available' : 'Out of Stock',
-        productSubCategory: p.category === 'male' ? 'Male Infertility' : 
-                           p.category === 'female' ? 'Female Infertility' : 
+        productSubCategory: p.category === 'male' ? 'Male Fertility Support' : 
+                           p.category === 'female' ? 'Female Fertility Support' : 
                            p.category === 'ayurvedic' ? 'Ayurvedic Supplements' : 'Health Supplements'
     };
 
@@ -473,8 +654,8 @@ function loadFromUrlParams() {
         }
     }
 
-    // Render specifications table
-    renderSpecificationsTable(currentProduct);
+    // Render all tabs
+    renderAllTabs();
     
     removeSkeleton();
     updateCartCount();
@@ -490,9 +671,13 @@ function showNotFound() {
     document.getElementById('selling-price').textContent = '₹0';
     document.getElementById('discount-badge').classList.add('hidden');
     
-    const specsBody = document.getElementById('specs-table-body');
+    const specsBody = document.getElementById('specifications-table-body');
     if (specsBody) {
         specsBody.innerHTML = `
+            <tr>
+                <td class="spec-label">Product Description</td>
+                <td class="spec-value">Product information not available</td>
+            </tr>
             <tr>
                 <td class="spec-label">Brand</td>
                 <td class="spec-value">Not Available</td>
@@ -500,10 +685,6 @@ function showNotFound() {
             <tr>
                 <td class="spec-label">Category</td>
                 <td class="spec-value">Not Available</td>
-            </tr>
-            <tr>
-                <td class="spec-label">Description</td>
-                <td class="spec-value">Product information not available</td>
             </tr>
         `;
     }
@@ -614,7 +795,7 @@ window.navigateToProductDetails = function(id) {
     }
 };
 
-// Main init
+// Main init function
 function init() {
     if (!loadFromUrlParams()) {
         showNotFound();

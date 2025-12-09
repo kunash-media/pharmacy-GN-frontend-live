@@ -920,13 +920,11 @@ function createCard(p) {
     <div class="p-4">
       <h3 class="font-semibold text-sm mb-1">${p.productName}</h3>
       <p class="text-xs text-gray-500 mb-2">${p.brandName}</p>
-      <p class="text-xs text-gray-600 mb-2">SKU: ${p.sku}</p>
+     
       <div class="mt-2 font-bold text-lg text-green-600">${priceLine}</div>
       <div class="flex items-center mt-2">
-        <span class="text-yellow-400 text-sm">
-          ${'★'.repeat(Math.floor(p.productRating))}${'☆'.repeat(5 - Math.floor(p.productRating))}
-        </span>
-        <span class="text-xs text-gray-500 ml-2">${p.productRating}</span>
+        
+       
       </div>
       <button onclick="${isOutOfStock ? 'void(0)' : `navigateToProductDetails(${p.id})`}" 
               class="mt-4 w-full ${isOutOfStock ? 'out-of-stock-btn bg-gray-400' : 'bg-[#4A70A9] hover:bg-[#16476A]'} text-white py-2 rounded-lg font-bold transition"
