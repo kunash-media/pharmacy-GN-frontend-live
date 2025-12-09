@@ -77,15 +77,17 @@
         .specs-table th {
             text-align: left;
             padding: 16px;
-            background-color: #f9fafb;
+            background-color: #F4E9D7;
             font-weight: 600;
             color: #374151;
             border-bottom: 2px solid #e5e7eb;
         }
+
         
         .specs-table td {
             padding: 16px;
             border-bottom: 1px solid #e5e7eb;
+          
             vertical-align: top;
         }
         
@@ -97,12 +99,14 @@
             font-weight: 600;
             color: #4b5563;
             width: 30%;
-            background-color: #f9fafb;
+            background-color: #F4E9D7;
         }
         
         .specs-table .spec-value {
             color: #6b7280;
         }
+
+    
         
         /* Tab Content Animation */
         .tab-content {
@@ -125,7 +129,7 @@
     <div id="header-placeholder"></div>
 
     <!-- MAIN CONTAINER -->
-    <div class="max-w-7xl mx-auto bg-[#FFF2EF] px-1 sm:px-4 lg:px-6 pt-20 lg:pt-44 pb-24">
+    <div class="max-w-6xl mx-auto bg-[#FFF2EF] px-1 sm:px-4 lg:px-6 pt-20 lg:pt-44 pb-24">
         <div class="flex gap-8">
 
             <!-- LEFT + CENTER: Product Details -->
@@ -166,6 +170,10 @@
                                 <h1 id="product-name" class="text-2xl lg:text-2xl font-bold text-gray-900 leading-snug skeleton h-14 w-35 rounded mt-4">
                                     Loading Product...
                                 </h1>
+                                 <!-- Rating -->
+                            <!-- <div class="flex items-center mt-2" id="product-rating">
+                                <div class="skeleton w-24 h-5 rounded"></div>
+                            </div> -->
                                 <!-- Wishlist Button -->
                                 <button id="wishlist-btn" class="w-12 h-12 bg-white rounded-full shadow-md flex items-center justify-center hover:shadow-lg transition">
                                     <i class="far fa-heart text-2xl text-gray-600"></i>
@@ -173,26 +181,23 @@
                             </div>
                             
                             <!-- SKU -->
-                            <div class="mt-2">
-                                <p id="product-sku" class="text-sm text-gray-600 skeleton w-24 h-4 rounded"></p>
+                            <div class="mb-6">
+                                <p id="product-sku" class="text-sm text-gray-600 skeleton w-26 h-4 rounded"></p>
                             </div>
                             
-                            <!-- Rating -->
-                            <div class="flex items-center mt-2" id="product-rating">
-                                <div class="skeleton w-24 h-5 rounded"></div>
-                            </div>
+                           
 
                             <!-- Pricing -->
                             <div class="flex items-baseline gap-4 mt-4">
-                                <span id="selling-price" class="text-2xl font-bold text-pharmeasy-green skeleton h-12 rounded">₹0</span>
-                                <span class="text-md text-gray-500 line-through">MRP <span id="mrp-price">₹0</span></span>
-                                <span id="discount-badge" class="bg-pharmeasy-red text-white px-2 py-2 rounded-full text-md font-semibold">55% OFF</span>
+                                <span id="selling-price" class="text-xl font-bold text-pharmeasy-green skeleton h-12 rounded">₹0</span>
+                                <span class="text-sm text-gray-500 line-through">MRP <span id="mrp-price">₹0</span></span>
+                                <span id="discount-badge" class="bg-pharmeasy-red text-white px-2 py-2 rounded-full text-sm font-semibold">55% OFF</span>
                             </div>
 
                             <!-- <p class="text-sm text-gray-600 mt-2">Inclusive of all taxes</p> -->
 
-                            <div class="bg-pharmeasy-light-green border border-green-300 rounded-lg p-5 my-6">
-                                <p class="text-pharmeasy-green font-bold text-md">
+                            <div class="bg-[#F4E9D7] border border-pink-300 rounded-lg p-5 my-6">
+                                <p class="text-green-600 font-bold text-md">
                                     Delivery by <span class="font-bold">Tomorrow, before 10:00 pm</span>
                                 </p>
                                 <p class="text-xs text-gray-600 mt-2">*Offer applicable on order above ₹1000</p>
@@ -213,7 +218,7 @@
                             <!-- Action Buttons -->
                             <div class="flex items-center gap-4 mb-8">
                                 <button id="add-to-cart-btn"
-                                    class="flex-1 px-2 bg-pharmeasy-green hover:bg-green-700 text-white font-bold py-3 rounded-lg text-md shadow-lg transition flex items-center justify-center transition">
+                                    class="flex-1 px-2 bg-[#607B8F] hover:bg-green-700 text-white font-bold py-3 rounded-lg text-md shadow-lg transition flex items-center justify-center transition">
                                     <i class="fas fa-shopping-cart mr-2"></i> Add to Cart
                                 </button>
                                 <button id="buy-now-btn" class="px-6 bg-orange-500 hover:bg-orange-600 text-white font-bold py-3 rounded-lg text-md shadow-lg transition">
@@ -221,10 +226,10 @@
                                 </button>
                             </div>
 
-                            <div class="flex items-center gap-3 text-sm text-gray-600">
+                            <!-- <div class="flex items-center gap-3 text-sm text-gray-600">
                                 <span class="text-pharmeasy-red font-medium">Non Returnable</span>
                                 <a href="#" class="text-pharmeasy-green underline font-medium">Read More</a>
-                            </div>
+                            </div> -->
                         </div>
                     </div>
                 </div>
@@ -235,13 +240,13 @@
                     <div class="border-b border-gray-200">
                         <div class="flex space-x-8 px-6">
                             <button class="tab-button active" data-tab="specifications">
-                                Specifications
+                                Product Details
                             </button>
                             <button class="tab-button" data-tab="reviews">
-                                Reviews
+                                Benefits
                             </button>
                             <button class="tab-button" data-tab="shipping">
-                                Shipping & Returns
+                                Ingredients
                             </button>
                         </div>
                     </div>
@@ -251,11 +256,11 @@
                         <!-- Specifications Tab -->
                         <div id="specifications-content" class="tab-content active">
                             <table class="specs-table">
-                                <thead>
+                                <!-- <thead>
                                     <tr>
                                         <th colspan="2" class="text-xl font-bold text-gray-800">Product Specifications</th>
                                     </tr>
-                                </thead>
+                                </thead> -->
                                 <tbody id="specs-table-body">
                                     <!-- Will be populated by JavaScript -->
                                 </tbody>
@@ -416,22 +421,22 @@
 
             
             <!-- RIGHT-MOST CART PANEL -->
-<div class="hidden lg:block w-96 ">
-    <div class="top-0 bg-white rounded-xl shadow-xl border border-gray-200 overflow-hidden mt-4">
+<!-- <div class="hidden lg:block w-96 ">
+    <div class="top-0 bg-white rounded-xl shadow-xl border border-gray-200 overflow-hidden mt-4"> -->
        
         <!-- DYNAMIC CART HEADER -->
-<div class=" text-white py-2 text-center">
+<!-- <div class=" text-white py-2 text-center">
     <h3 class="text-lg font-bold text-gray-500 mt-3" id="cart-item-count-display">
         <span id="cart-items-number">0</span> Item<span id="cart-items-text">s</span> in Cart
     </h3>
-</div>
+</div> -->
 
-        <div class="p-4">
+        <!-- <div class="p-4">
             <button onclick="window.location.href='cart.html'" 
                     class="w-full mt-2 bg-pharmeasy-green hover:bg-green-700 text-white font-bold py-1 rounded-lg text-xl shadow-lg transition">
                 View Cart
             </button>
-        </div>
+        </div> -->
     </div>
 </div>
         </div>
