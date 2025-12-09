@@ -168,6 +168,33 @@ input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; height: 24
 
   <div id="footer-placeholder"></div>
 
+   <script>
+    function loadHeader() {
+      fetch('../Header/header.html')
+        .then(r => r.text())
+        .then(html => {
+          document.getElementById('header-placeholder').innerHTML = html;
+          const script = document.createElement('script');
+          script.src = '../Header/header.js';
+          document.body.appendChild(script);
+        });
+    }
+
+    function loadFooter() {
+      fetch('../Footer/footer.html')
+        .then(r => r.text())
+        .then(html => {
+          document.getElementById('footer-placeholder').innerHTML = html;
+        });
+    }
+    // Load header/footer and render wishlist
+    document.addEventListener('DOMContentLoaded', () => {
+      loadHeader();
+      loadFooter();
+      renderWishlist();
+    });
+  </script>
+
   <!-- Scripts -->
   <script src="../cart-wishlist-system.js" defer></script>
   <script src="./surgical.js" defer></script>
