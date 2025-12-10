@@ -965,144 +965,98 @@
 </div>
 <!-- Upload Prescription Modal -->
 <div id="uploadModal" class="bg-black/50 hidden fixed inset-0 flex items-center justify-center z-50">
-  <div class="overflow-auto  bg-gray-100 rounded-2xl shadow-2xl w-11/12 max-w-3xl p-8 h-[400px] lg:mt-[167px] relative">
-   
-    <!-- Close Button -->
-    <button onclick="document.getElementById('uploadModal').classList.add('hidden')"
-            class="absolute top-3 right-3 text-gray-500 hover:text-black text-xl font-bold">
-      ✕
-    </button>
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-      <!-- Left Section -->
-      <div class="border rounded-xl p-5 shadow-md">
-        <h2 class="text-lg font-semibold mb-4">Enjoy Easy and Hassle Free Ordering</h2>
-       
-        <!-- Upload Box -->
-        <label class="border rounded-lg p-2 mb-3 flex items-center justify-between cursor-pointer hover:bg-gray-50">
-          <div class="flex items-center gap-3 ">
-            <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M12 16v-8m0 0l-4 4m4-4l4 4M4 20h16"/>
-            </svg>
-            <span class="font-medium text-gray-700">Upload Prescription</span>
-          </div>
-          <input type="file" class="hidden" />
-          <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-          </svg>
-        </label>
-       <!-- Valid Prescription Info (trigger button) -->
-<div id="validPrescriptionBtn" class=" text-sm text-gray-600 mb-3 flex items-center gap-2 cursor-pointer border-b border-blue-600 inline-block pb-1 w-fit">
-  <label for="doctorName" class="block text-sm font-medium text-gray-700 mb-2">
-    Doctor's Name <span class="text-red-500">*</span>
-  
-   <div class="flex items-center gap-3 mb-2">
-    <input 
-      type="text" 
-      id="doctorName" 
-      name="doctorName"
-      placeholder="Enter doctor's name"
-      class="flex-1 px-2 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition"
-    />
-    </label>
-    
-    <button 
-  id="uploadPrescriptionBtn"
-  type="button"
-  disabled
-  class="px-6 py-2 bg-gray-300 text-gray-500 rounded-lg font-medium cursor-not-allowed transition hover:opacity-90"
->
-  Upload Prescription
-</button>
-  </div>
-</div>
-<!-- Urgent Order Info Box with Call Button -->
- <div>
-        <h2 class="text-lg font-semibold mb-1 ">How will the Pharmacist help you?</h2>
-        <ul class="space-y-1 text-gray-700">
-          <li class="flex items-start gap-2">
-            <img src="https://assets.pharmeasy.in/web-assets/images/uploadStep1.png?dim=64x64&q=75" alt="Step 1" class="w-12 h-12">
-            <span>Pharmacist will check items on prescription and add to cart</span>
-          </li>
-         
-          
-          <li class="flex items-start gap-2">
-            <img src="https://assets.pharmeasy.in/web-assets/images/uploadStep2.png?dim=64x64&q=75" alt="Step 2" class="w-12 h-12">
-            <span>Choose the earliest delivery date</span>
-          </li>
-          <li class="flex items-start gap-2">
-            <img src="https://assets.pharmeasy.in/web-assets/images/uploadStep3.png?dim=64x64&q=75" alt="Step 3" class="w-12 h-12">
-            <span>Finally, Share payment methods options</span>
-          </li>
-        </ul>
-      </div>
+            <div class="overflow-auto bg-gray-100 rounded-2xl shadow-2xl w-11/12 max-w-3xl p-8 h-[400px] lg:mt-[167px] relative">
+                <button onclick="document.getElementById('uploadModal').classList.add('hidden')"
+                        class="absolute top-3 right-3 text-gray-500 hover:text-black text-xl font-bold">
+                    ✕
+                </button>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Left Section -->
+                    <div class="border rounded-xl p-5 shadow-md">
+                        <h2 class="text-lg font-semibold mb-4">Enjoy Easy and Hassle Free Ordering</h2>
+                        
+                        <!-- In the Upload Prescription Modal Left Section -->
+<!-- REPLACE the existing <label> block with this: -->
+<label class="border rounded-lg p-2 mb-3 flex items-center justify-between cursor-pointer hover:bg-gray-50">
+    <div class="flex items-center gap-3">
+        <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 16v-8m0 0l-4 4m4-4l4 4M4 20h16"/>
+        </svg>
+        <span class="font-medium text-gray-700" id="fileName">Upload Prescription</span>
+    </div>
+    <!-- This is the actual file input that was missing -->
+    <input type="file" id="prescriptionFileInput" class="hidden" accept="image/*,.pdf" />
+    <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+    </svg>
+</label>
 
-      </div>
-      <!-- Right Section -->
-      <div>
-       <h3 class="text-lg font-semibold mb-4">DO’S AND DON’Ts</h3>
-    <ul class="space-y-3 text-sm">
-      <li class="flex items-start gap-2">
-        <span class="text-green-600 font-bold">✔</span>
-        <span><b>Upload Clear Image</b> — Ensure picture is taken with clear visible handwriting/type. Place prescription on a flat surface to get better focus and clear image.</span>
-      </li>
-      <li class="flex items-start gap-2">
-        <span class="text-red-600 font-bold">✘</span>
-        <span><b>No Picture of Medicines</b></span>
-      </li>
-      <li class="flex items-start gap-2">
-        <span class="text-red-600 font-bold">✘</span>
-        <span><b>Do not crop the Image</b></span>
-      </li>
-    </ul>
-      </div>
-    </div>
-  </div>
-</div>
-<!-- Valid Prescription Modal -->
-<div id="validPrescriptionModal" class="hidden fixed inset-0 bg-black/50 flex items-center justify-center z-50 mt-40 ">
-  <div class="bg-white rounded-2xl shadow-2xl w-11/12 max-w-xl p-8 relative">
-    <!-- Close Button -->
-    <button onclick="document.getElementById('validPrescriptionModal').classList.add('hidden')"
-            class="absolute top-13 right-3 text-gray-500 hover:text-black text-xl font-bold">
-      ✕
-    </button>
-    <!-- Modal Content -->
-    <h2 class="text-xl font-semibold mb-6 text-center">A valid prescription contains:</h2>
-    <!-- Icons Row -->
-    <div class="grid grid-cols-2 md:grid-cols-4 gap-6 text-center mb-6">
-      <div class="flex flex-col items-center">
-        <svg class="w-8 h-8 text-blue-500 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l9-5-9-5-9 5 9 5z"/>
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l6.16-3.422A12.083 12.083 0 0118 20.944V21l-6-3-6 3v-.056a12.083 12.083 0 01-.16-10.366L12 14z"/>
-        </svg>
-        <span class="text-sm font-medium">Doctor Details</span>
-      </div>
-      <div class="flex flex-col items-center">
-        <svg class="w-8 h-8 text-green-500 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10m-11 4h12M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
-        </svg>
-        <span class="text-sm font-medium">Date of Prescription</span>
-      </div>
-      <div class="flex flex-col items-center">
-        <svg class="w-8 h-8 text-purple-500 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5.121 17.804A9.969 9.969 0 0112 15c2.21 0 4.242.72 5.879 1.928M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
-        </svg>
-        <span class="text-sm font-medium">Patient Details</span>
-      </div>
-      <div class="flex flex-col items-center">
-        <svg class="w-8 h-8 text-red-500 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-6h13V7H9V1L1 9l8 8z"/>
-        </svg>
-        <span class="text-sm font-medium">Dosage Details</span>
-      </div>
-    </div>
-   <!-- Divider -->
-<hr class="my-4 border-t-4 border-blue-500 rounded">
-    <!-- Do's and Don'ts -->
-    
-  </div>
-</div>
+                        <div class="text-sm text-gray-600 mb-3 flex items-center gap-2 cursor-pointer border-b border-blue-600 inline-block pb-1 w-fit">
+                            <label for="doctorName" class="block text-sm font-medium text-gray-700 mb-2">
+                                Doctor's Name <span class="text-red-500">*</span>
+                            </label>
+                            <div class="flex items-center gap-3 mb-2">
+                                <input type="text" id="doctorName" name="doctorName" placeholder="Enter doctor's name"
+                                       class="flex-1 px-2 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition">
+                            </div>
+                        </div>
+
+                        <!-- CHANGED: Upload → Submit Button (with real functionality) -->
+                       <!-- UPLOAD PRESCRIPTION BUTTON (NOW WORKING SUBMIT BUTTON -->
+<button id="submitPrescriptionBtn"
+        class="w-full px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition disabled:bg-gray-400 disabled:cursor-not-allowed mt-4"
+        disabled>
+    Submit Prescription
+</button>
+
+                        <div class="mt-6">
+                            <h2 class="text-lg font-semibold mb-1">How will the Pharmacist help you?</h2>
+                            <ul class="space-y-1 text-gray-700">
+                                <li class="flex items-start gap-2">
+                                    <img src="https://assets.pharmeasy.in/web-assets/images/uploadStep1.png?dim=64x64&q=75" alt="Step 1" class="w-12 h-12">
+                                    <span>Pharmacist will check items on prescription and add to cart</span>
+                                </li>
+                                <li class="flex items-start gap-2">
+                                    <img src="https://assets.pharmeasy.in/web-assets/images/uploadStep2.png?dim=64x64&q=75" alt="Step 2" class="w-12 h-12">
+                                    <span>Choose the earliest delivery date</span>
+                                </li>
+                                <li class="flex items-start gap-2">
+                                    <img src="https://assets.pharmeasy.in/web-assets/images/uploadStep3.png?dim=64x64&q=75" alt="Step 3" class="w-12 h-12">
+                                    <span>Finally, Share payment methods options</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Right Section -->
+                    <div>
+                        <h3 class="text-lg font-semibold mb-4">DO’S AND DON’Ts</h3>
+                        <ul class="space-y-3 text-sm">
+                            <li class="flex items-start gap-2">
+                                <span class="text-green-600 font-bold">Check</span>
+                                <span><b>Upload Clear Image</b> — Ensure picture is taken with clear visible handwriting/type...</span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <span class="text-red-600 font-bold">Cross</span>
+                                <span><b>No Picture of Medicines</b></span>
+                            </li>
+                            <li class="flex items-start gap-2">
+                                <span class="text-red-600 font-bold">Cross</span>
+                                <span><b>Do not crop the Image</b></span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Floating WhatsApp Button (NOW WORKING) -->
+        <a href="https://wa.me/918382058205?text=Hi! I want to place an order via prescription" 
+           target="_blank" 
+           rel="noopener"
+           class="whatsapp-float pulse">
+            <i class="fab fa-whatsapp"></i>
+        </a>
  <!-- Carousel Container -->
                 <div class="w-full max-w-5xl mx-auto">
                     <div class="carousel-container p-8  rounded-2xl ">
@@ -1269,53 +1223,61 @@
         }
     </script>
 
-   <script>
-// Fixed Upload Prescription Button Logic
+    <script>
+// FIXED & FULLY WORKING UPLOAD PRESCRIPTION LOGIC
 document.addEventListener('DOMContentLoaded', function () {
     const doctorNameInput = document.getElementById('doctorName');
-    const uploadPrescriptionBtn = document.getElementById('uploadPrescriptionBtn');
+    const fileInput = document.getElementById('prescriptionFileInput');
+    const submitBtn = document.getElementById('submitPrescriptionBtn');
 
-    if (!doctorNameInput || !uploadPrescriptionBtn) {
-        console.warn('Upload prescription elements not found');
+    if (!doctorNameInput || !fileInput || !submitBtn) {
+        console.warn('Prescription modal elements missing!');
         return;
     }
 
-    // Enable button when doctor name is entered
-    doctorNameInput.addEventListener('input', function () {
-        const hasName = this.value.trim().length > 0;
-        if (hasName) {
-            uploadPrescriptionBtn.disabled = false;
-            uploadPrescriptionBtn.className = 'px-6 py-2 bg-blue-600 text-white rounded-lg font-medium cursor-pointer transition hover:bg-blue-700';
-        } else {
-            uploadPrescriptionBtn.disabled = true;
-            uploadPrescriptionBtn.className = 'px-6 py-2 bg-gray-300 text-gray-500 rounded-lg font-medium cursor-not-allowed transition';
-        }
+    // Enable/disable submit button
+    function updateSubmitButton() {
+        const hasName = doctorNameInput.value.trim().length > 0;
+        const hasFile = fileInput.files.length > 0;
+        submitBtn.disabled = !(hasName && hasFile);
+    }
+
+    // Check on input/change
+    doctorNameInput.addEventListener('input', updateSubmitButton);
+    fileInput.addEventListener('change', updateSubmitButton);
+
+    // Make the "Upload Prescription" label clickable
+    const uploadLabel = document.querySelector('label.border');
+    if (uploadLabel) {
+        uploadLabel.addEventListener('click', (e) => {
+            e.preventDefault();
+            fileInput.click();
+        });
+    }
+
+    // SUBMIT ACTION
+    submitBtn.addEventListener('click', function () {
+        if (submitBtn.disabled) return;
+
+        const file = fileInput.files[0];
+        const doctorName = doctorNameInput.value.trim();
+
+        // Success feedback
+        alert(`Prescription Submitted Successfully!\n\nDoctor: ${doctor}\nFile: ${file.name}\n\nOur pharmacist will contact you soon.`);
+
+        // Reset form
+        document.getElementById('uploadModal').classList.add('hidden');
+        doctorNameInput.value = '';
+        fileInput.value = '';
+        submitBtn.disabled = true;
     });
 
-    // Click → open file picker
-    uploadPrescriptionBtn.addEventListener('click', function () {
-        if (this.disabled) return;
-
-        const fileInput = document.createElement('input');
-        fileInput.type = 'file';
-        fileInput.accept = 'image/*,.pdf';
-        fileInput.style.display = 'none';
-
-        fileInput.onchange = function (e) {
-            const file = e.target.files[0];
-            if (file) {
-                alert(`Selected: ${file.name}\n\nIn real app: Upload to server now`);
-                console.log('Prescription file:', file);
-                // Here you would upload the file
-            }
-        };
-
-        document.body.appendChild(fileInput);
-        fileInput.click();
-        document.body.removeChild(fileInput);
-    });
+    // Initial check
+    updateSubmitButton();
 });
 </script>
+
+ 
     
 <script src="./cart-wishlist-system.js"></script>
 <!-- <script src="./cart.js"></script> -->

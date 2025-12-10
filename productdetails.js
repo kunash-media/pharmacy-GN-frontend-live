@@ -542,35 +542,35 @@ function loadFromUrlParams() {
     }
 
     currentProduct = {
-        id: p.id || Date.now(),
-        sku: p.sku || 'N/A',
-        name: p.name,
-        brand: p.brand || 'Generic',
-        price: parseFloat(p.price) || 0,
-        originalPrice: p.originalPrice ? parseFloat(p.originalPrice) : null,
-        discount: p.discount ? parseInt(p.discount) : 0,
-        image: p.image || 'https://via.placeholder.com/600',
-        description: p.description || 'No description available.',
-        category: p.category || 'all',
-        unit: p.unit || '',
-        mrp: p.mrp ? parseFloat(p.mrp) : null,
-        rating: p.rating ? parseFloat(p.rating) : 4.0,
-        prescription: p.prescription === 'true',
-        prescriptionRequired: p.prescription === 'true',
-        benefitsList: parseArray(p.benefits),
-        ingredientsList: parseArray(p.ingredients),
-        directionsList: parseArray(p.directions),
-        productDynamicFields: parseObject(p.dynamicFields),
-        mfgDate: p.mfgDate || '',
-        expDate: p.expDate || '',
-        batchNo: p.batchNo || '',
-        productSizes: parseArray(p.sizes),
-        productQuantity: p.quantity ? parseInt(p.quantity) : 0,
-        productStatus: p.quantity > 0 ? 'Available' : 'Out of Stock',
-        productSubCategory: p.category === 'male' ? 'Male Fertility Support' : 
-                           p.category === 'female' ? 'Female Fertility Support' : 
-                           p.category === 'ayurvedic' ? 'Ayurvedic Supplements' : 'Health Supplements'
-    };
+    id: p.id || Date.now(),
+    sku: p.sku || 'N/A',
+    name: p.name,
+    brand: p.brand || 'Generic',
+    price: parseFloat(p.price) || 0,
+    originalPrice: p.originalPrice ? parseFloat(p.originalPrice) : null,
+    discount: p.discount ? parseInt(p.discount) : 0,
+    image: p.image || 'https://via.placeholder.com/600',
+    description: p.description || 'No description available.',
+    category: p.category || 'all',
+    unit: p.unit || '',
+    mrp: p.mrp ? parseFloat(p.mrp) : null,
+    rating: p.rating ? parseFloat(p.rating) : 4.0,
+    prescription: p.prescription === 'true',
+    prescriptionRequired: p.prescription === 'true',
+    benefitsList: parseArray(p.benefits),
+    ingredientsList: parseArray(p.ingredients),
+    directionsList: parseArray(p.directions),
+    productDynamicFields: parseObject(p.dynamicFields),
+    mfgDate: p.mfgDate || '',
+    expDate: p.expDate || '',
+    batchNo: p.batchNo || '',
+    productSizes: parseArray(p.sizes),
+    productQuantity: p.quantity ? parseInt(p.quantity) : 10, // Default to 10 if not specified
+    productStatus: p.quantity ? (parseInt(p.quantity) > 0 ? 'Available' : 'Out of Stock') : 'Available',
+    productSubCategory: p.category === 'male' ? 'Male Fertility Support' : 
+                       p.category === 'female' ? 'Female Fertility Support' : 
+                       p.category === 'ayurvedic' ? 'Ayurvedic Supplements' : 'Health Supplements'
+};
 
     // Update all UI elements
     document.getElementById('product-name').textContent = currentProduct.name;
@@ -628,31 +628,46 @@ function loadFromUrlParams() {
 
     // Update quantity input max based on available stock
     const quantityInput = document.getElementById('quantity-input');
-    if (quantityInput && currentProduct.productQuantity > 0) {
-        quantityInput.max = Math.min(currentProduct.productQuantity, 10);
-        quantityInput.value = 1;
-    } else if (quantityInput) {
-        quantityInput.disabled = true;
-        quantityInput.value = 0;
-        quantityInput.placeholder = 'Out of Stock';
-    }
+const availableQuantity = currentProduct.productQuantity || 0;
+
+if (quantityInput && availableQuantity > 0) {
+    quantityInput.max = Math.min(availableQuantity, 10);
+    quantityInput.value = 1;
+    quantityInput.disabled = false;
+    quantityInput.placeholder = 'Quantity';
+} else if (quantityInput) {
+    quantityInput.disabled = true;
+    quantityInput.value = 0;
+    quantityInput.placeholder = 'Out of Stock';
+}
 
     // Update add to cart button based on stock
     const addToCartBtn = document.getElementById('add-to-cart-btn');
-    const buyNowBtn = document.getElementById('buy-now-btn');
-    
-    if (currentProduct.productQuantity <= 0) {
-        if (addToCartBtn) {
-            addToCartBtn.disabled = true;
-            addToCartBtn.innerHTML = '<i class="fas fa-times-circle mr-2"></i> Out of Stock';
-            addToCartBtn.className = 'flex-1 px-2 bg-gray-400 cursor-not-allowed text-white font-bold py-3 rounded-lg text-md shadow-lg transition flex items-center justify-center';
-        }
-        if (buyNowBtn) {
-            buyNowBtn.disabled = true;
-            buyNowBtn.innerHTML = '<i class="fas fa-times-circle mr-2"></i> Out of Stock';
-            buyNowBtn.className = 'px-6 bg-gray-400 cursor-not-allowed text-white font-bold py-3 rounded-lg text-md shadow-lg transition';
-        }
+const buyNowBtn = document.getElementById('buy-now-btn');
+
+if (availableQuantity <= 0) {
+    if (addToCartBtn) {
+        addToCartBtn.disabled = true;
+        addToCartBtn.innerHTML = '<i class="fas fa-times-circle mr-2"></i> Out of Stock';
+        addToCartBtn.className = 'flex-1 px-2 bg-gray-400 cursor-not-allowed text-white font-bold py-3 rounded-lg text-md shadow-lg transition flex items-center justify-center';
     }
+        if (buyNowBtn) {
+        buyNowBtn.disabled = true;
+        buyNowBtn.innerHTML = '<i class="fas fa-times-circle mr-2"></i> Out of Stock';
+        buyNowBtn.className = 'px-6 bg-gray-400 cursor-not-allowed text-white font-bold py-3 rounded-lg text-md shadow-lg transition';
+    }
+} else {
+     if (addToCartBtn) {
+        addToCartBtn.disabled = false;
+        addToCartBtn.innerHTML = '<i class="fas fa-shopping-cart mr-2"></i> Add to Cart';
+        addToCartBtn.className = 'flex-1 px-2 bg-[#295F98] hover:bg-[#5C7285] text-white font-bold py-3 rounded-lg text-md shadow-lg transition flex items-center justify-center';
+    }
+    if (buyNowBtn) {
+        buyNowBtn.disabled = false;
+        buyNowBtn.innerHTML = '<i class="fas fa-bolt mr-2"></i> Buy Now';
+        buyNowBtn.className = 'px-6 bg-orange-500 hover:bg-orange-600 text-white font-bold py-3 rounded-lg text-md shadow-lg transition';
+    }
+}
 
     // Render all tabs
     renderAllTabs();

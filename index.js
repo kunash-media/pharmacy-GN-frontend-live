@@ -425,50 +425,43 @@ const additionalKeywords = [
     { term: 'immunity', matches: 'Immunity Boosters', icon: '🛡️' }
 ];
 
-function openProductDetails(productId) {
-    const allProducts = [...productsData, ...medicinesData];
-    const product = allProducts.find(p => p.id === productId);
+function openProductDetails(id) {
+    const all = [...productsData, ...medicinesData];
+    const p = all.find(item => item.id === id);
+    if (!p) return alert("Product not found");
 
-    if (!product) {
-        alert("Product not found!");
-        return;
+    // Parse price and original price
+    const price = parseFloat(p.price.replace('₹', '').replace(',', ''));
+    const originalPrice = p.originalPrice ? parseFloat(p.originalPrice.replace('₹', '').replace(',', '')) : 0;
+    
+    // Calculate discount percentage
+    let discountPercentage = 0;
+    if (originalPrice > 0 && price < originalPrice) {
+        discountPercentage = Math.round(((originalPrice - price) / originalPrice) * 100);
     }
 
-    // Determine which section this product belongs to
-    let sectionProducts = [];
-    let sectionCategory = '';
-
-    if (productsData.some(p => p.id === productId)) {
-        // This is a feminine hygiene product
-        sectionProducts = productsData;
-        sectionCategory = 'feminine';
-    } else if (medicinesData.some(p => p.id === productId)) {
-        // This is a medicine/device product
-        sectionProducts = medicinesData;
-        sectionCategory = 'medicine';
-    }
-
-    // Store the products from THIS section in sessionStorage
-    sessionStorage.setItem('currentPageProducts', JSON.stringify(sectionProducts));
-    sessionStorage.setItem('currentPageCategory', sectionCategory);
-
-    // Create URL parameters
+    // Generate a random quantity (5-20) for demo purposes
+    const randomQuantity = Math.floor(Math.random() * 16) + 5;
+    
     const params = new URLSearchParams({
-        id: product.id,
-        name: product.name,
-        price: product.price.replace('₹', '').trim(),
-        originalPrice: product.originalPrice ? product.originalPrice.replace('₹', '').trim() : '',
-        discount: product.discount || '',
-        image: product.image,
-        description: product.description || 'Premium quality product.',
-        category: sectionCategory
+        id: p.id,
+        name: encodeURIComponent(p.name || p.title),
+        price: price.toString(),
+        originalPrice: originalPrice.toString(),
+        discount: discountPercentage.toString(),
+        image: encodeURIComponent(p.image || p.mainImageUrl),
+        description: encodeURIComponent(p.description || 'Premium quality healthcare product.'),
+        category: p.category || 'all',
+        quantity: randomQuantity.toString(),
+        unit: 'pack',
+        sku: `SKU-${p.id}`,
+        brand: encodeURIComponent(p.brand || 'Generic Brand'),
+        rating: '4.5',
+        mrp: originalPrice.toString() // Add MRP for display
     });
-
-    window.location.href = `/productdetails.html?${params.toString()}`;
+    
+    window.location.href = `productdetails.html?${params.toString()}`;
 }
-
-// Make it globally accessible
-window.openProductDetails = openProductDetails;
 
 const searchInput = document.getElementById('searchInput');
 const suggestions = document.getElementById('searchSuggestions');
@@ -735,14 +728,17 @@ function createMyntraCard(p) {
                 
                 <!-- Price Row - More compact -->
                 <div class="myntra-price-row flex items-center gap-2 mb-3">
-                    <span class="myntra-current-price text-lg font-bold text-gray-900">
+                    <span class="myntra-current-price text-lg font-bold text-green-600">
                         ${p.price}
                     </span>
                     ${p.originalPrice ? `
-                        <span class="myntra-original-price text-gray-400 line-through text-sm">
+                        <span class="myntra-original-price text-gray-500 line-through text-sm">
                             ${p.originalPrice}
                         </span>
                     ` : ''}
+                    <span class="myntra-current-price text-sm font-bold text-red-600">
+                        ${p.discount}
+                    </span>
                 </div>
                 
                 <!-- Rating/Reviews if available -->
@@ -1551,12 +1547,12 @@ if (uploadModal) {
 }
 
 // Open Valid Prescription Modal
-const validPrescriptionBtn = document.getElementById('validPrescriptionBtn');
-if (validPrescriptionBtn) {
-    validPrescriptionBtn.addEventListener('click', function() {
-        document.getElementById('validPrescriptionModal').classList.remove('hidden');
-    });
-}
+// const validPrescriptionBtn = document.getElementById('validPrescriptionBtn');
+// if (validPrescriptionBtn) {
+//     validPrescriptionBtn.addEventListener('click', function() {
+//         document.getElementById('validPrescriptionModal').classList.remove('hidden');
+//     });
+// }
 
 // Close Valid Prescription modal when clicking backdrop
 const validPrescriptionModal = document.getElementById('validPrescriptionModal');
@@ -1712,51 +1708,93 @@ document.addEventListener('DOMContentLoaded', function() {
     console.log('Goodneewz initialized successfully!');
 });
 
-// Fixed Upload Prescription Button Logic
+// ========== FIXED UPLOAD PRESCRIPTION LOGIC ==========
 document.addEventListener('DOMContentLoaded', function () {
     const doctorNameInput = document.getElementById('doctorName');
-    const uploadPrescriptionBtn = document.getElementById('uploadPrescriptionBtn');
+    const fileInput = document.getElementById('prescriptionFileInput');
+    const fileNameDisplay = document.getElementById('fileName'); // To show selected file name
+    const submitBtn = document.getElementById('submitPrescriptionBtn');
+    const uploadModal = document.getElementById('uploadModal');
 
-    if (!doctorNameInput || !uploadPrescriptionBtn) {
-        console.warn('Upload prescription elements not found');
+    // Exit if essential elements are not found
+    if (!doctorNameInput || !fileInput || !submitBtn || !uploadModal) {
+        console.warn('Prescription modal elements missing. Skipping initialization.');
         return;
     }
 
-    // Enable button when doctor name is entered
-    doctorNameInput.addEventListener('input', function () {
-        const hasName = this.value.trim().length > 0;
-        if (hasName) {
-            uploadPrescriptionBtn.disabled = false;
-            uploadPrescriptionBtn.className = 'px-6 py-2 bg-blue-600 text-white rounded-lg font-medium cursor-pointer transition hover:bg-blue-700';
+    // 1. Enable/disable the submit button
+    function updateSubmitButton() {
+        const hasName = doctorNameInput.value.trim().length > 0;
+        const hasFile = fileInput.files.length > 0;
+        submitBtn.disabled = !(hasName && hasFile);
+    }
+
+    // 2. Handle file selection and update the UI
+    function handleFileSelect() {
+        if (fileInput.files.length > 0) {
+            const file = fileInput.files[0];
+            fileNameDisplay.textContent = file.name;
+            fileNameDisplay.classList.add('text-green-600', 'font-semibold');
         } else {
-            uploadPrescriptionBtn.disabled = true;
-            uploadPrescriptionBtn.className = 'px-6 py-2 bg-gray-300 text-gray-500 rounded-lg font-medium cursor-not-allowed transition';
+            fileNameDisplay.textContent = 'Upload Prescription';
+            fileNameDisplay.classList.remove('text-green-600', 'font-semibold');
         }
-    });
+        updateSubmitButton(); // Re-check form validity
+    }
 
-    // Click → open file picker
-    uploadPrescriptionBtn.addEventListener('click', function () {
-        if (this.disabled) return;
+    // 3. Form submission handler
+    function handleSubmit() {
+        if (submitBtn.disabled) return;
 
-        const fileInput = document.createElement('input');
-        fileInput.type = 'file';
-        fileInput.accept = 'image/*,.pdf';
-        fileInput.style.display = 'none';
+        const file = fileInput.files[0];
+        const doctorName = doctorNameInput.value.trim();
 
-        fileInput.onchange = function (e) {
-            const file = e.target.files[0];
-            if (file) {
-                alert(`Selected: ${file.name}\n\nIn real app: Upload to server now`);
-                console.log('Prescription file:', file);
-                // Here you would upload the file
-            }
-        };
+        // Success feedback
+        alert(`Prescription Submitted Successfully!\n\nDoctor: ${doctorName}\nFile: ${file.name}\n\nOur pharmacist will contact you soon.`);
 
-        document.body.appendChild(fileInput);
-        fileInput.click();
-        document.body.removeChild(fileInput);
-    });
+        // Reset form and close modal
+        resetForm();
+        uploadModal.classList.add('hidden');
+    }
+
+    // 4. Reset form to its initial state
+    function resetForm() {
+        doctorNameInput.value = '';
+        fileInput.value = ''; // This clears the file selection
+        fileNameDisplay.textContent = 'Upload Prescription';
+        fileNameDisplay.classList.remove('text-green-600', 'font-semibold');
+        submitBtn.disabled = true;
+    }
+
+    // 5. Attach event listeners
+    doctorNameInput.addEventListener('input', updateSubmitButton);
+    fileInput.addEventListener('change', handleFileSelect);
+    submitBtn.addEventListener('click', handleSubmit);
+
+    // 6. Make the entire label clickable to trigger file selection
+    const uploadLabel = document.querySelector('label.border.rounded-lg');
+    if (uploadLabel) {
+        uploadLabel.addEventListener('click', function(e) {
+            // Prevent triggering the file input if the click is on the inner SVG/icon
+            if (e.target.tagName === 'INPUT') return;
+            fileInput.click();
+        });
+    }
+
+    // 7. Also close modal when clicking the 'X' button
+    const closeModalBtn = uploadModal.querySelector('button.absolute.top-3.right-3');
+    if (closeModalBtn) {
+        closeModalBtn.addEventListener('click', function() {
+            resetForm();
+            uploadModal.classList.add('hidden');
+        });
+    }
+
+    // Initial state: button disabled
+    submitBtn.disabled = true;
+    console.log('Prescription upload logic initialized successfully.');
 });
+
 
 
 

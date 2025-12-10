@@ -976,6 +976,7 @@ function initShowMore() {
 }
 
 // =============== WISHLIST TOGGLE ===============
+// Updated toggleWishlist function for fertility.js and wellness.js
 function toggleWishlist(productId, buttonElement) {
   let wishlist = JSON.parse(localStorage.getItem('wishlist') || '[]');
   const product = products.find(p => p.id === productId);
@@ -983,17 +984,77 @@ function toggleWishlist(productId, buttonElement) {
   const index = wishlist.findIndex(item => item.id === productId);
 
   if (index === -1) {
-    wishlist.push(product);
+    // Save product with consistent property names
+    const wishlistProduct = {
+      id: product.id,
+      productId: product.id,
+      name: product.productName, // Important: use 'name' not 'productName'
+      productName: product.productName,
+      price: product.productPrice,
+      originalPrice: product.productOldPrice || product.productPrice,
+      brand: product.brandName, // Important: use 'brand' not 'brandName'
+      brandName: product.brandName,
+      image: product.image,
+      description: product.productDescription,
+      category: product.category || 'wellness',
+      productCategory: product.productCategory,
+      productStatus: product.productStatus,
+      productQuantity: product.productQuantity,
+      productRating: product.productRating || 4.0,
+      productUnit: product.productUnit,
+      sku: product.sku,
+      productSku: product.sku
+    };
+    
+    wishlist.push(wishlistProduct);
+    localStorage.setItem('wishlist', JSON.stringify(wishlist));
+    
+    // Update button
     buttonElement.classList.add('active');
     buttonElement.innerHTML = '<i class="fa-solid fa-heart"></i>';
+    
+    // Show notification
+    showToast('Added to wishlist', 'success');
   } else {
     wishlist.splice(index, 1);
+    localStorage.setItem('wishlist', JSON.stringify(wishlist));
+    
     buttonElement.classList.remove('active');
     buttonElement.innerHTML = '<i class="fa-regular fa-heart"></i>';
+    
+    showToast('Removed from wishlist', 'info');
   }
 
-  localStorage.setItem('wishlist', JSON.stringify(wishlist));
-  window.dispatchEvent(new CustomEvent('wishlistUpdated'));
+  // Dispatch event
+  window.dispatchEvent(new CustomEvent('wishlistUpdated', { 
+    detail: { count: wishlist.length } 
+  }));
+}
+
+// Add toast function if not exists
+function showToast(message, type = 'success') {
+  // Remove existing toast
+  const existing = document.querySelector('.toast-notification');
+  if (existing) existing.remove();
+  
+  const toast = document.createElement('div');
+  toast.className = `toast-notification fixed top-20 right-4 z-50 px-4 py-3 rounded-lg shadow-lg text-white ${
+    type === 'success' ? 'bg-green-500' : 
+    type === 'error' ? 'bg-red-500' : 
+    'bg-blue-500'
+  }`;
+  toast.innerHTML = `
+    <div class="flex items-center gap-2">
+      <i class="fas fa-${type === 'success' ? 'check' : 'info'}"></i>
+      <span>${message}</span>
+    </div>
+  `;
+  
+  document.body.appendChild(toast);
+  
+  setTimeout(() => {
+    toast.remove();
+  }, 3000);
 }
 
 function updateResultsCount() {

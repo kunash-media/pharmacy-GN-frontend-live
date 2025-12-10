@@ -60,28 +60,23 @@
 
 <!-- SINGLE FIXED HEADER -->
 <div class="fixed-header">
-
-  <!-- MAIN HEADER -->
   <header class="border-b bg-white">
     <div class="max-w-7xl mx-auto px-4 sm:px-4 lg:px-8">
       <div class="flex justify-between items-center py-5">
 
-        <!-- Logo + Pincode (Desktop) -->
+        <!-- Logo + Pincode -->
         <div class="flex items-center space-x-4">
           <a href="/index.html" class="flex-shrink-0">
             <img src="/Images/IMG/LOGO-removebg-preview.png" alt="GoodiNeewz" class="h-10 sm:h-12">
           </a>
 
-          <!-- Desktop Pincode -->
+          <!-- Desktop Pincode Trigger -->
           <div class="hidden md:flex flex-col">
-            <div class="flex items-center space-x-2">
-              <label for="pincode" class="text-sm font-medium text-gray-700" data-i18n = "enterPinCode">Select Pincode:</label>
-              <div class="relative">
-                <input type="text" id="pincode" maxlength="6" placeholder="Enter pincode"
-                       class="w-32 px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-green-500">
-                <span id="pincode-clear" class="absolute right-2 top-1/2 -translate-y-1/2 cursor-pointer text-gray-500 hidden">×</span>
-              </div>
-            </div>
+            <button id="pincode-trigger" class="flex items-center space-x-2 text-sm font-medium text-gray-700 hover:text-pink-600 transition">
+              <i class="fas fa-map-marker-alt text-pink-600"></i>
+              <span id="display-pincode">Select Pincode</span>
+              <i class="fas fa-chevron-down text-xs ml-1"></i>
+            </button>
             <div id="delivery-info" class="flex items-center mt-1 text-xs text-green-600 hidden">
               <i class="fas fa-truck mr-1"></i>
               <span>Delivery in 3-5 days</span>
@@ -91,70 +86,59 @@
 
         <!-- Desktop Right Icons -->
         <div class="hidden lg:flex items-center space-x-6 text-gray-700">
-          <select id="language-selector" class="text-md border border-gray-300 rounded px-3 py-2">
-            <option value="english">English</option>
-            <option value="hindi">Hindi</option>
-            <option value="marathi">Marathi</option>
-          </select>
+          
+          <!-- Language Trigger Button -->
+          <button id="language-trigger" class="flex items-center space-x-2 text-sm font-medium hover:text-pink-600 transition">
+            <i class="fas fa-globe text-xl"></i>
+            <span id="current-lang">English</span>
+            <i class="fas fa-chevron-down text-xs"></i>
+          </button>
+
           <a href="/contact.html" class="hover:text-blue-700 flex items-center gap-2" data-i18n="contact">
             <i class="fas fa-phone"></i> Contact Us
           </a>
 
-          <!-- Wishlist -->
           <a href="/Wishlist/wishlist.html" class="relative hover:text-red-600">
             <i class="fas fa-heart text-xl"></i>
             <span id="desktop-wishlist-count" class="absolute -top-2 -right-2 bg-red-500 text-white text-[10px] font-bold rounded-full w-5 h-5 flex items-center justify-center hidden">0</span>
           </a>
 
-          <!-- Cart -->
           <a href="/cart.html" class="relative">
             <i class="fas fa-shopping-cart text-xl"></i>
             <span id="desktop-cart-count" class="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-bold hidden">0</span>
           </a>
 
           <div class="relative">
-            <button id="profile-btn" data-i18n="profile" class="flex items-center space-x-2 hover:bg-gray-100 px-4 py-2 rounded-md transition">
+            <button id="profile-btn" class="flex items-center space-x-2 hover:bg-gray-100 px-4 py-2 rounded-md transition">
               <i class="fas fa-user-circle text-2xl"></i>
-              <span>Account</span>
+              <span data-i18n="profile">Account</span>
             </button>
             <div id="profile-menu" class="absolute right-0 mt-2 w-56 bg-white shadow-lg rounded-lg border border-gray-200 hidden opacity-0 transition-all">
               <a href="/Signup/auth.html" data-i18n="signupLogin" class="flex items-center px-4 py-3 hover:bg-gray-50"><i class="fas fa-user-plus mr-3"></i>Sign Up / Login</a>
-              <a href="/Profile/profile.html" data-i18n="" class="flex items-center px-4 py-3 hover:bg-gray-50"><i class="fas fa-user-circle mr-3"></i>Profile</a>
+              <a href="/Profile/profile.html" class="flex items-center px-4 py-3 hover:bg-gray-50"><i class="fas fa-user-circle mr-3"></i>Profile</a>
               <a href="/MY ORDERS/myorders.html" data-i18n="orders" class="flex items-center px-4 py-3 hover:bg-gray-50"><i class="fas fa-box mr-3"></i>Orders</a>
               <a href="/index.html" id="logout-btn" data-i18n="logout" class="flex items-center px-4 py-3 hover:bg-gray-50 text-red-600"><i class="fas fa-sign-out-alt mr-3"></i>Logout</a>
             </div>
           </div>
         </div>
 
-        <!-- MOBILE TOP BAR -->
-        <div class="flex top-0 lg:hidden items-center gap-4 text-gray-700">
-          
-
-          <!-- Centered Logo in Mobile -->
-          <!-- <a href="../index.html" class="absolute left-1/2 -translate-x-1/2 flex-shrink-0">
-            <img src="/Images/IMG/LOGO-removebg-preview.png" alt="GoodiNeewz" class="h-9">
-          </a> -->
-
-          <div class="flex items-center gap-4">
-            <select id="language-selector" class="text-sm border border-gray-300 rounded px-1 py-1">
-            <option value="english">En</option>
-            <option value="hindi">Hindi</option>
-            <option value="marathi">Marathi</option>
-          </select>
-            <a href="/contact.html"><i class="fas fa-phone text-xl"></i></a>
-            <a href="../Wishlist/wishlist.html" class="relative">
-              <i class="fas fa-heart text-xl"></i>
-              <span id="wishlistCount" class="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-bold hidden">0</span>
-            </a>
-            <a href="/cart.html" class="relative">
-              <i class="fas fa-shopping-cart text-xl"></i>
-              <span id="cartCount" class="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-bold hidden">0</span>
-            </a>
-            <button id="mobile-profile-btn"><i class="fas fa-user-circle text-2xl"></i></button>
-            <button id="mobile-menu-btn" class="text-2xl">
-            <i class="fas fa-bars"></i>
+        <!-- Mobile Top Bar -->
+        <div class="flex lg:hidden items-center gap-4 text-gray-700">
+          <!-- Mobile Language Trigger -->
+          <button id="mobile-language-trigger" class="text-xl">
+            <i class="fas fa-globe"></i>
           </button>
-          </div>
+          <a href="/contact.html"><i class="fas fa-phone text-xl"></i></a>
+          <a href="/Wishlist/wishlist.html" class="relative">
+            <i class="fas fa-heart text-xl"></i>
+            <span id="wishlistCount" class="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-bold hidden">0</span>
+          </a>
+          <a href="/cart.html" class="relative">
+            <i class="fas fa-shopping-cart text-xl"></i>
+            <span id="cartCount" class="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-bold hidden">0</span>
+          </a>
+          <button id="mobile-profile-btn"><i class="fas fa-user-circle text-2xl"></i></button>
+          <button id="mobile-menu-btn" class="text-2xl"><i class="fas fa-bars"></i></button>
         </div>
       </div>
     </div>
@@ -189,7 +173,7 @@
             </a>
             <div class="absolute top-full left-1/2 -translate-x-1/2 mt-2 w-64 bg-white shadow-xl rounded-lg border opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50">
               <a href="/Wellness/wellness.html" class="block px-4 py-3 hover:bg-gray-50" data-i18n="vitamins">Vitamins & Supplements</a>
-              <a href="/Wellness/wellness.html" class="block px-4 py-3 hover:bg-gray-50" data-i18n="skin">Skin & Hair Care</a>
+              <a href="/Wellness/wellness.html?sub=hair-skin-care" class="block px-4 py-3 hover:bg-gray-50" data-i18n="skin">Skin & Hair Care</a>
               <a href="/Wellness/wellness.html" class="block px-4 py-3 hover:bg-gray-50" data-i18n="oral">Oral Care</a>
               <a href="/Wellness/wellness.html" class="block px-4 py-3 hover:bg-gray-50" data-i18n="menstrual">Menstrual Care</a>
               <a href="/Wellness/wellness.html" class="block px-4 py-3 hover:bg-gray-50" data-i18n="fitness">Fitness & Weight</a>
@@ -298,6 +282,94 @@
       </div>
     </div>
   </nav>
+</div>
+
+<!-- PINCODE MODAL -->
+<div id="pincode-modal" class="fixed inset-0 z-50 hidden">
+  <div class="flex items-center justify-center min-h-screen px-4 modal-backdrop">
+    <div class="fixed inset-0 bg-black bg-opacity-50" onclick="closePincodeModal()"></div>
+    <div class="bg-white rounded-2xl shadow-2xl p-8 max-w-md w-full modal-content relative">
+      <button onclick="closePincodeModal()" class="absolute top-4 right-6 text-gray-400 hover:text-gray-800 text-3xl leading-none">&times;</button>
+      
+      <div class="text-center mb-8">
+        <div class="w-20 h-20 bg-pink-100 rounded-full flex items-center justify-center mx-auto mb-4">
+          <i class="fas fa-map-marker-alt text-4xl text-pink-600"></i>
+        </div>
+        <h3 class="text-2xl font-bold text-gray-800">Enter Delivery Pincode</h3>
+        <p class="text-gray-600 mt-2">Check availability & delivery time in your area</p>
+      </div>
+
+      <div class="relative">
+        <i class="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"></i>
+        <input 
+          type="text" 
+          id="modal-pincode-input" 
+          maxlength="6" 
+          placeholder="Enter 6-digit pincode" 
+          class="w-full pl-12 pr-16 py-4 border-2 border-gray-300 rounded-xl text-lg focus:outline-none focus:ring-4 focus:ring-pink-200 focus:border-pink-500 transition"
+        >
+        <button id="check-pincode-btn" class="absolute right-2 top-1/2 -translate-y-1/2 bg-pink-600 hover:bg-pink-700 text-white px-6 py-2.5 rounded-lg font-medium transition">
+          Check
+        </button>
+      </div>
+
+      <p id="pincode-error" class="text-red-600 text-sm mt-3 text-center hidden">
+        Please enter a valid 6-digit pincode
+      </p>
+      <p id="pincode-success" class="text-green-600 text-sm mt-3 text-center hidden flex items-center justify-center">
+        <i class="fas fa-check-circle mr-2"></i>
+        Delivery available in <strong id="success-pin"></strong> (3–5 days)
+      </p>
+
+      <div class="mt-6 text-center text-xs text-gray-500">
+        <p>We deliver across India</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="language-modal" class="fixed inset-0 z-50 hidden modal">
+  <div class="flex items-center justify-center min-h-screen px-4 modal-backdrop">
+    <div class="fixed inset-0 bg-black bg-opacity-50" onclick="closeLanguageModal()"></div>
+    <div class="bg-white rounded-2xl shadow-2xl p-8 max-w-md w-full modal-content relative">
+      <button onclick="closeLanguageModal()" class="absolute top-4 right-6 text-gray-400 hover:text-gray-800 text-3xl leading-none">×</button>
+      
+      <div class="text-center mb-8">
+        <div class="w-20 h-20 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+          <i class="fas fa-globe text-4xl text-blue-600"></i>
+        </div>
+        <h3 class="text-2xl font-bold text-gray-800">Choose Your Language</h3>
+        <p class="text-gray-600 mt-2">Select preferred language</p>
+      </div>
+
+      <div class="space-y-4">
+        <button onclick="changeLanguage('english')" class="lang-btn w-full flex items-center gap-4 p-4 rounded-xl border-2 border-gray-200 hover:border-blue-500 hover:bg-blue-50 transition">
+          <span class="text-3xl">EN</span>
+          <div class="text-left">
+            <div class="font-semibold text-gray-800">English</div>
+            <div class="text-sm text-gray-500">English</div>
+          </div>
+          <i class="ml-auto fas fa-check text-green-600 hidden"></i>
+        </button>
+        <button onclick="changeLanguage('hindi')" class="lang-btn w-full flex items-center gap-4 p-4 rounded-xl border-2 border-gray-200 hover:border-blue-500 hover:bg-blue-50 transition">
+          <span class="text-3xl">HI</span>
+          <div class="text-left">
+            <div class="font-semibold text-gray-800">हिन्दी</div>
+            <div class="text-sm text-gray-500">Hindi</div>
+          </div>
+          <i class="ml-auto fas fa-check text-green-600 hidden"></i>
+        </button>
+        <button onclick="changeLanguage('marathi')" class="lang-btn w-full flex items-center gap-4 p-4 rounded-xl border-2 border-gray-200 hover:border-blue-500 hover:bg-blue-50 transition">
+          <span class="text-3xl">MR</span>
+          <div class="text-left">
+            <div class="font-semibold text-gray-800">मराठी</div>
+            <div class="text-sm text-gray-500">Marathi</div>
+          </div>
+          <i class="ml-auto fas fa-check text-green-600 hidden"></i>
+        </button>
+      </div>
+    </div>
+  </div>
 </div>
 
 <!-- Mobile Profile Menu -->

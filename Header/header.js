@@ -147,302 +147,145 @@ const translations = {
 };
 
 
+function openPincodeModal() {
+  const modal = document.getElementById('pincode-modal');
+  modal.classList.remove('hidden');
+  setTimeout(() => modal.classList.add('show'), 10);
+  document.getElementById('modal-pincode-input').focus();
+}
 
-// Function to handle pin code selection with persistence
-function selectPin() {
-  console.log('selectPin function called');
-  
-  const pincodeInput = document.getElementById('pincode');
-  
-  if (!pincodeInput) {
-    console.error('Pincode input element not found!');
+function closePincodeModal() {
+  const modal = document.getElementById('pincode-modal');
+  modal.classList.remove('show');
+  setTimeout(() => modal.classList.add('hidden'), 300);
+}
+
+function validateAndSavePincode() {
+  const input = document.getElementById('modal-pincode-input');
+  const pin = input.value.trim();
+  const error = document.getElementById('pincode-error');
+  const success = document.getElementById('pincode-success');
+  const successPin = document.getElementById('success-pin');
+  const displayPins = document.querySelectorAll('#display-pincode, #mobile-display-pincode');
+
+  error.classList.add('hidden'); success.classList.add('hidden');
+  if (!/^\d{6}$/.test(pin)) {
+    error.classList.remove('hidden');
     return;
   }
-  
-  const pin = pincodeInput.value.trim();
-  console.log('Pin value:', pin);
-  
-  
+
+  localStorage.setItem('savedPincode', pin);
+  displayPins.forEach(el => el.textContent = pin);
+  successPin.textContent = pin;
+  success.classList.remove('hidden');
+  document.getElementById('delivery-info').classList.remove('hidden');
+  setTimeout(closePincodeModal, 1000);
+  showNotification(`Pincode ${pin} saved!`);
 }
 
-// Function to load saved pincode
 function loadSavedPincode() {
-  console.log('loadSavedPincode function called');
-  
-  const savedPincode = localStorage.getItem('savedPincode');
-  console.log('Retrieved pincode from localStorage:', savedPincode);
-  
-  const pincodeInput = document.getElementById('pincode');
-  
-  if (pincodeInput && savedPincode) {
-    pincodeInput.value = savedPincode;
-    console.log('Pincode loaded into input:', savedPincode);
+  const saved = localStorage.getItem('savedPincode');
+  if (saved) {
+    document.querySelectorAll('#display-pincode, #mobile-display-pincode').forEach(el => el.textContent = saved);
+    document.getElementById('delivery-info').classList.remove('hidden');
   }
 }
 
-// Function to translate the page
-function translatePage(language) {
-  const elements = document.querySelectorAll('[data-i18n]');
-  
-  elements.forEach(element => {
-    const key = element.getAttribute('data-i18n');
-    if (translations[language] && translations[language][key]) {
-      element.textContent = translations[language][key];
-    }
-  });
-
-  const placeholderElements = document.querySelectorAll('[data-i18n-placeholder]');
-  placeholderElements.forEach(element => {
-    const key = element.getAttribute('data-i18n-placeholder');
-    if (translations[language] && translations[language][key]) {
-      element.placeholder = translations[language][key];
-    }
-  });
-
-  localStorage.setItem('selectedLanguage', language);
-  console.log(`Language changed to: ${language}`);
+function openLanguageModal() {
+  const modal = document.getElementById('language-modal');
+  modal.classList.remove('hidden');
+  setTimeout(() => modal.classList.add('show'), 10);
+  updateLanguageCheckmark();
 }
 
-// Function to handle language change
+function closeLanguageModal() {
+  const modal = document.getElementById('language-modal');
+  modal.classList.remove('show');
+  setTimeout(() => modal.classList.add('hidden'), 300);
+}
+
+function updateLanguageCheckmark() {
+  const current = localStorage.getItem('selectedLanguage') || 'english';
+  document.querySelectorAll('.lang-btn').forEach(btn => {
+    const lang = btn.getAttribute('onclick').match(/'(\w+)'/)[1];
+    btn.querySelector('i.fa-check').classList.toggle('hidden', lang !== current);
+  });
+}
+
 function changeLanguage(lang) {
+  localStorage.setItem('selectedLanguage', lang);
   translatePage(lang);
-  showNotification(`Language changed to ${lang}`);
+  document.getElementById('current-lang').textContent = lang.charAt(0).toUpperCase() + lang.slice(1);
+  updateLanguageCheckmark();
+  closeLanguageModal();
+  showNotification('Language changed');
 }
 
-// Show notification
-function showNotification(message) {
-  const existingNotification = document.querySelector('.custom-notification');
-  if (existingNotification) {
-    existingNotification.remove();
-  }
-  
-  const notification = document.createElement('div');
-  notification.className = 'custom-notification';
-  notification.textContent = message;
-  notification.style.cssText = `
-    position: fixed;
-    top: 80px;
-    right: 20px;
-    background: #4CAF50;
-    color: white;
-    padding: 15px 20px;
-    border-radius: 5px;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-    z-index: 10000;
-    animation: slideIn 0.3s ease;
-  `;
-  
-  document.body.appendChild(notification);
-  
-  setTimeout(() => {
-    notification.style.animation = 'slideOut 0.3s ease';
-    setTimeout(() => notification.remove(), 300);
-  }, 3000);
+function translatePage(lang) {
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.getAttribute('data-i18n');
+    if (translations[lang]?.[key]) {
+      el.textContent = translations[lang][key];
+    }
+  });
 }
 
-// Add CSS for notification animations
-const style = document.createElement('style');
-style.textContent = `
-  @keyframes slideIn {
-    from {
-      transform: translateX(400px);
-      opacity: 0;
-    }
-    to {
-      transform: translateX(0);
-      opacity: 1;
-    }
-  }
-  
-  @keyframes slideOut {
-    from {
-      transform: translateX(0);
-      opacity: 1;
-    }
-    to {
-      transform: translateX(400px);
-      opacity: 0;
-    }
-  }
-`;
-document.head.appendChild(style);
-
-// Profile dropdown toggle function
-function toggleProfileDropdown() {
-  const profileMenu = document.getElementById('profile-menu');
-  if (profileMenu) {
-    profileMenu.classList.toggle('show');
-    console.log('Profile menu toggled');
-  }
+function showNotification(msg) {
+  const n = document.createElement('div');
+  n.textContent = msg;
+  n.className = 'fixed top-20 right-4 bg-green-600 text-white px-6 py-3 rounded-lg shadow-lg z-50 animate-pulse';
+  document.body.appendChild(n);
+  setTimeout(() => n.remove(), 3000);
 }
 
-
-
-// Main initialization function
 function initializeHeader() {
-  console.log('Initializing header...');
-  
-  // Load saved language preference
-  const savedLanguage = localStorage.getItem('selectedLanguage') || 'english';
-  console.log('Saved language:', savedLanguage);
-  
-  // Set the dropdown to the saved language
-  const languageSelector = document.getElementById('language-selector');
-  if (languageSelector) {
-    languageSelector.value = savedLanguage;
-    translatePage(savedLanguage);
-    
-    // Add event listener for language change
-    languageSelector.addEventListener('change', function() {
-      changeLanguage(this.value);
-    });
-  }
-  
-  // Load saved pincode
   loadSavedPincode();
-  
-  // Add Enter key support for pincode
-  const pincodeInput = document.getElementById('pincode');
-  if (pincodeInput) {
-    pincodeInput.addEventListener('keypress', function(event) {
-      if (event.key === 'Enter') {
-        event.preventDefault();
-        selectPin();
-      }
-    });
-  }
-  
-  // Profile dropdown functionality
-  const profileBtn = document.getElementById('profile-btn');
-  if (profileBtn) {
-    profileBtn.addEventListener('click', function(event) {
-      event.stopPropagation();
-      toggleProfileDropdown();
-      console.log('Profile button clicked');
-    });
-  }
-  
- 
-  // Logout functionality
-  const logoutBtn = document.getElementById('logout-btn');
-  if (logoutBtn) {
-    logoutBtn.addEventListener('click', function(event) {
-      event.preventDefault();
-      // Add your logout logic here
-      showNotification('Logged out successfully');
-      console.log('Logout clicked');
-      // You can redirect to login page or clear session data here
-      // window.location.href = '/login.html';
-    });
-  }
-  
-  console.log('Header initialization complete');
-}
 
-// Wait for DOM to be fully loaded - SINGLE event listener
-document.addEventListener('DOMContentLoaded', function() {
-    console.log('DOM fully loaded, initializing header...');
-    initializeHeader();
-});
+  const savedLang = localStorage.getItem('selectedLanguage') || 'english';
+  document.getElementById('current-lang').textContent = savedLang.charAt(0).toUpperCase() + savedLang.slice(1);
+  translatePage(savedLang);
 
-// Also initialize if DOM is already loaded
-if (document.readyState === 'interactive' || document.readyState === 'complete') {
-    console.log('DOM already ready, initializing header...');
-    setTimeout(initializeHeader, 0);
-}
+  // Pincode triggers
+  document.getElementById('pincode-trigger')?.addEventListener('click', openPincodeModal);
+  document.getElementById('mobile-pincode-trigger')?.addEventListener('click', openPincodeModal);
 
+  // Language triggers
+  document.getElementById('language-trigger')?.addEventListener('click', openLanguageModal);
+  document.getElementById('mobile-language-trigger')?.addEventListener('click', openLanguageModal);
 
-// DESKTOP PROFILE DROPDOWN – CLICK TO TOGGLE
-document.getElementById('profile-btn')?.addEventListener('click', function(e) {
-  e.stopPropagation();
-  const menu = document.getElementById('profile-menu');
-  const isHidden = menu.classList.contains('hidden');
-  
+  // Check pincode
+  document.getElementById('check-pincode-btn')?.addEventListener('click', validateAndSavePincode);
+  document.getElementById('modal-pincode-input')?.addEventListener('keypress', e => e.key === 'Enter' && validateAndSavePincode());
 
-  // Toggle current menu
-  if (isHidden) {
-    menu.classList.remove('hidden');
-    setTimeout(() => menu.classList.remove('opacity-0'), 10); // smooth fade-in
-  } else {
-    menu.classList.add('opacity-0');
-    setTimeout(() => menu.classList.add('hidden'), 200);
-  }
-});
-
-
-
-
-// Mobile & Desktop Profile Dropdown
-  document.getElementById('mobile-profile-btn')?.addEventListener('click', (e) => {
+  // Mobile menu & profile
+  document.getElementById('mobile-menu-btn')?.addEventListener('click', () => {
+    document.getElementById('mobile-menu').classList.toggle('hidden');
+  });
+  document.getElementById('mobile-profile-btn')?.addEventListener('click', e => {
     e.stopPropagation();
     document.getElementById('mobile-profile-menu').classList.toggle('hidden');
   });
 
-  document.getElementById('desktop-profile-btn')?.addEventListener('click', (e) => {
+  // Desktop profile
+  document.getElementById('profile-btn')?.addEventListener('click', e => {
     e.stopPropagation();
-    document.getElementById('desktop-profile-menu').classList.toggle('hidden');
+    const menu = document.getElementById('profile-menu');
+    menu.classList.toggle('hidden', 'opacity-0');
   });
 
-
-// Mobile Menu Toggle
-document.getElementById('mobile-menu-btn')?.addEventListener('click', (e) => {
-    e.stopPropagation();
-    document.getElementById('mobile-menu').classList.toggle('hidden');
-  });
-
-
-// ACTIVE NAV LINK HIGHLIGHT - 100% WORKING
-function highlightActiveNav() {
-  const currentPage = window.location.pathname;  // e.g., /MotherCare/mother.html
-
-  // Remove all active classes first
-  document.querySelectorAll('.nav-link, .mobile-nav-link').forEach(link => {
-    link.classList.remove('active');
-  });
-
-  // Check each nav link
-  document.querySelectorAll('.nav-link, .mobile-nav-link').forEach(link => {
-    const href = link.getAttribute('href');
-    
-    if (!href || href === '#' || href === 'javascript:void(0)') return;
-
-    // Match exact page or folder
-    if (currentPage.includes(href.replace(/^\/+/, ''))) {
-      link.classList.add('active');
-    }
-  });
-
-  // Special case: if on home page
-  if (currentPage === '/' || currentPage.endsWith('/index.html') || currentPage.endsWith('/')) {
-    document.querySelectorAll('.nav-link, .mobile-nav-link').forEach(link => {
-      link.classList.remove('active');
-    });
-  }
+  highlightActiveNav();
 }
 
-// Run when page loads
-document.addEventListener('DOMContentLoaded', highlightActiveNav);
-// Also run immediately in case DOM already loaded
-highlightActiveNav();
-
-// FINAL ACTIVE NAV HIGHLIGHT - 100% WORKING
 function highlightActiveNav() {
   const path = window.location.pathname;
-
   document.querySelectorAll('.nav-link, .mobile-nav-link').forEach(link => {
     link.classList.remove('active');
     const href = link.getAttribute('href');
-    if (!href || href === '#' || href === 'javascript:void(0)') return;
-
-    const cleanHref = href.split('?')[0].replace(/^\//, '');
-    const cleanPath = path.split('?')[0].replace(/^\//, '');
-
-    if (cleanPath === cleanHref || cleanPath.includes(cleanHref)) {
-      link.classList.add('active');
-    }
+    if (!href || href.includes('javascript')) return;
+    if (path.includes(href.replace(/^\//, ''))) link.classList.add('active');
   });
 }
 
-// Run on load
-document.addEventListener('DOMContentLoaded', highlightActiveNav);
-highlightActiveNav(); // Run immediately too
+document.addEventListener('DOMContentLoaded', initializeHeader);
+if (document.readyState !== 'loading') initializeHeader();
+highlightActiveNav();
