@@ -146,7 +146,53 @@ const translations = {
   }
 };
 
+// List of invalid pincodes (common patterns that aren't real pincodes)
+const invalidPincodes = [
+  '000000', '111111', '222222', '333333', '444444', '555555', 
+  '666666', '777777', '888888', '999999', '123456', '654321',
+  '012345', '543210', '111222', '222333', '333444', '444555',
+  '555666', '666777', '777888', '888999', '999000', '000111'
+];
 
+// PINCODE VALIDATION FUNCTIONS
+function isValidPincode(pin) {
+  // Basic validation: must be 6 digits
+  if (!/^\d{6}$/.test(pin)) {
+    return { valid: false, message: "Please enter exactly 6 digits" };
+  }
+  
+  // Check for invalid patterns
+  if (invalidPincodes.includes(pin)) {
+    return { valid: false, message: "This is not a valid Indian pincode" };
+  }
+  
+  // Check for all same digits
+  if (/^(\d)\1{5}$/.test(pin)) {
+    return { valid: false, message: "Invalid pincode pattern" };
+  }
+  
+  // Check for sequential digits (ascending or descending)
+  const isSequential = (str) => {
+    const nums = str.split('').map(Number);
+    const ascending = nums.every((num, i) => i === 0 || num === nums[i-1] + 1);
+    const descending = nums.every((num, i) => i === 0 || num === nums[i-1] - 1);
+    return ascending || descending;
+  };
+  
+  if (isSequential(pin)) {
+    return { valid: false, message: "Invalid pincode pattern" };
+  }
+  
+  // First digit should be between 1-8 for Indian pincodes
+  const firstDigit = parseInt(pin[0]);
+  if (firstDigit < 1 || firstDigit > 8) {
+    return { valid: false, message: "Invalid Indian pincode. First digit should be 1-8" };
+  }
+  
+  return { valid: true, message: "Valid pincode" };
+}
+
+// PINCODE FUNCTIONS
 function openPincodeModal() {
   const modal = document.getElementById('pincode-modal');
   modal.classList.remove('hidden');
@@ -166,31 +212,99 @@ function validateAndSavePincode() {
   const error = document.getElementById('pincode-error');
   const success = document.getElementById('pincode-success');
   const successPin = document.getElementById('success-pin');
+  const checkBtn = document.getElementById('check-pincode-btn');
   const displayPins = document.querySelectorAll('#display-pincode, #mobile-display-pincode');
 
-  error.classList.add('hidden'); success.classList.add('hidden');
-  if (!/^\d{6}$/.test(pin)) {
-    error.classList.remove('hidden');
-    return;
-  }
+  // Reset states
+  error.classList.add('hidden'); 
+  success.classList.add('hidden');
+  input.classList.remove('pincode-validating', 'pincode-invalid');
 
-  localStorage.setItem('savedPincode', pin);
-  displayPins.forEach(el => el.textContent = pin);
-  successPin.textContent = pin;
-  success.classList.remove('hidden');
-  document.getElementById('delivery-info').classList.remove('hidden');
-  setTimeout(closePincodeModal, 1000);
-  showNotification(`Pincode ${pin} saved!`);
+ // Show validating state
+  input.classList.add('pincode-validating');
+  checkBtn.disabled = true;
+  checkBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Checking...';
+  
+  // Simulate API check delay
+  setTimeout(() => {
+    input.classList.remove('pincode-validating');
+    checkBtn.disabled = false;
+    checkBtn.textContent = 'Check';
+
+ // Validate pincode
+    const validation = isValidPincode(pin);
+    
+    if (!validation.valid) {
+      error.textContent = validation.message;
+      error.classList.remove('hidden');
+      input.classList.add('pincode-invalid');
+      input.focus();
+      input.select();
+      return;
+    }
+
+   // Pincode is valid
+    localStorage.setItem('savedPincode', pin);
+    displayPins.forEach(el => el.textContent = pin);
+    successPin.textContent = pin;
+    success.classList.remove('hidden');
+    document.getElementById('delivery-info').classList.remove('hidden');
+    input.classList.remove('pincode-invalid');
+    
+    // Show success for 2 seconds then close
+    setTimeout(() => {
+      closePincodeModal();
+      showNotification(`Delivery available in ${pin}! Delivery in 3-5 days.`);
+    }, 1500);
+    
+  }, 800); // Simulated API delay
 }
+
 
 function loadSavedPincode() {
   const saved = localStorage.getItem('savedPincode');
   if (saved) {
-    document.querySelectorAll('#display-pincode, #mobile-display-pincode').forEach(el => el.textContent = saved);
-    document.getElementById('delivery-info').classList.remove('hidden');
+    // Validate saved pincode on load
+    const validation = isValidPincode(saved);
+    if (validation.valid) {
+      document.querySelectorAll('#display-pincode, #mobile-display-pincode').forEach(el => el.textContent = saved);
+      document.getElementById('delivery-info').classList.remove('hidden');
+    } else {
+      // Remove invalid saved pincode
+      localStorage.removeItem('savedPincode');
+    }
   }
 }
 
+// Real-time pincode validation on input
+function setupPincodeInputValidation() {
+  const input = document.getElementById('modal-pincode-input');
+  if (input) {
+    input.addEventListener('input', function(e) {
+      let value = e.target.value.replace(/\D/g, ''); // Remove non-digits
+      value = value.substring(0, 6); // Limit to 6 digits
+      e.target.value = value;
+      
+      // Remove validation classes on new input
+      e.target.classList.remove('pincode-validating', 'pincode-invalid');
+      document.getElementById('pincode-error').classList.add('hidden');
+      document.getElementById('pincode-success').classList.add('hidden');
+      
+      // Auto-check when 6 digits are entered
+      if (value.length === 6) {
+        const validation = isValidPincode(value);
+        if (!validation.valid) {
+          e.target.classList.add('pincode-invalid');
+          document.getElementById('pincode-error').textContent = validation.message;
+          document.getElementById('pincode-error').classList.remove('hidden');
+        }
+      }
+    });
+  }
+}
+
+
+// LANGUAGE FUNCTIONS
 function openLanguageModal() {
   const modal = document.getElementById('language-modal');
   modal.classList.remove('hidden');
@@ -230,50 +344,13 @@ function translatePage(lang) {
   });
 }
 
+// UTILITY FUNCTIONS
 function showNotification(msg) {
   const n = document.createElement('div');
   n.textContent = msg;
   n.className = 'fixed top-20 right-4 bg-green-600 text-white px-6 py-3 rounded-lg shadow-lg z-50 animate-pulse';
   document.body.appendChild(n);
   setTimeout(() => n.remove(), 3000);
-}
-
-function initializeHeader() {
-  loadSavedPincode();
-
-  const savedLang = localStorage.getItem('selectedLanguage') || 'english';
-  document.getElementById('current-lang').textContent = savedLang.charAt(0).toUpperCase() + savedLang.slice(1);
-  translatePage(savedLang);
-
-  // Pincode triggers
-  document.getElementById('pincode-trigger')?.addEventListener('click', openPincodeModal);
-  document.getElementById('mobile-pincode-trigger')?.addEventListener('click', openPincodeModal);
-
-  // Language triggers
-  document.getElementById('language-trigger')?.addEventListener('click', openLanguageModal);
-  document.getElementById('mobile-language-trigger')?.addEventListener('click', openLanguageModal);
-
-  // Check pincode
-  document.getElementById('check-pincode-btn')?.addEventListener('click', validateAndSavePincode);
-  document.getElementById('modal-pincode-input')?.addEventListener('keypress', e => e.key === 'Enter' && validateAndSavePincode());
-
-  // Mobile menu & profile
-  document.getElementById('mobile-menu-btn')?.addEventListener('click', () => {
-    document.getElementById('mobile-menu').classList.toggle('hidden');
-  });
-  document.getElementById('mobile-profile-btn')?.addEventListener('click', e => {
-    e.stopPropagation();
-    document.getElementById('mobile-profile-menu').classList.toggle('hidden');
-  });
-
-  // Desktop profile
-  // document.getElementById('profile-btn')?.addEventListener('click', e => {
-  //   e.stopPropagation();
-  //   const menu = document.getElementById('profile-menu');
-  //   menu.classList.toggle('hidden', 'opacity-0');
-  // });
-
-  highlightActiveNav();
 }
 
 function highlightActiveNav() {
@@ -286,6 +363,77 @@ function highlightActiveNav() {
   });
 }
 
+// MAIN INITIALIZATION FUNCTION
+function initializeHeader() {
+  loadSavedPincode();
+
+  const savedLang = localStorage.getItem('selectedLanguage') || 'english';
+  document.getElementById('current-lang').textContent = savedLang.charAt(0).toUpperCase() + savedLang.slice(1);
+  translatePage(savedLang);
+
+// Pincode triggers
+  document.getElementById('pincode-trigger')?.addEventListener('click', openPincodeModal);
+  document.getElementById('mobile-pincode-trigger')?.addEventListener('click', openPincodeModal);
+
+  // Language triggers
+  document.getElementById('language-trigger')?.addEventListener('click', openLanguageModal);
+  document.getElementById('mobile-language-trigger')?.addEventListener('click', openLanguageModal);
+
+  // Check pincode button
+  document.getElementById('check-pincode-btn')?.addEventListener('click', validateAndSavePincode);
+  document.getElementById('modal-pincode-input')?.addEventListener('keypress', e => {
+    if (e.key === 'Enter') validateAndSavePincode();
+  });
+
+  // Mobile menu & profile
+  document.getElementById('mobile-menu-btn')?.addEventListener('click', () => {
+    document.getElementById('mobile-menu').classList.toggle('hidden');
+  });
+  
+  document.getElementById('mobile-profile-btn')?.addEventListener('click', e => {
+    e.stopPropagation();
+    document.getElementById('mobile-profile-menu').classList.toggle('hidden');
+  });
+
+  // Desktop profile dropdown - FIXED VERSION
+  const profileBtn = document.getElementById('profile-btn');
+  const profileMenu = document.getElementById('profile-menu');
+  
+  if (profileBtn && profileMenu) {
+    profileBtn.addEventListener('click', function(e) {
+      e.stopPropagation();
+      profileMenu.classList.toggle('show');
+    });
+    
+    // Close dropdown when clicking outside
+    document.addEventListener('click', function() {
+      profileMenu.classList.remove('show');
+    });
+    
+    // Prevent dropdown from closing when clicking inside it
+    profileMenu.addEventListener('click', function(e) {
+      e.stopPropagation();
+    });
+  }
+ // Mobile dropdowns
+  document.querySelectorAll('.mobile-dropdown button').forEach(btn => {
+    btn.addEventListener('click', function() {
+      this.parentElement.querySelector('.mobile-dropdown-content').classList.toggle('hidden');
+    });
+  });
+
+  highlightActiveNav();
+}
+
+// EVENT LISTENERS
 document.addEventListener('DOMContentLoaded', initializeHeader);
 if (document.readyState !== 'loading') initializeHeader();
-highlightActiveNav();
+
+
+// Close modals on escape key
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') {
+    closePincodeModal();
+    closeLanguageModal();
+  }
+});

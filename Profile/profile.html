@@ -336,12 +336,12 @@
         // If no user is found, redirect to login
         console.error('No logged-in user found');
         alert('Please log in to view your profile');
-        window.location.href = '../index.html'; // Adjust path as needed
+        window.location.href = '../home.html'; // Adjust path as needed
         
       } catch (error) {
         console.error('Error getting current user:', error);
         alert('Unable to verify login status. Please log in again.');
-        window.location.href = '../index.html';
+        window.location.href = '../home.html';
       }
     }
 

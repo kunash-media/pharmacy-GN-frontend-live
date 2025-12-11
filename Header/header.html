@@ -55,7 +55,7 @@
       padding-left: 2rem;
     }
 
-    /* ACCOUNT DROPDOWN - FULLY FIXED & WORKING */
+    /* ACCOUNT DROPDOWN - FIXED */
     #profile-menu {
       display: none;
       position: absolute;
@@ -72,6 +72,22 @@
     #profile-menu.show {
       display: block;
     }
+
+    /* Modal animations */
+    .modal-backdrop {
+      animation: fadeIn 0.3s ease;
+    }
+    .modal-content {
+      animation: slideUp 0.3s ease;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    @keyframes slideUp {
+      from { transform: translateY(20px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
   </style>
 </head>
 <body>
@@ -84,13 +100,14 @@
 
         <!-- Logo + Pincode with Divider -->
         <div class="flex items-center space-x-6">
-          <a href="/index.html" class="flex-shrink-0">
+          <a href="/home.html" class="flex-shrink-0">
             <img src="/Images/IMG/LOGO-removebg-preview.png" alt="GoodiNeewz" class="h-10 sm:h-12">
           </a>
 
           <!-- Vertical Gray Divider Line -->
           <div class="h-12 w-px bg-gray-300 hidden md:block"></div>
 
+          <!-- Desktop Pincode Trigger -->
           <!-- Desktop Pincode Trigger -->
           <div class="hidden md:flex flex-col">
             <button id="pincode-trigger" class="flex items-center space-x-2 text-xs font-medium text-gray-700 hover:text-pink-600 transition">
@@ -129,7 +146,7 @@
             <span id="desktop-cart-count" class="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center font-bold hidden">0</span>
           </a>
 
-          <!-- Account Dropdown - FULLY WORKING -->
+          <!-- Account Dropdown - FIXED VERSION -->
           <div class="relative">
             <button id="profile-btn" class="flex items-center space-x-2 hover:bg-gray-100 px-4 py-2 rounded-md transition">
               <i class="fas fa-user-circle text-2xl"></i>
@@ -148,7 +165,7 @@
               <a href="/MY ORDERS/myorders.html" data-i18n="orders" class="flex items-center px-5 py-4 hover:bg-gray-50 text-gray-700 transition">
                 <i class="fas fa-box mr-3 text-gray-500"></i> Orders
               </a>
-              <a href="/index.html" id="logout-btn" data-i18n="logout" class="flex items-center px-5 py-4 hover:bg-gray-50 text-red-600 font-medium transition">
+              <a href="/home.html" id="logout-btn" data-i18n="logout" class="flex items-center px-5 py-4 hover:bg-gray-50 text-red-600 font-medium transition">
                 <i class="fas fa-sign-out-alt mr-3"></i> Logout
               </a>
             </div>
@@ -338,9 +355,7 @@
         </button>
       </div>
 
-      <p id="pincode-error" class="text-red-600 text-sm mt-3 text-center hidden">
-        Please enter a valid 6-digit pincode
-      </p>
+      <p id="pincode-error" class="text-red-600 text-sm mt-3 text-center hidden"></p>
       <p id="pincode-success" class="text-green-600 text-sm mt-3 text-center hidden flex items-center justify-center">
         <i class="fas fa-check-circle mr-2"></i>
         Delivery available in <strong id="success-pin"></strong> (3–5 days)
@@ -404,38 +419,11 @@
     <a href="/Signup/auth.html" data-i18n="signupLogin" class="flex items-center px-4 py-3 hover:bg-gray-50"><i class="fas fa-user-plus mr-3"></i>Sign Up / Login</a>
     <a href="/Profile/profile.html" class="flex items-center px-4 py-3 hover:bg-gray-50"><i class="fas fa-user-circle mr-3"></i>Profile</a>
     <a href="/MY ORDERS/myorders.html" data-i18n="orders" class="flex items-center px-4 py-3 hover:bg-gray-50"><i class="fas fa-box mr-3"></i>Orders</a>
-    <a href="/index.html" data-i18n="logout" class="flex items-center px-4 py-3 hover:bg-gray-50 text-red-600"><i class="fas fa-sign-out-alt mr-3"></i>Logout</a>
+    <a href="/home.html" data-i18n="logout" class="flex items-center px-4 py-3 hover:bg-gray-50 text-red-600"><i class="fas fa-sign-out-alt mr-3"></i>Logout</a>
   </div>
 </div>
 
-<!-- FINAL WORKING JAVASCRIPT -->
-<script>
-  // Account Dropdown - Opens on click, closes on outside click
-  document.addEventListener('click', function() {
-    document.getElementById('profile-menu')?.classList.remove('show');
-  });
 
-  document.getElementById('profile-btn')?.addEventListener('click', function(e) {
-    e.stopPropagation();
-    document.getElementById('profile-menu').classList.toggle('show');
-  });
-
-  document.getElementById('profile-menu')?.addEventListener('click', function(e) {
-    e.stopPropagation();
-  });
-
-  // Mobile menu toggle
-  document.getElementById('mobile-menu-btn')?.addEventListener('click', function() {
-    document.getElementById('mobile-menu').classList.toggle('hidden');
-  });
-
-  // Mobile dropdowns
-  document.querySelectorAll('.mobile-dropdown button').forEach(btn => {
-    btn.addEventListener('click', function() {
-      this.parentElement.querySelector('.mobile-dropdown-content').classList.toggle('hidden');
-    });
-  });
-</script>
 
 <script src="./header.js"></script>
 </body>
