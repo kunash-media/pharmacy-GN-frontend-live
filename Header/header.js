@@ -267,11 +267,11 @@ function initializeHeader() {
   });
 
   // Desktop profile
-  document.getElementById('profile-btn')?.addEventListener('click', e => {
-    e.stopPropagation();
-    const menu = document.getElementById('profile-menu');
-    menu.classList.toggle('hidden', 'opacity-0');
-  });
+  // document.getElementById('profile-btn')?.addEventListener('click', e => {
+  //   e.stopPropagation();
+  //   const menu = document.getElementById('profile-menu');
+  //   menu.classList.toggle('hidden', 'opacity-0');
+  // });
 
   highlightActiveNav();
 }
