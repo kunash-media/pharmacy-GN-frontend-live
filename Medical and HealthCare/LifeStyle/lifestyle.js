@@ -1,438 +1,716 @@
-// =============== LIFESTYLE DISORDER PRODUCTS ===============
-const fakeProducts = [
-  { id: 1, name: "Sugar-Free Gold", brand: "Dabur", price: 280, originalPrice: 350, discount: 20, category: "diabetes", image: "https://images.unsplash.com/photo-1587854692152-cbe660dbde88?w=400&h=400&fit=crop", prescription: false, description: "Sugar substitute for diabetes management" },
-  { id: 2, name: "Diabetic Multivitamin", brand: "Abbott", price: 420, originalPrice: 550, discount: 24, category: "diabetes", image: "https://images.unsplash.com/photo-1584017911766-d451b3d0e843?w=400&h=400&fit=crop", prescription: false, description: "Essential vitamins for diabetic patients" },
-  { id: 3, name: "Blood Pressure Monitor", brand: "Dr. Reddy's", price: 850, originalPrice: 1200, discount: 29, category: "heart-bp", image: "https://images.unsplash.com/photo-1559757148-5c350d0d3c56?w=400&h=400&fit=crop", prescription: false, description: "Digital BP monitor for home use" },
-  { id: 4, name: "Heart Care Capsules", brand: "Himalaya", price: 315, originalPrice: 420, discount: 25, category: "heart-bp", image: "https://images.unsplash.com/photo-1550572017-4876b7788da6?w=400&h=400&fit=crop", prescription: false, description: "Natural support for heart health" },
-  { id: 5, name: "Thyroid Support Tablets", brand: "Baidyanath", price: 295, originalPrice: 395, discount: 25, category: "thyroid", image: "https://images.unsplash.com/photo-1599932887768-d6cb80133949?w=400&h=400&fit=crop", prescription: false, description: "Ayurvedic support for thyroid function" },
-  { id: 6, name: "Iodine Supplement", brand: "Abbott", price: 180, originalPrice: 240, discount: 25, category: "thyroid", image: "https://images.unsplash.com/photo-1584622650111-993a426fbf0a?w=400&h=400&fit=crop", prescription: false, description: "Essential iodine for thyroid health" },
-  { id: 7, name: "Vitamin D3 60K IU", brand: "Dr. Reddy's", price: 145, originalPrice: 195, discount: 26, category: "vitamins", image: "https://images.unsplash.com/photo-1584622650111-993a426fbf0a?w=400&h=400&fit=crop", prescription: false, description: "High potency Vitamin D supplement" },
-  { id: 8, name: "Multivitamin Complex", brand: "Himalaya", price: 325, originalPrice: 450, discount: 28, category: "vitamins", image: "https://images.unsplash.com/photo-1584017911766-d451b3d0e843?w=400&h=400&fit=crop", prescription: false, description: "Complete daily multivitamin formula" },
-  { id: 9, name: "Diabetic Foot Cream", brand: "Dabur", price: 195, originalPrice: 260, discount: 25, category: "diabetes", image: "https://images.unsplash.com/photo-1607619056574-7b8d3ee536b2?w=400&h=400&fit=crop", prescription: false, description: "Moisturizing cream for diabetic skin" },
-  { id: 10, name: "Omega-3 Fish Oil", brand: "Abbott", price: 480, originalPrice: 650, discount: 26, category: "heart-bp", image: "https://images.unsplash.com/photo-1627483262268-9c2b5b2834b5?w=400&h=400&fit=crop", prescription: false, description: "Supports heart and brain health" },
-  { id: 11, name: "Calcium + Vitamin D", brand: "Dabur", price: 225, originalPrice: 300, discount: 25, category: "vitamins", image: "https://images.unsplash.com/photo-1559757148-5c350d0d3c56?w=400&h=400&fit=crop", prescription: false, description: "Bone health supplement" },
-  { id: 12, name: "Thyroid Care Tea", brand: "Himalaya", price: 165, originalPrice: 220, discount: 25, category: "thyroid", image: "https://images.unsplash.com/photo-1599932887768-d6cb80133949?w=400&h=400&fit=crop", prescription: false, description: "Herbal tea for thyroid support" }
+// ==================== lifestyle.js – LIFESTYLE DISORDER PRODUCTS ====================
+
+const allProducts = [
+  // Diabetes Care
+  { 
+    id: 1, 
+    title: "Sugar-Free Gold 500g", 
+    price: 280, 
+    originalPrice: 350, 
+    discount: 20, 
+    rating: 4.6, 
+    reviewCount: 2350,
+    category: "diabetes", 
+    brand: "Dabur", 
+    image: "https://images.unsplash.com/photo-1559757148-5c350d0d3c56?w=400&h=400&fit=crop",
+    description: "Natural sugar substitute for diabetes management",
+    inStock: true 
+  },
+  { 
+    id: 2, 
+    title: "Diabetic Multivitamin (60 tablets)", 
+    price: 420, 
+    originalPrice: 550, 
+    discount: 24, 
+    rating: 4.5, 
+    reviewCount: 1870,
+    category: "diabetes", 
+    brand: "Abbott", 
+    image: "https://images.unsplash.com/photo-1584017911766-d451b3d0e843?w=400&h=400&fit=crop",
+    description: "Essential vitamins specially formulated for diabetic patients",
+    inStock: true 
+  },
+  { 
+    id: 3, 
+    title: "Diabetic Foot Cream 50g", 
+    price: 195, 
+    originalPrice: 260, 
+    discount: 25, 
+    rating: 4.7, 
+    reviewCount: 1560,
+    category: "diabetes", 
+    brand: "Dabur", 
+    image: "https://images.unsplash.com/photo-1607619056574-7b8d3ee536b2?w=400&h=400&fit=crop",
+    description: "Moisturizing cream for diabetic skin care",
+    inStock: true 
+  },
+
+  // Heart & Blood Pressure
+  { 
+    id: 4, 
+    title: "Digital Blood Pressure Monitor", 
+    price: 850, 
+    originalPrice: 1200, 
+    discount: 29, 
+    rating: 4.8, 
+    reviewCount: 3250,
+    category: "heart-bp", 
+    brand: "Dr. Reddy's", 
+    image: "https://images.unsplash.com/photo-1559757148-5c350d0d3c56?w=400&h=400&fit=crop",
+    description: "Accurate digital BP monitor for home use",
+    inStock: true 
+  },
+  { 
+    id: 5, 
+    title: "Heart Care Capsules (60 caps)", 
+    price: 315, 
+    originalPrice: 420, 
+    discount: 25, 
+    rating: 4.6, 
+    reviewCount: 2780,
+    category: "heart-bp", 
+    brand: "Himalaya", 
+    image: "https://images.unsplash.com/photo-1550572017-4876b7788da6?w=400&h=400&fit=crop",
+    description: "Natural support for cardiovascular health",
+    inStock: true 
+  },
+  { 
+    id: 6, 
+    title: "Omega-3 Fish Oil (90 capsules)", 
+    price: 480, 
+    originalPrice: 650, 
+    discount: 26, 
+    rating: 4.7, 
+    reviewCount: 3120,
+    category: "heart-bp", 
+    brand: "Abbott", 
+    image: "https://images.unsplash.com/photo-1627483262268-9c2b5b2834b5?w=400&h=400&fit=crop",
+    description: "Supports heart and brain health with essential fatty acids",
+    inStock: false 
+  },
+
+  // Thyroid Support
+  { 
+    id: 7, 
+    title: "Thyroid Support Tablets (60 tabs)", 
+    price: 295, 
+    originalPrice: 395, 
+    discount: 25, 
+    rating: 4.4, 
+    reviewCount: 1450,
+    category: "thyroid", 
+    brand: "Baidyanath", 
+    image: "https://images.unsplash.com/photo-1599932887768-d6cb80133949?w=400&h=400&fit=crop",
+    description: "Ayurvedic support for healthy thyroid function",
+    inStock: true 
+  },
+  { 
+    id: 8, 
+    title: "Iodine Supplement (100 tablets)", 
+    price: 180, 
+    originalPrice: 240, 
+    discount: 25, 
+    rating: 4.5, 
+    reviewCount: 1670,
+    category: "thyroid", 
+    brand: "Abbott", 
+    image: "https://images.unsplash.com/photo-1584622650111-993a426fbf0a?w=400&h=400&fit=crop",
+    description: "Essential iodine supplement for thyroid health",
+    inStock: true 
+  },
+  { 
+    id: 9, 
+    title: "Thyroid Care Herbal Tea (30 bags)", 
+    price: 165, 
+    originalPrice: 220, 
+    discount: 25, 
+    rating: 4.3, 
+    reviewCount: 980,
+    category: "thyroid", 
+    brand: "Himalaya", 
+    image: "https://images.unsplash.com/photo-1599932887768-d6cb80133949?w=400&h=400&fit=crop",
+    description: "Herbal tea blend for thyroid support",
+    inStock: true 
+  },
+
+  // Vitamins & Supplements
+  { 
+    id: 10, 
+    title: "Vitamin D3 60K IU (4 tablets)", 
+    price: 145, 
+    originalPrice: 195, 
+    discount: 26, 
+    rating: 4.8, 
+    reviewCount: 2890,
+    category: "vitamins", 
+    brand: "Dr. Reddy's", 
+    image: "https://images.unsplash.com/photo-1584622650111-993a426fbf0a?w=400&h=400&fit=crop",
+    description: "High potency Vitamin D supplement for bone health",
+    inStock: true 
+  },
+  { 
+    id: 11, 
+    title: "Multivitamin Complex (90 tablets)", 
+    price: 325, 
+    originalPrice: 450, 
+    discount: 28, 
+    rating: 4.7, 
+    reviewCount: 2560,
+    category: "vitamins", 
+    brand: "Himalaya", 
+    image: "https://images.unsplash.com/photo-1584017911766-d451b3d0e843?w=400&h=400&fit=crop",
+    description: "Complete daily multivitamin formula",
+    inStock: true 
+  },
+  { 
+    id: 12, 
+    title: "Calcium + Vitamin D (60 tablets)", 
+    price: 225, 
+    originalPrice: 300, 
+    discount: 25, 
+    rating: 4.6, 
+    reviewCount: 2340,
+    category: "vitamins", 
+    brand: "Dabur", 
+    image: "https://images.unsplash.com/photo-1559757148-5c350d0d3c56?w=400&h=400&fit=crop",
+    description: "Bone health supplement with enhanced absorption",
+    inStock: false 
+  },
+
+  // Nutritional Support
+  { 
+    id: 13, 
+    title: "Protein Powder 500g (Vanilla)", 
+    price: 650, 
+    originalPrice: 850, 
+    discount: 24, 
+    rating: 4.8, 
+    reviewCount: 3450,
+    category: "nutrition", 
+    brand: "Abbott", 
+    image: "https://images.unsplash.com/photo-1551601651-2a8555f1a136?w=400&h=400&fit=crop",
+    description: "Whey protein for nutritional support",
+    inStock: true 
+  },
+  { 
+    id: 14, 
+    title: "Fiber Supplement (200g)", 
+    price: 285, 
+    originalPrice: 380, 
+    discount: 25, 
+    rating: 4.5, 
+    reviewCount: 1670,
+    category: "nutrition", 
+    brand: "Dabur", 
+    image: "https://images.unsplash.com/photo-1587854692152-cbe660dbde88?w=400&h=400&fit=crop",
+    description: "Dietary fiber for digestive health",
+    inStock: true 
+  },
+
+  // General Wellness
+  { 
+    id: 15, 
+    title: "Stress Relief Capsules (60 caps)", 
+    price: 350, 
+    originalPrice: 450, 
+    discount: 22, 
+    rating: 4.4, 
+    reviewCount: 1890,
+    category: "wellness", 
+    brand: "Himalaya", 
+    image: "https://images.unsplash.com/photo-1550572017-4876b7788da6?w=400&h=400&fit=crop",
+    description: "Natural stress and anxiety management",
+    inStock: true 
+  },
+  { 
+    id: 16, 
+    title: "Immunity Booster Syrup 200ml", 
+    price: 220, 
+    originalPrice: 290, 
+    discount: 24, 
+    rating: 4.7, 
+    reviewCount: 2450,
+    category: "wellness", 
+    brand: "Baidyanath", 
+    image: "https://images.unsplash.com/photo-1584017911766-d451b3d0e843?w=400&h=400&fit=crop",
+    description: "Herbal syrup to boost immune system",
+    inStock: true 
+  }
 ];
 
-let products = [...fakeProducts];
-let filteredProducts = [...fakeProducts];
-let productGrid, sortSelect;
+// Global State
+let filteredProducts = [...allProducts];
+let wishlist = JSON.parse(localStorage.getItem("wishlist") || "[]");
+let cart = JSON.parse(localStorage.getItem("cart") || "[]");
+let currentPage = 1;
+const pageSize = 12;
 
-let currentFilters = {
+// Persistent Filter State
+let filterState = {
   category: 'all',
   brand: 'all',
-  discount: 'all',
+  discount: 0,
   minPrice: 0,
-  maxPrice: 5000
+  maxPrice: 5000,
+  sort: 'default'
 };
 
-// ======================================================
-document.addEventListener('DOMContentLoaded', () => {
-  productGrid = document.getElementById('productGrid');
-  sortSelect = document.getElementById('sortSelect');
+// Category Display Names
+const categoryDisplayNames = {
+  'all': 'All Lifestyle Products',
+  'diabetes': 'Diabetes Care Products',
+  'heart-bp': 'Heart & Blood Pressure Support',
+  'thyroid': 'Thyroid Support Products',
+  'vitamins': 'Vitamins & Supplements',
+  'nutrition': 'Nutritional Support',
+  'wellness': 'General Wellness'
+};
 
-  sessionStorage.setItem('currentPageProducts', JSON.stringify(fakeProducts));
+// Helper: Safe text update
+function setText(id, text) {
+  const el = document.getElementById(id);
+  if (el) el.textContent = text;
+}
 
-  render(filteredProducts);
-  updateResultsCount();
-  initSlider();
-  initSorting();
-  initMobileSheets();
-  initFilters();
+// Update page title based on category
+function updatePageTitle() {
+  const titleEl = document.getElementById('pageTitle');
+  if (titleEl && categoryDisplayNames[filterState.category]) {
+    titleEl.textContent = categoryDisplayNames[filterState.category];
+  }
+}
 
-  // ONE single delegated listener for the whole grid – solves the duplicate-heart bug
-  productGrid.addEventListener('click', (e) => {
-    const btn = e.target.closest('.wishlist-btn');
-    if (!btn) return;
+// ==================== UPDATE HEADER COUNTS ====================
+function updateHeaderCounts() {
+  const updateBadge = (id, count) => {
+    const el = document.getElementById(id);
+    if (el) {
+      el.textContent = count;
+      el.classList.toggle("hidden", count === 0);
+    }
+  };
+  const cartTotal = cart.reduce((sum, item) => sum + (item.quantity || 1), 0);
+  updateBadge("cartCount", cartTotal);
+  updateBadge("wishlistCount", wishlist.length);
+}
 
-    e.preventDefault();
-    e.stopPropagation();
+// ==================== WISHLIST ====================
+function toggleWishlist(id) {
+  const product = allProducts.find(p => p.id === id);
+  if (!product) return;
 
-    const productId = Number(btn.dataset.id);
-    toggleWishlist(productId, btn);
-  });
-});
+  const index = wishlist.findIndex(item => item.id === id);
 
-// =============== CARD CREATION (now safe) ===============
-function createCard(p) {
-  const div = document.createElement('div');
-  div.className = 'bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition cursor-pointer relative';
+  if (index > -1) {
+    // Remove from wishlist
+    wishlist.splice(index, 1);
+    showToast("Removed from wishlist ♥");
+  } else {
+    // Add with correct format
+    const wishlistItem = {
+      id: product.id,
+      name: product.title.split(' (')[0].trim(),
+      price: product.price,
+      originalPrice: product.originalPrice || null,
+      image: product.image
+    };
+    wishlist.push(wishlistItem);
+    showToast("Added to wishlist ♥");
+  }
 
-  const priceLine = p.originalPrice
-    ? `₹${p.price} <s class="text-gray-400 text-sm">₹${p.originalPrice}</s> <span class="text-green-600 text-sm font-bold">${p.discount}% off</span>`
-    : `₹${p.price}`;
+  localStorage.setItem("wishlist", JSON.stringify(wishlist));
+  updateHeaderCounts();
+  renderProducts(); // Update heart icon
+}
 
-  // check current wishlist state
-  const wishlist = JSON.parse(localStorage.getItem('wishlist') || '[]');
-  const isWishlisted = wishlist.some(item => item.id === p.id);
+function showToast(msg) {
+  const toast = document.createElement("div");
+  toast.textContent = msg;
+  toast.className = "fixed bottom-20 left-1/2 -translate-x-1/2 bg-black text-white px-6 py-3 rounded-full z-50 shadow-lg";
+  document.body.appendChild(toast);
+  setTimeout(() => toast.remove(), 2000);
+}
 
-  div.innerHTML = `
-    <div class="relative">
-      <img src="${p.image}" alt="${p.name}" class="w-full h-48 object-cover">
-      
-      <!-- Wishlist button – data-id is the only thing we need -->
-      <button class="wishlist-btn ${isWishlisted ? 'active' : ''}" data-id="${p.id}">
-        <i class="fa-${isWishlisted ? 'solid' : 'regular'} fa-heart"></i>
-      </button>
-    </div>
-    <div class="p-2">
-      <h3 class="font-semibold text-sm">${p.name}</h3>
-      <p class="text-xs text-gray-500 mt-1">${p.brand}</p>
-      <div class="mt-2 font-bold text-lg text-green-600">${priceLine}</div>
-      <button onclick="navigateToProductDetails(${p.id})" class="mt-4 w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-lg font-bold transition">
-        View Details
-      </button>
+// ==================== PRODUCT CARD ====================
+function createProductCard(p) {
+  const inWishlist = wishlist.some(x => x.id === p.id);
+  const isOutOfStock = !p.inStock;
+
+  return `
+    <div class="group relative bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 border border-blue-100
+                ${isOutOfStock ? 'opacity-60 grayscale cursor-not-allowed' : ''}"
+         ${!isOutOfStock ? `onclick="event.stopPropagation(); viewProductDetails(${p.id})"` : ''}
+         style="${isOutOfStock ? 'pointer-events: none;' : ''}">
+
+      <div class="relative bg-blue-50 cursor-pointer aspect-[6/4] overflow-hidden">
+        <img src="${p.image}" alt="${p.title}"
+             class="w-full h-full object-contain p-5 transition-transform duration-500 ${!isOutOfStock ? 'group-hover:scale-110' : ''}">
+
+        <div class="absolute top-2 left-2 text-white text-xs font-bold px-3 py-1.5 rounded-full shadow-md z-10
+                    ${isOutOfStock ? 'bg-red-600' : 'bg-green-600'}">
+          ${isOutOfStock ? 'Out of Stock' : 'In Stock'}
+        </div>
+
+        <button onclick="event.stopPropagation(); toggleWishlist(${p.id})"
+                class="absolute top-2 right-2 w-9 h-9 bg-white rounded-full shadow-lg flex items-center justify-center 
+                       ${isOutOfStock ? 'opacity-50' : 'opacity-0 group-hover:opacity-100'} transition-opacity z-10">
+          <i class="${inWishlist ? 'fas fa-heart text-red-500' : 'far fa-heart text-gray-600'} text-lg"></i>
+        </button>
+      </div>
+
+      <div class="p-3">
+        <p class="text-xs text-gray-500 uppercase font-medium truncate">${p.brand || 'Brand'}</p>
+        <h3 class="text-sm font-medium text-gray-800 line-clamp-2 mt-1">${p.title}</h3>
+
+        <div class="mt-2 flex items-center gap-2">
+          <span class="text-lg font-bold text-green-600">₹${p.price.toLocaleString()}</span>
+          ${p.originalPrice > p.price ? `
+            <span class="text-sm text-gray-500 line-through">₹${p.originalPrice.toLocaleString()}</span>
+          ` : ''}
+          ${p.discount ? `<span class="text-sm font-medium text-red-500">${p.discount}% OFF</span>` : ''}
+        </div>
+
+        <button onclick="event.stopPropagation(); viewProductDetails(${p.id})"
+                class="mt-3 w-full font-medium text-sm py-2.5 rounded-lg transition
+                        ${isOutOfStock 
+                          ? 'bg-gray-300 text-gray-600 cursor-not-allowed' 
+                          : 'bg-[#36C2CE] hover:bg-[#0a7272] text-white'}">
+          ${isOutOfStock ? 'Out of Stock' : 'View Details'}
+        </button>
+      </div>
     </div>
   `;
-  return div;
 }
 
-// =============== WISHLIST TOGGLE (single listener ===============
-function toggleWishlist(productId, buttonElement) {
-  let wishlist = JSON.parse(localStorage.getItem('wishlist') || '[]');
-  const product = products.find(p => p.id === productId);
+// ==================== RENDERING ====================
+function renderProducts() {
+  const start = (currentPage - 1) * pageSize;
+  const paginated = filteredProducts.slice(start, start + pageSize);
+  const grid = document.getElementById("productsGrid");
 
-  const index = wishlist.findIndex(item => item.id === productId);
-
-  if (index === -1) {
-    // add
-    wishlist.push(product);
-    buttonElement.classList.add('active');
-    buttonElement.innerHTML = '<i class="fa-solid fa-heart"></i>';
-  } else {
-    // remove
-    wishlist.splice(index, 1);
-    buttonElement.classList.remove('active');
-    buttonElement.innerHTML = '<i class="fa-regular fa-heart"></i>';
+  if (grid) {
+    grid.innerHTML = paginated.length 
+      ? paginated.map(createProductCard).join("")
+      : `<p class="col-span-full text-center text-gray-500 py-10">No products found</p>`;
   }
 
-  localStorage.setItem('wishlist', JSON.stringify(wishlist));
-
-  // let header badge know that wishlist changed
-  window.dispatchEvent(new CustomEvent('wishlistUpdated'));
+  setText("resultsCount", `Showing ${filteredProducts.length} products`);
+  updatePageTitle();
+  renderPagination();
 }
 
-// =============== RENDER (unchanged except calling createCard) ===============
-function render(list) {
-  productGrid.innerHTML = ''; // clear
-  if (list.length === 0) {
-    productGrid.innerHTML = '<div class="col-span-full text-center py-20 text-gray-500 text-xl">No products found</div>';
-    return;
+function renderPagination() {
+  const container = document.getElementById("pagination");
+  if (!container) return;
+  const totalPages = Math.ceil(filteredProducts.length / pageSize);
+  container.innerHTML = "";
+  for (let i = 1; i <= totalPages; i++) {
+    const btn = document.createElement("button");
+    btn.textContent = i;
+    btn.className = `px-4 py-2 rounded border mx-1 ${i === currentPage ? 'bg-[#36C2CE] text-white' : 'bg-white text-blue-600 border-blue-300'}`;
+    btn.onclick = () => { currentPage = i; renderProducts(); };
+    container.appendChild(btn);
   }
-  list.forEach(p => productGrid.appendChild(createCard(p)));
 }
 
-function updateResultsCount() {
-  const countEl = document.getElementById('resultsCount');
-  if (countEl) {
-    countEl.textContent = `${filteredProducts.length} products found`;
-  }
-  updateTitle();
-}
-
-function updateTitle() {
-  const titleEl = document.querySelector('h2.text-3xl');
-  if (!titleEl) return;
-
-  const categoryNames = {
-    'all': 'Lifestyle Disorder Products',
-    'diabetes': 'Diabetes Care Products',
-    'heart-bp': 'Heart & Blood Pressure Support',
-    'thyroid': 'Thyroid Support Products',
-    'vitamins': 'Vitamins & Supplements'
-  };
-
-  let title = categoryNames[currentFilters.category] || 'Lifestyle Disorder Products';
-
-  // Add brand to title if selected
-  if (currentFilters.brand !== 'all') {
-    title += ` - ${currentFilters.brand}`;
-  }
-
-  titleEl.textContent = title;
-}
-
-// Apply Filters Function
+// ==================== FILTER & SORT ====================
 function applyFilters() {
-  filteredProducts = products.filter(product => {
-    // Category filter
-    if (currentFilters.category !== 'all' && product.category !== currentFilters.category) {
-      return false;
-    }
-
-    // Brand filter
-    if (currentFilters.brand !== 'all' && product.brand !== currentFilters.brand) {
-      return false;
-    }
-
-    // Price filter
-    if (product.price < currentFilters.minPrice || product.price > currentFilters.maxPrice) {
-      return false;
-    }
-
-    // Discount filter
-    if (currentFilters.discount !== 'all') {
-      const requiredDiscount = parseInt(currentFilters.discount);
-      if (product.discount < requiredDiscount) {
-        return false;
-      }
-    }
-
-    return true;
+  filteredProducts = allProducts.filter(p => {
+    const catMatch = filterState.category === 'all' || p.category === filterState.category;
+    const brandMatch = filterState.brand === 'all' || p.brand === filterState.brand;
+    const discMatch = p.discount >= filterState.discount;
+    const priceMatch = p.price >= filterState.minPrice && p.price <= filterState.maxPrice;
+    return catMatch && brandMatch && discMatch && priceMatch;
   });
 
-  render(filteredProducts);
-  updateResultsCount();
+  sortProducts(filterState.sort);
+  currentPage = 1;
+  renderProducts();
+  saveFiltersToStorage();
 }
 
-// Initialize Desktop Filters
-function initFilters() {
-  // Desktop form submit
-  const desktopForm = document.getElementById('filterForm');
-  if (desktopForm) {
-    desktopForm.addEventListener('submit', (e) => {
-      e.preventDefault();
-      
-      currentFilters.category = document.querySelector('input[name="category"]:checked')?.value || 'all';
-      currentFilters.brand = document.querySelector('input[name="brand"]:checked')?.value || 'all';
-      currentFilters.discount = document.querySelector('input[name="discount"]:checked')?.value || 'all';
-      
-      applyFilters();
-    });
+function sortProducts(type) {
+  switch (type) {
+    case 'price-low': filteredProducts.sort((a, b) => a.price - b.price); break;
+    case 'price-high': filteredProducts.sort((a, b) => b.price - a.price); break;
+    case 'rating': filteredProducts.sort((a, b) => (b.rating || 0) - (a.rating || 0)); break;
+    case 'newest': filteredProducts.sort((a, b) => b.id - a.id); break;
+    default: break;
+  }
+}
 
-    // Live filter on radio change
-    desktopForm.querySelectorAll('input[type="radio"]').forEach(radio => {
-      radio.addEventListener('change', () => {
-        currentFilters.category = document.querySelector('input[name="category"]:checked')?.value || 'all';
-        currentFilters.brand = document.querySelector('input[name="brand"]:checked')?.value || 'all';
-        currentFilters.discount = document.querySelector('input[name="discount"]:checked')?.value || 'all';
+function loadFiltersFromStorage() {
+  try {
+    const saved = localStorage.getItem('lifestyleFilters');
+    if (saved) filterState = { ...filterState, ...JSON.parse(saved) };
+  } catch (e) { console.error("Failed to load filters", e); }
+}
+
+function saveFiltersToStorage() {
+  localStorage.setItem('lifestyleFilters', JSON.stringify(filterState));
+}
+
+// ==================== PRICE SLIDERS ====================
+function initPriceSliders() {
+  // Desktop sliders
+  const desktopContainer = document.querySelector("#filterSidebar .price-slider-container");
+  if (desktopContainer) {
+    const minThumb = desktopContainer.querySelector('#minThumb');
+    const maxThumb = desktopContainer.querySelector('#maxThumb');
+    const fill = desktopContainer.querySelector('#desktopFill');
+    const minVal = desktopContainer.querySelector('#minValue');
+    const maxVal = desktopContainer.querySelector('#maxValue');
+    
+    const updateDesktop = (minP, maxP) => {
+      const minPct = (minP / 5000) * 100;
+      const maxPct = (maxP / 5000) * 100;
+      if (fill) {
+        fill.style.left = minPct + "%";
+        fill.style.width = (maxPct - minPct) + "%";
+      }
+      if (minVal) minVal.textContent = `₹${minP.toLocaleString()}`;
+      if (maxVal) maxVal.textContent = `₹${maxP.toLocaleString()}`;
+      filterState.minPrice = minP;
+      filterState.maxPrice = maxP;
+    };
+
+    if (minThumb && maxThumb) {
+      minThumb.addEventListener("input", () => {
+        let val = parseInt(minThumb.value);
+        if (val > parseInt(maxThumb.value)) val = parseInt(maxThumb.value);
+        updateDesktop(val, parseInt(maxThumb.value));
         applyFilters();
       });
-    });
-  }
 
-  // Mobile filters apply button
-  const applyMobileBtn = document.getElementById('applyMobileFilters');
-  if (applyMobileBtn) {
-    applyMobileBtn.addEventListener('click', () => {
-      currentFilters.category = document.querySelector('input[name="mobileCategory"]:checked')?.value || 'all';
-      currentFilters.brand = document.querySelector('input[name="mobileBrand"]:checked')?.value || 'all';
-      currentFilters.discount = document.querySelector('input[name="mobileDiscount"]:checked')?.value || 'all';
-      
-      applyFilters();
-      closeFilterSheet();
-    });
-  }
-
-  // Mobile clear filters
-  const clearMobileBtn = document.getElementById('clearMobileFilters');
-  if (clearMobileBtn) {
-    clearMobileBtn.addEventListener('click', () => {
-      document.querySelectorAll('input[name="mobileCategory"], input[name="mobileBrand"], input[name="mobileDiscount"]').forEach(radio => {
-        if (radio.value === 'all') radio.checked = true;
-      });
-      
-      // Reset desktop filters too
-      document.querySelectorAll('input[name="category"], input[name="brand"], input[name="discount"]').forEach(radio => {
-        if (radio.value === 'all') radio.checked = true;
+      maxThumb.addEventListener("input", () => {
+        let val = parseInt(maxThumb.value);
+        if (val < parseInt(minThumb.value)) val = parseInt(minThumb.value);
+        updateDesktop(parseInt(minThumb.value), val);
+        applyFilters();
       });
 
-      currentFilters = {
-        category: 'all',
-        brand: 'all',
-        discount: 'all',
-        minPrice: 0,
-        maxPrice: 5000
-      };
+      updateDesktop(filterState.minPrice, filterState.maxPrice);
+    }
+  }
 
-      // Reset price sliders
-      document.getElementById('minThumb').value = 0;
-      document.getElementById('maxThumb').value = 5000;
-      document.getElementById('mobileMinThumb').value = 0;
-      document.getElementById('mobileMaxThumb').value = 5000;
-      updateDesktopSlider();
-      updateMobileSlider();
+  // Mobile sliders
+  const mobileContainer = document.querySelector("#filterSheet .price-slider-container");
+  if (mobileContainer) {
+    const minThumb = mobileContainer.querySelector('#mobileMinThumb');
+    const maxThumb = mobileContainer.querySelector('#mobileMaxThumb');
+    const fill = mobileContainer.querySelector('#mobileFill');
+    const minVal = mobileContainer.querySelector('#mobileMinValue');
+    const maxVal = mobileContainer.querySelector('#mobileMaxValue');
+    
+    const updateMobile = (minP, maxP) => {
+      const minPct = (minP / 5000) * 100;
+      const maxPct = (maxP / 5000) * 100;
+      if (fill) {
+        fill.style.left = minPct + "%";
+        fill.style.width = (maxPct - minPct) + "%";
+      }
+      if (minVal) minVal.textContent = `₹${minP.toLocaleString()}`;
+      if (maxVal) maxVal.textContent = `₹${maxP.toLocaleString()}`;
+      filterState.minPrice = minP;
+      filterState.maxPrice = maxP;
+    };
 
-      applyFilters();
-    });
+    if (minThumb && maxThumb) {
+      minThumb.addEventListener("input", () => {
+        let val = parseInt(minThumb.value);
+        if (val > parseInt(maxThumb.value)) val = parseInt(maxThumb.value);
+        updateMobile(val, parseInt(maxThumb.value));
+      });
+
+      maxThumb.addEventListener("input", () => {
+        let val = parseInt(maxThumb.value);
+        if (val < parseInt(minThumb.value)) val = parseInt(minThumb.value);
+        updateMobile(parseInt(minThumb.value), val);
+      });
+
+      updateMobile(filterState.minPrice, filterState.maxPrice);
+    }
   }
 }
 
-// Navigate to Product Details Page with URL parameters
-window.navigateToProductDetails = function(id) {
-  const product = products.find(p => p.id === id);
-  if (!product) {
-    console.error('Product not found with id:', id);
+// ==================== FILTER INITIALIZATION ====================
+function initFiltersAndUI() {
+  loadFiltersFromStorage();
+
+  // Desktop filters
+  document.querySelectorAll('#filterForm input[name="category"], #filterForm input[name="brand"], #filterForm input[name="discount"]').forEach(input => {
+    if ((input.name === "category" && input.value === filterState.category) ||
+        (input.name === "brand" && input.value === filterState.brand) ||
+        (input.name === "discount" && parseInt(input.value) === filterState.discount)) {
+      input.checked = true;
+    }
+
+    input.addEventListener('change', () => {
+      if (input.name === "category") filterState.category = input.value;
+      if (input.name === "brand") filterState.brand = input.value;
+      if (input.name === "discount") filterState.discount = parseInt(input.value);
+      applyFilters();
+    });
+  });
+
+  // Mobile filters change listeners
+  document.querySelectorAll('#mobileFilterForm input[name="mobileCategory"], #mobileFilterForm input[name="mobileBrand"], #mobileFilterForm input[name="mobileDiscount"]').forEach(input => {
+    if ((input.name === "mobileCategory" && input.value === filterState.category) ||
+        (input.name === "mobileBrand" && input.value === filterState.brand) ||
+        (input.name === "mobileDiscount" && parseInt(input.value) === filterState.discount)) {
+      input.checked = true;
+    }
+  });
+
+  // Apply desktop filters button
+  document.getElementById("applyDesktopFilters")?.addEventListener("click", () => {
+    const cat = document.querySelector('#filterForm input[name="category"]:checked')?.value || 'all';
+    const brd = document.querySelector('#filterForm input[name="brand"]:checked')?.value || 'all';
+    const disc = parseInt(document.querySelector('#filterForm input[name="discount"]:checked')?.value || 0);
+    filterState.category = cat; filterState.brand = brd; filterState.discount = disc;
+    applyFilters();
+  });
+
+  // Apply mobile filters button
+  document.getElementById("applyMobileFilters")?.addEventListener("click", () => {
+    const cat = document.querySelector('#filterSheet input[name="mobileCategory"]:checked')?.value || 'all';
+    const brd = document.querySelector('#filterSheet input[name="mobileBrand"]:checked')?.value || 'all';
+    const disc = parseInt(document.querySelector('#filterSheet input[name="mobileDiscount"]:checked')?.value || 0);
+    filterState.category = cat; filterState.brand = brd; filterState.discount = disc;
+    applyFilters();
+    document.getElementById("filterSheet").classList.add("translate-y-full");
+    document.getElementById("mobileSheetBackdrop").classList.add("hidden");
+  });
+
+  // Clear filters
+  document.getElementById("clearMobileFilters")?.addEventListener("click", () => {
+    filterState = { category: 'all', brand: 'all', discount: 0, minPrice: 0, maxPrice: 5000, sort: 'default' };
+    localStorage.removeItem("lifestyleFilters");
+    
+    // Reset all radio buttons
+    document.querySelectorAll('input[type="radio"]').forEach(r => {
+      r.checked = (r.value === 'all' || r.value === '0');
+    });
+    
+    // Reset sort select
+    const sortSelect = document.getElementById("sortSelect");
+    if (sortSelect) sortSelect.value = 'default';
+    
+    initPriceSliders();
+    applyFilters();
+  });
+
+  // Sort select
+  const sortSelect = document.getElementById("sortSelect");
+  if (sortSelect) {
+    sortSelect.value = filterState.sort;
+    sortSelect.addEventListener("change", (e) => {
+      filterState.sort = e.target.value;
+      sortProducts(filterState.sort);
+      renderProducts();
+      saveFiltersToStorage();
+    });
+  }
+
+  // Apply sort button (mobile)
+  document.getElementById("applySortBtn")?.addEventListener("click", () => {
+    const selectedSort = document.querySelector('input[name="mobileSort"]:checked')?.value || 'default';
+    if (sortSelect) {
+      sortSelect.value = selectedSort;
+      filterState.sort = selectedSort;
+      sortProducts(filterState.sort);
+      renderProducts();
+      saveFiltersToStorage();
+    }
+    document.getElementById("sortSheet").classList.add("translate-y-full");
+    document.getElementById("mobileSheetBackdrop").classList.add("hidden");
+  });
+
+  applyFilters();
+}
+
+// ==================== VIEW PRODUCT DETAILS ====================
+function viewProductDetails(id) {
+  const product = allProducts.find(p => p.id === id);
+  if (!product) return;
+  
+  if (!product.inStock) {
+    alert('This product is currently out of stock. Please check back later.');
     return;
   }
 
-  // Store current page name/category for reference
-  const currentPageName = document.title || 'Lifestyle Disorder';
-  
+  // Store data for product details page
   sessionStorage.setItem('selectedProduct', JSON.stringify(product));
-  sessionStorage.setItem('currentPageProducts', JSON.stringify(products));
-  sessionStorage.setItem('currentPageName', currentPageName);
+  sessionStorage.setItem('currentPageProducts', JSON.stringify(allProducts));
+  sessionStorage.setItem('currentPageName', 'Lifestyle Disorder');
 
   const params = new URLSearchParams({
     id: product.id,
-    name: product.name,
+    name: product.title,
     brand: product.brand,
     price: product.price,
     originalPrice: product.originalPrice || '',
     discount: product.discount || '',
     image: product.image,
     description: product.description || '',
-    prescription: product.prescription,
     category: product.category || '',
-    sourcePage: currentPageName
+    inStock: product.inStock,
+    sourcePage: 'Lifestyle Disorder'
   });
 
   window.location.href = `/productdetails.html?${params.toString()}`;
 }
 
-function initSorting() {
-  sortSelect.addEventListener('change', () => {
-    const val = sortSelect.value;
-    let sorted = [...filteredProducts];
-    if (val === 'price-low') sorted.sort((a,b) => a.price - b.price);
-    if (val === 'price-high') sorted.sort((a,b) => b.price - a.price);
-    if (val === 'rating') sorted.sort((a,b) => (b.rating || 0) - (a.rating || 0));
-    if (val === 'newest') sorted.sort((a,b) => b.id - a.id);
-    render(sorted);
-  });
-
-  // Mobile sort apply
-  const applySortBtn = document.getElementById('applySortBtn');
-  if (applySortBtn) {
-    applySortBtn.addEventListener('click', () => {
-      const selectedSort = document.querySelector('input[name="mobileSort"]:checked')?.value || 'default';
-      sortSelect.value = selectedSort;
-      sortSelect.dispatchEvent(new Event('change'));
-      closeSortSheet();
-    });
-  }
+// ==================== BANNER ====================
+function initBanner() {
+  const slides = document.querySelectorAll('.banner-slide');
+  const dots = document.querySelectorAll('.banner-dot');
+  let i = 0;
+  
+  const go = (n) => {
+    slides.forEach(s => s.classList.remove('active'));
+    dots.forEach(d => d.classList.remove('active'));
+    i = (n + slides.length) % slides.length;
+    slides[i].classList.add('active');
+    dots[i].classList.add('active');
+  };
+  
+  dots.forEach((d, idx) => d.onclick = () => go(idx));
+  setInterval(() => go(i + 1), 5000);
 }
 
-// Desktop Price Slider
-function initSlider() {
-  const minThumb = document.getElementById('minThumb');
-  const maxThumb = document.getElementById('maxThumb');
-  const mobileMinThumb = document.getElementById('mobileMinThumb');
-  const mobileMaxThumb = document.getElementById('mobileMaxThumb');
-
-  const updateDesktopSlider = () => {
-    const minVal = parseInt(minThumb.value);
-    const maxVal = parseInt(maxThumb.value);
-    
-    if (minVal > maxVal - 200) {
-      minThumb.value = maxVal - 200;
-    }
-    
-    const fill = document.getElementById('desktopFill');
-    if (fill) {
-      fill.style.left = (minVal / 5000) * 100 + '%';
-      fill.style.width = ((maxVal - minVal) / 5000) * 100 + '%';
-    }
-    
-    const minValue = document.getElementById('minValue');
-    const maxValue = document.getElementById('maxValue');
-    if (minValue) minValue.textContent = '₹' + minVal;
-    if (maxValue) maxValue.textContent = '₹' + maxVal;
-    
-    currentFilters.minPrice = minVal;
-    currentFilters.maxPrice = maxVal;
-  };
-
-  const updateMobileSlider = () => {
-    const minVal = parseInt(mobileMinThumb.value);
-    const maxVal = parseInt(mobileMaxThumb.value);
-    
-    if (minVal > maxVal - 200) {
-      mobileMinThumb.value = maxVal - 200;
-    }
-    
-    const fill = document.getElementById('mobileFill');
-    if (fill) {
-      fill.style.left = (minVal / 5000) * 100 + '%';
-      fill.style.width = ((maxVal - minVal) / 5000) * 100 + '%';
-    }
-    
-    const minValue = document.getElementById('mobileMinValue');
-    const maxValue = document.getElementById('mobileMaxValue');
-    if (minValue) minValue.textContent = '₹' + minVal;
-    if (maxValue) maxValue.textContent = '₹' + maxVal;
-    
-    currentFilters.minPrice = minVal;
-    currentFilters.maxPrice = maxVal;
-  };
-
-  if (minThumb && maxThumb) {
-    minThumb.oninput = () => {
-      updateDesktopSlider();
-      applyFilters();
-    };
-    maxThumb.oninput = () => {
-      updateDesktopSlider();
-      applyFilters();
-    };
-    updateDesktopSlider();
-  }
-
-  if (mobileMinThumb && mobileMaxThumb) {
-    mobileMinThumb.oninput = updateMobileSlider;
-    mobileMaxThumb.oninput = updateMobileSlider;
-    updateMobileSlider();
-  }
-
-  window.updateDesktopSlider = updateDesktopSlider;
-  window.updateMobileSlider = updateMobileSlider;
-}
-
-// Mobile Sheets
+// ==================== MOBILE SHEETS ====================
 function initMobileSheets() {
-  const backdrop = document.getElementById('mobileSheetBackdrop');
-  const filterSheet = document.getElementById('filterSheet');
-  const sortSheet = document.getElementById('sortSheet');
+  const backdrop = document.getElementById("mobileSheetBackdrop");
   
   // Open Filter Sheet
-  document.getElementById('openFilterSheet')?.addEventListener('click', () => {
-    backdrop.classList.remove('hidden');
-    filterSheet.classList.remove('translate-y-full');
+  document.getElementById("openFilterSheet")?.addEventListener("click", () => {
+    document.getElementById("filterSheet").classList.remove("translate-y-full");
+    backdrop.classList.remove("hidden");
   });
-
-  // Close Filter Sheet
-  const closeFilterSheet = () => {
-    backdrop.classList.add('hidden');
-    filterSheet.classList.add('translate-y-full');
-  };
-
-  document.getElementById('closeFilterSheet')?.addEventListener('click', closeFilterSheet);
-  window.closeFilterSheet = closeFilterSheet;
-
+  
   // Open Sort Sheet
-  document.getElementById('openSortSheet')?.addEventListener('click', () => {
-    backdrop.classList.remove('hidden');
-    sortSheet.classList.remove('translate-y-full');
+  document.getElementById("openSortSheet")?.addEventListener("click", () => {
+    document.getElementById("sortSheet").classList.remove("translate-y-full");
+    backdrop.classList.remove("hidden");
   });
-
-  // Close Sort Sheet
-  const closeSortSheet = () => {
-    backdrop.classList.add('hidden');
-    sortSheet.classList.add('translate-y-full');
-  };
-
-  document.getElementById('closeSortSheet')?.addEventListener('click', closeSortSheet);
-  window.closeSortSheet = closeSortSheet;
-
-  // Click backdrop to close
-  backdrop.addEventListener('click', () => {
-    closeFilterSheet();
-    closeSortSheet();
+  
+  // Close sheets
+  document.querySelectorAll("#closeFilterSheet, #closeSortSheet, #mobileSheetBackdrop").forEach(el => {
+    el?.addEventListener("click", () => {
+      document.getElementById("filterSheet").classList.add("translate-y-full");
+      document.getElementById("sortSheet").classList.add("translate-y-full");
+      backdrop.classList.add("hidden");
+    });
   });
 }
 
-window.sortProducts = function(type) {
-  sortSelect.value = type;
-  sortSelect.dispatchEvent(new Event('change'));
-  document.getElementById('mobileSheetBackdrop')?.click();
-};
+// ==================== ON LOAD ====================
+document.addEventListener("DOMContentLoaded", () => {
+  initBanner();
+  initMobileSheets();
+  initPriceSliders();
+  initFiltersAndUI();
+  renderProducts();
+  updateHeaderCounts();
+});

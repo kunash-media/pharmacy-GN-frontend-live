@@ -1,1394 +1,851 @@
-const wellnessProducts = [
+// ==================== wellness.js – WELLNESS ESSENTIALS PAGE ====================
+
+// Using your existing wellness products array (16 products)
+const allProducts = [
   {
     "sku": "WVITC001",
-    "productName": "Vitamin C 1000mg Effervescent",
-    "productCategory": "Wellness & Healthcare",
-    "productSubCategory": "Vitamins & Supplements",
+    "title": "Vitamin C 1000mg Effervescent",
     "productPrice": 399,
     "productOldPrice": 499,
-    "productStatus": "Available",
-    "productDescription": "High strength Vitamin C effervescent tablets for immunity boost and antioxidant support.",
-    "productQuantity": 25,
-    "productUnit": "Tube of 20 tablets",
-    "productMRP": 550,
+    "discount": 20,
     "productRating": 4.5,
-    "prescriptionRequired": false,
-    "brandName": "Himalaya",
-    "mfgDate": "2024-03-15",
-    "expDate": "2026-03-15",
-    "batchNo": "BATCH-VITC-001",
-    "benefitsList": [
-      "Boosts immunity and antioxidant defense",
-      "Improves skin health and collagen production",
-      "Enhances iron absorption",
-      "Supports overall wellness"
-    ],
-    "directionsList": [
-      "Drop 1 tablet in glass of water",
-      "Drink immediately after fizzing stops",
-      "Take once daily",
-      "Best taken in morning"
-    ],
-    "ingredientsList": [
-      "Ascorbic Acid (Vitamin C)",
-      "Citric Acid",
-      "Sodium Bicarbonate",
-      "Natural Orange Flavor"
-    ],
-    "productDynamicFields": {
-      "strength": "1000mg",
-      "form": "Effervescent Tablet",
-      "dosage": "Oral",
-      "shelfLife": "24 months",
-      "countryOfOrigin": "India",
-      "suitableFor": "Adults and children above 12 years",
-      "storage": "Store in cool dry place"
-    },
-    "productSizes": [
-      "10 tablets",
-      "20 tablets",
-      "40 tablets"
-    ],
-    "id": 1,
+    "productStatus": "Available",
+    "mainImageUrl": "https://images.unsplash.com/photo-1584017911766-d451b3d0e843?w=400&h=400&fit=crop",
+    "description": "High strength Vitamin C effervescent tablets for immunity boost and antioxidant support.",
     "category": "vitamins",
-    "image": "https://images.unsplash.com/photo-1584017911766-d451b3d0e843?w=400&h=400&fit=crop"
+    "brand": "Himalaya",
+    "inStock": true,
+    "id": 1
   },
   {
     "sku": "WHAIROIL001",
-    "productName": "Onion Hair Oil 200ml",
-    "productCategory": "Wellness & Healthcare",
-    "productSubCategory": "Hair & Skin Care",
+    "title": "Onion Hair Oil 200ml",
     "productPrice": 499,
     "productOldPrice": 649,
-    "productStatus": "Available",
-    "productDescription": "Onion extract enriched hair oil for hair growth, reduces hair fall and dandruff.",
-    "productQuantity": 18,
-    "productUnit": "200ml Bottle",
-    "productMRP": 700,
+    "discount": 23,
     "productRating": 4.2,
-    "prescriptionRequired": false,
-    "brandName": "Dabur",
-    "mfgDate": "2024-02-10",
-    "expDate": "2026-02-10",
-    "batchNo": "BATCH-HAIR-002",
-    "benefitsList": [
-      "Promotes hair growth and thickness",
-      "Reduces hair fall and breakage",
-      "Controls dandruff and scalp infections",
-      "Nourishes hair roots"
-    ],
-    "directionsList": [
-      "Apply on scalp and hair",
-      "Massage gently for 5 minutes",
-      "Leave for 30 minutes or overnight",
-      "Wash with mild shampoo"
-    ],
-    "ingredientsList": [
-      "Onion Extract",
-      "Coconut Oil",
-      "Almond Oil",
-      "Amla Extract"
-    ],
-    "productDynamicFields": {
-      "form": "Oil",
-      "application": "Topical",
-      "shelfLife": "24 months",
-      "countryOfOrigin": "India",
-      "suitableFor": "All hair types",
-      "storage": "Store in cool place away from sunlight"
-    },
-    "productSizes": [
-      "100ml",
-      "200ml",
-      "500ml"
-    ],
-    "id": 2,
+    "productStatus": "Available",
+    "mainImageUrl": "https://images.unsplash.com/photo-1608248543803-ba4f8c70ae0b?w=400&h=400&fit=crop",
+    "description": "Onion extract enriched hair oil for hair growth, reduces hair fall and dandruff.",
     "category": "hairskin",
-    "image": "https://images.unsplash.com/photo-1608248543803-ba4f8c70ae0b?w=400&h=400&fit=crop"
+    "brand": "Dabur",
+    "inStock": true,
+    "id": 2
   },
   {
     "sku": "WFITPRO001",
-    "productName": "Whey Protein Isolate 1kg",
-    "productCategory": "Wellness & Healthcare",
-    "productSubCategory": "Fitness & Weight",
+    "title": "Whey Protein Isolate 1kg",
     "productPrice": 2199,
     "productOldPrice": 2799,
-    "productStatus": "Available",
-    "productDescription": "Premium whey protein isolate for muscle building and recovery. Chocolate flavor.",
-    "productQuantity": 15,
-    "productUnit": "1kg Powder",
-    "productMRP": 3000,
+    "discount": 21,
     "productRating": 4.7,
-    "prescriptionRequired": false,
-    "brandName": "MuscleBlaze",
-    "mfgDate": "2024-01-20",
-    "expDate": "2025-01-20",
-    "batchNo": "BATCH-PRO-003",
-    "benefitsList": [
-      "Builds lean muscle mass",
-      "Speeds up workout recovery",
-      "High protein low fat content",
-      "Supports weight management"
-    ],
-    "directionsList": [
-      "Mix 1 scoop (30g) in water or milk",
-      "Shake well and consume",
-      "Best post-workout or as snack",
-      "Do not exceed 2 scoops daily"
-    ],
-    "ingredientsList": [
-      "Whey Protein Isolate",
-      "Cocoa Powder",
-      "Stevia",
-      "Natural Flavors"
-    ],
-    "productDynamicFields": {
-      "proteinContent": "27g per serving",
-      "form": "Powder",
-      "flavor": "Chocolate",
-      "shelfLife": "18 months",
-      "countryOfOrigin": "India",
-      "suitableFor": "Adults above 18 years",
-      "storage": "Store in cool dry place"
-    },
-    "productSizes": [
-      "500g",
-      "1kg",
-      "2kg"
-    ],
-    "id": 3,
+    "productStatus": "Available",
+    "mainImageUrl": "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=400&h=400&fit=crop",
+    "description": "Premium whey protein isolate for muscle building and recovery. Chocolate flavor.",
     "category": "fitness",
-    "image": "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=400&h=400&fit=crop"
+    "brand": "MuscleBlaze",
+    "inStock": true,
+    "id": 3
   },
   {
     "sku": "WIMMU001",
-    "productName": "Chyawanprash 1kg",
-    "productCategory": "Wellness & Healthcare",
-    "productSubCategory": "Immunity Boosters",
+    "title": "Chyawanprash 1kg",
     "productPrice": 399,
     "productOldPrice": 499,
-    "productStatus": "Available",
-    "productDescription": "Traditional Ayurvedic immunity booster with herbs and amla. Strengthens respiratory health.",
-    "productQuantity": 30,
-    "productUnit": "1kg Jar",
-    "productMRP": 550,
+    "discount": 20,
     "productRating": 4.3,
-    "prescriptionRequired": false,
-    "brandName": "Dabur",
-    "mfgDate": "2024-03-01",
-    "expDate": "2026-03-01",
-    "batchNo": "BATCH-CHYA-004",
-    "benefitsList": [
-      "Boosts immunity naturally",
-      "Improves respiratory health",
-      "Rich in antioxidants",
-      "Enhances energy and vitality"
-    ],
-    "directionsList": [
-      "Take 1-2 teaspoons daily",
-      "Consume with milk or warm water",
-      "Best taken in morning on empty stomach",
-      "Can be taken by children and adults"
-    ],
-    "ingredientsList": [
-      "Amla (Indian Gooseberry)",
-      "Ashwagandha",
-      "Giloy",
-      "Honey",
-      "40+ Herbs"
-    ],
-    "productDynamicFields": {
-      "form": "Paste",
-      "dosage": "Oral",
-      "shelfLife": "18 months",
-      "countryOfOrigin": "India",
-      "suitableFor": "All age groups above 3 years",
-      "storage": "Store in cool place after opening"
-    },
-    "productSizes": [
-      "500g",
-      "1kg",
-      "2kg"
-    ],
-    "id": 4,
+    "productStatus": "Available",
+    "mainImageUrl": "https://images.unsplash.com/photo-1559757148-5c350d0d3c56?w=400&h=400&fit=crop",
+    "description": "Traditional Ayurvedic immunity booster with herbs and amla. Strengthens respiratory health.",
     "category": "immunity",
-    "image": "https://images.unsplash.com/photo-1559757148-5c350d0d3c56?w=400&h=400&fit=crop"
+    "brand": "Dabur",
+    "inStock": true,
+    "id": 4
   },
   {
     "sku": "WSENIOR001",
-    "productName": "Adult Diapers Large (10 pcs)",
-    "productCategory": "Wellness & Healthcare",
-    "productSubCategory": "Senior Care",
+    "title": "Adult Diapers Large (10 pcs)",
     "productPrice": 599,
     "productOldPrice": 799,
-    "productStatus": "Available",
-    "productDescription": "Super absorbent adult diapers for overnight protection. Soft and comfortable design.",
-    "productQuantity": 25,
-    "productUnit": "Pack of 10 diapers",
-    "productMRP": 850,
+    "discount": 25,
     "productRating": 4.6,
-    "prescriptionRequired": false,
-    "brandName": "Friends",
-    "mfgDate": "2024-02-15",
-    "expDate": "2026-02-15",
-    "batchNo": "BATCH-DIA-005",
-    "benefitsList": [
-      "Super absorbent for overnight protection",
-      "Soft cotton-like surface",
-      "Leak-proof design",
-      "Odor control technology"
-    ],
-    "directionsList": [
-      "Wear as regular underwear",
-      "Change every 4-6 hours or when wet",
-      "Dispose in dustbin after use",
-      "Ensure proper fit for leakage prevention"
-    ],
-    "ingredientsList": [
-      "Super Absorbent Polymer",
-      "Non-woven Fabric",
-      "Polyethylene Backsheet"
-    ],
-    "productDynamicFields": {
-      "size": "Large (Waist 36-44 inches)",
-      "absorption": "1000ml",
-      "type": "Disposable Diaper",
-      "shelfLife": "36 months",
-      "countryOfOrigin": "India",
-      "suitableFor": "Adults with incontinence issues",
-      "storage": "Store in dry place"
-    },
-    "productSizes": [
-      "Small (10 pcs)",
-      "Medium (10 pcs)",
-      "Large (10 pcs)",
-      "XL (10 pcs)"
-    ],
-    "id": 5,
+    "productStatus": "Available",
+    "mainImageUrl": "https://images.unsplash.com/photo-1584017911766-d451b3d0e843?w=400&h=400&fit=crop",
+    "description": "Super absorbent adult diapers for overnight protection. Soft and comfortable design.",
     "category": "senior",
-    "image": "https://images.unsplash.com/photo-1584017911766-d451b3d0e843?w=400&h=400&fit=crop"
+    "brand": "Friends",
+    "inStock": true,
+    "id": 5
   },
   {
     "sku": "WORAL001",
-    "productName": "Herbal Toothpaste 150g",
-    "productCategory": "Wellness & Healthcare",
-    "productSubCategory": "Oral Care",
+    "title": "Herbal Toothpaste 150g",
     "productPrice": 119,
     "productOldPrice": 149,
-    "productStatus": "Available",
-    "productDescription": "Natural herbal toothpaste with neem and clove for complete oral care and fresh breath.",
-    "productQuantity": 40,
-    "productUnit": "150g Tube",
-    "productMRP": 180,
+    "discount": 20,
     "productRating": 4.4,
-    "prescriptionRequired": false,
-    "brandName": "Himalaya",
-    "mfgDate": "2024-01-10",
-    "expDate": "2026-01-10",
-    "batchNo": "BATCH-TOOTH-006",
-    "benefitsList": [
-      "Fights plaque and cavities",
-      "Prevents gum problems",
-      "Natural whitening action",
-      "Provides long-lasting fresh breath"
-    ],
-    "directionsList": [
-      "Apply on wet toothbrush",
-      "Brush for 2 minutes twice daily",
-      "Rinse thoroughly with water",
-      "Use regularly for best results"
-    ],
-    "ingredientsList": [
-      "Neem Extract",
-      "Clove Oil",
-      "Pomegranate",
-      "Natural Mint"
-    ],
-    "productDynamicFields": {
-      "form": "Paste",
-      "application": "Topical",
-      "shelfLife": "36 months",
-      "countryOfOrigin": "India",
-      "suitableFor": "All age groups above 3 years",
-      "storage": "Store in cool dry place"
-    },
-    "productSizes": [
-      "75g",
-      "150g",
-      "300g"
-    ],
-    "id": 6,
+    "productStatus": "Available",
+    "mainImageUrl": "https://images.unsplash.com/photo-1627483262268-9c2b5b2834b5?w=400&h=400&fit=crop",
+    "description": "Natural herbal toothpaste with neem and clove for complete oral care and fresh breath.",
     "category": "oral",
-    "image": "https://images.unsplash.com/photo-1627483262268-9c2b5b2834b5?w=400&h=400&fit=crop"
+    "brand": "Himalaya",
+    "inStock": true,
+    "id": 6
   },
   {
     "sku": "WMENSTRUAL001",
-    "productName": "Ultra Thin Sanitary Pads XL",
-    "productCategory": "Wellness & Healthcare",
-    "productSubCategory": "Menstrual Care",
+    "title": "Ultra Thin Sanitary Pads XL",
     "productPrice": 299,
     "productOldPrice": 399,
-    "productStatus": "Available",
-    "productDescription": "Ultra thin sanitary pads with wings for heavy flow days. Super absorbent and comfortable.",
-    "productQuantity": 30,
-    "productUnit": "Pack of 40 pads",
-    "productMRP": 450,
+    "discount": 25,
     "productRating": 4.1,
-    "prescriptionRequired": false,
-    "brandName": "Stayfree",
-    "mfgDate": "2024-03-05",
-    "expDate": "2027-03-05",
-    "batchNo": "BATCH-PAD-007",
-    "benefitsList": [
-      "Ultra thin design for comfort",
-      "Wings for secure fit",
-      "Super absorbent core",
-      "Dry-weave top sheet"
-    ],
-    "directionsList": [
-      "Remove backing from adhesive",
-      "Place center of pad in underwear",
-      "Wrap wings around underwear",
-      "Change every 4-6 hours"
-    ],
-    "ingredientsList": [
-      "Super Absorbent Polymer",
-      "Non-woven Top Sheet",
-      "Polyethylene Backsheet"
-    ],
-    "productDynamicFields": {
-      "size": "XL (For heavy flow)",
-      "length": "270mm",
-      "type": "Sanitary Pad with Wings",
-      "shelfLife": "60 months",
-      "countryOfOrigin": "India",
-      "suitableFor": "Women during menstruation",
-      "storage": "Store in dry place"
-    },
-    "productSizes": [
-      "Regular (30 pads)",
-      "XL (40 pads)",
-      "Night (20 pads)"
-    ],
-    "id": 7,
+    "productStatus": "Available",
+    "mainImageUrl": "https://images.unsplash.com/photo-1584017911766-d451b3d0e843?w=400&h=400&fit=crop",
+    "description": "Ultra thin sanitary pads with wings for heavy flow days. Super absorbent and comfortable.",
     "category": "menstrual",
-    "image": "https://images.unsplash.com/photo-1584017911766-d451b3d0e843?w=400&h=400&fit=crop"
+    "brand": "Stayfree",
+    "inStock": true,
+    "id": 7
   },
   {
     "sku": "WOMEGA001",
-    "productName": "Omega-3 Fish Oil 1000mg",
-    "productCategory": "Wellness & Healthcare",
-    "productSubCategory": "Vitamins & Supplements",
+    "title": "Omega-3 Fish Oil 1000mg",
     "productPrice": 749,
     "productOldPrice": 999,
-    "productStatus": "Out of Stock",
-    "productDescription": "Pure fish oil supplements rich in EPA and DHA for heart, brain and joint health.",
-    "productQuantity": 0,
-    "productUnit": "Bottle of 60 softgels",
-    "productMRP": 1200,
+    "discount": 25,
     "productRating": 4.5,
-    "prescriptionRequired": false,
-    "brandName": "Zandu",
-    "mfgDate": "2024-02-20",
-    "expDate": "2026-02-20",
-    "batchNo": "BATCH-OMEGA-008",
-    "benefitsList": [
-      "Supports heart health",
-      "Improves brain function",
-      "Reduces joint inflammation",
-      "Promotes healthy cholesterol levels"
-    ],
-    "directionsList": [
-      "Take 1 softgel twice daily",
-      "Take with meals",
-      "Do not exceed recommended dose",
-      "Store in cool place"
-    ],
-    "ingredientsList": [
-      "Fish Oil Concentrate",
-      "EPA (180mg)",
-      "DHA (120mg)",
-      "Gelatin Capsule"
-    ],
-    "productDynamicFields": {
-      "strength": "1000mg",
-      "form": "Softgel Capsule",
-      "dosage": "Oral",
-      "shelfLife": "24 months",
-      "countryOfOrigin": "India",
-      "suitableFor": "Adults above 18 years",
-      "storage": "Store in cool place away from light"
-    },
-    "productSizes": [
-      "30 softgels",
-      "60 softgels",
-      "120 softgels"
-    ],
-    "id": 8,
+    "productStatus": "Out of Stock",
+    "mainImageUrl": "https://images.unsplash.com/photo-1584017911766-d451b3d0e843?w=400&h=400&fit=crop",
+    "description": "Pure fish oil supplements rich in EPA and DHA for heart, brain and joint health.",
     "category": "vitamins",
-    "image": "https://images.unsplash.com/photo-1584017911766-d451b3d0e843?w=400&h=400&fit=crop"
+    "brand": "Zandu",
+    "inStock": false,
+    "id": 8
   },
   {
     "sku": "WSERUM001",
-    "productName": "Vitamin C Glow Face Serum",
-    "productCategory": "Wellness & Healthcare",
-    "productSubCategory": "Hair & Skin Care",
+    "title": "Vitamin C Glow Face Serum",
     "productPrice": 899,
     "productOldPrice": 1199,
-    "productStatus": "Available",
-    "productDescription": "Brightening serum with Vitamin C and hyaluronic acid for radiant, even-toned skin.",
-    "productQuantity": 10,
-    "productUnit": "30ml Bottle",
-    "productMRP": 1400,
+    "discount": 25,
     "productRating": 4.7,
-    "prescriptionRequired": false,
-    "brandName": "Charak",
-    "mfgDate": "2024-03-10",
-    "expDate": "2026-03-10",
-    "batchNo": "BATCH-SERUM-009",
-    "benefitsList": [
-      "Brightens skin complexion",
-      "Reduces dark spots and pigmentation",
-      "Boosts collagen production",
-      "Hydrates and plumps skin"
-    ],
-    "directionsList": [
-      "Apply 2-3 drops on cleansed face",
-      "Gently massage until absorbed",
-      "Use morning and night",
-      "Follow with moisturizer and sunscreen"
-    ],
-    "ingredientsList": [
-      "Vitamin C (L-Ascorbic Acid)",
-      "Hyaluronic Acid",
-      "Niacinamide",
-      "Botanical Extracts"
-    ],
-    "productDynamicFields": {
-      "concentration": "10% Vitamin C",
-      "form": "Serum",
-      "application": "Topical",
-      "shelfLife": "12 months after opening",
-      "countryOfOrigin": "India",
-      "suitableFor": "All skin types",
-      "storage": "Store in cool dark place"
-    },
-    "productSizes": [
-      "15ml",
-      "30ml",
-      "50ml"
-    ],
-    "id": 9,
+    "productStatus": "Available",
+    "mainImageUrl": "https://images.unsplash.com/photo-1596462502278-27bfdc403348?w=400&h=400&fit=crop",
+    "description": "Brightening serum with Vitamin C and hyaluronic acid for radiant, even-toned skin.",
     "category": "hairskin",
-    "image": "https://images.unsplash.com/photo-1596462502278-27bfdc403348?w=400&h=400&fit=crop"
+    "brand": "Charak",
+    "inStock": true,
+    "id": 9
   },
   {
     "sku": "WFATBURN001",
-    "productName": "L-Carnitine Fat Burner",
-    "productCategory": "Wellness & Healthcare",
-    "productSubCategory": "Fitness & Weight",
+    "title": "L-Carnitine Fat Burner",
     "productPrice": 899,
     "productOldPrice": 1199,
-    "productStatus": "Available",
-    "productDescription": "Fat burning supplement that helps convert fat into energy. Supports weight management.",
-    "productQuantity": 18,
-    "productUnit": "Bottle of 60 capsules",
-    "productMRP": 1400,
+    "discount": 25,
     "productRating": 4.3,
-    "prescriptionRequired": false,
-    "brandName": "MuscleTech",
-    "mfgDate": "2024-02-25",
-    "expDate": "2026-02-25",
-    "batchNo": "BATCH-CARN-010",
-    "benefitsList": [
-      "Boosts fat metabolism",
-      "Increases energy levels",
-      "Supports weight management",
-      "Enhances workout performance"
-    ],
-    "directionsList": [
-      "Take 1 capsule twice daily",
-      "Take before meals and workouts",
-      "Drink plenty of water",
-      "Do not exceed 3 capsules daily"
-    ],
-    "ingredientsList": [
-      "L-Carnitine Tartrate",
-      "Green Tea Extract",
-      "Caffeine Anhydrous"
-    ],
-    "productDynamicFields": {
-      "strength": "500mg",
-      "form": "Capsule",
-      "dosage": "Oral",
-      "shelfLife": "24 months",
-      "countryOfOrigin": "India",
-      "suitableFor": "Adults above 18 years",
-      "storage": "Store in cool dry place"
-    },
-    "productSizes": [
-      "30 capsules",
-      "60 capsules",
-      "90 capsules"
-    ],
-    "id": 10,
+    "productStatus": "Available",
+    "mainImageUrl": "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=400&h=400&fit=crop",
+    "description": "Fat burning supplement that helps convert fat into energy. Supports weight management.",
     "category": "fitness",
-    "image": "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=400&h=400&fit=crop"
+    "brand": "MuscleTech",
+    "inStock": true,
+    "id": 10
   },
   {
     "sku": "WGILOY001",
-    "productName": "Giloy Tulsi Juice 1L",
-    "productCategory": "Wellness & Healthcare",
-    "productSubCategory": "Immunity Boosters",
+    "title": "Giloy Tulsi Juice 1L",
     "productPrice": 299,
     "productOldPrice": 399,
-    "productStatus": "Available",
-    "productDescription": "Natural immunity booster juice with giloy and tulsi. Strengthens body's defense system.",
-    "productQuantity": 25,
-    "productUnit": "1L Bottle",
-    "productMRP": 450,
+    "discount": 25,
     "productRating": 4.2,
-    "prescriptionRequired": false,
-    "brandName": "Himalaya",
-    "mfgDate": "2024-03-12",
-    "expDate": "2025-03-12",
-    "batchNo": "BATCH-GILOY-011",
-    "benefitsList": [
-      "Boosts natural immunity",
-      "Fights seasonal infections",
-      "Detoxifies body",
-      "Improves respiratory health"
-    ],
-    "directionsList": [
-      "Take 2 teaspoons (10ml) twice daily",
-      "Can be taken with water or juice",
-      "Best taken before meals",
-      "Shake well before use"
-    ],
-    "ingredientsList": [
-      "Giloy (Tinospora Cordifolia)",
-      "Tulsi (Holy Basil)",
-      "Amrit (Natural Preservative)"
-    ],
-    "productDynamicFields": {
-      "form": "Liquid",
-      "dosage": "Oral",
-      "shelfLife": "12 months",
-      "countryOfOrigin": "India",
-      "suitableFor": "All age groups above 5 years",
-      "storage": "Refrigerate after opening"
-    },
-    "productSizes": [
-      "200ml",
-      "500ml",
-      "1L"
-    ],
-    "id": 11,
+    "productStatus": "Available",
+    "mainImageUrl": "https://images.unsplash.com/photo-1559757148-5c350d0d3c56?w=400&h=400&fit=crop",
+    "description": "Natural immunity booster juice with giloy and tulsi. Strengthens body's defense system.",
     "category": "immunity",
-    "image": "https://images.unsplash.com/photo-1559757148-5c350d0d3c56?w=400&h=400&fit=crop"
+    "brand": "Himalaya",
+    "inStock": true,
+    "id": 11
   },
   {
     "sku": "WBP001",
-    "productName": "Digital BP Monitor",
-    "productCategory": "Wellness & Healthcare",
-    "productSubCategory": "Senior Care",
+    "title": "Digital BP Monitor",
     "productPrice": 1799,
     "productOldPrice": 2399,
-    "productStatus": "Available",
-    "productDescription": "Automatic digital blood pressure monitor with large display and memory function.",
-    "productQuantity": 10,
-    "productUnit": "1 Device with cuff",
-    "productMRP": 2800,
+    "discount": 25,
     "productRating": 4.8,
-    "prescriptionRequired": false,
-    "brandName": "Omron",
-    "mfgDate": "2024-02-28",
-    "expDate": "2027-02-28",
-    "batchNo": "BATCH-BPM-012",
-    "benefitsList": [
-      "Accurate blood pressure measurement",
-      "Large easy-to-read display",
-      "Memory function for 2 users",
-      "Irregular heartbeat detector"
-    ],
-    "directionsList": [
-      "Sit comfortably with feet flat",
-      "Wrap cuff on left arm",
-      "Press start button",
-      "Remain still during measurement"
-    ],
-    "ingredientsList": [
-      "Digital Monitor",
-      "Arm Cuff (22-32cm)",
-      "4 AAA Batteries",
-      "User Manual"
-    ],
-    "productDynamicFields": {
-      "type": "Automatic Digital Monitor",
-      "measurementRange": "0-299 mmHg",
-      "memory": "2x60 readings",
-      "battery": "4 AAA batteries",
-      "countryOfOrigin": "Japan",
-      "suitableFor": "Home use for adults",
-      "warranty": "3 years"
-    },
-    "productSizes": [
-      "Standard (22-32cm)",
-      "Large (32-42cm)"
-    ],
-    "id": 12,
+    "productStatus": "Available",
+    "mainImageUrl": "https://images.unsplash.com/photo-1584017911766-d451b3d0e843?w=400&h=400&fit=crop",
+    "description": "Automatic digital blood pressure monitor with large display and memory function.",
     "category": "senior",
-    "image": "https://images.unsplash.com/photo-1584017911766-d451b3d0e843?w=400&h=400&fit=crop"
+    "brand": "Omron",
+    "inStock": true,
+    "id": 12
   },
   {
     "sku": "WMOUTHWASH001",
-    "productName": "Mouthwash Alcohol Free 500ml",
-    "productCategory": "Wellness & Healthcare",
-    "productSubCategory": "Oral Care",
+    "title": "Mouthwash Alcohol Free 500ml",
     "productPrice": 249,
     "productOldPrice": 299,
-    "productStatus": "Available",
-    "productDescription": "Alcohol-free mouthwash for fresh breath and complete oral protection. Gentle on gums.",
-    "productQuantity": 20,
-    "productUnit": "500ml Bottle",
-    "productMRP": 350,
+    "discount": 17,
     "productRating": 4.3,
-    "prescriptionRequired": false,
-    "brandName": "Zandu",
-    "mfgDate": "2024-03-08",
-    "expDate": "2026-03-08",
-    "batchNo": "BATCH-MOUTH-013",
-    "benefitsList": [
-      "Freshens breath for hours",
-      "Fights plaque and bacteria",
-      "Alcohol-free formula",
-      "Gentle on sensitive gums"
-    ],
-    "directionsList": [
-      "Pour 20ml (capful) into cup",
-      "Swish in mouth for 30 seconds",
-      "Do not swallow",
-      "Use twice daily after brushing"
-    ],
-    "ingredientsList": [
-      "Cetylpyridinium Chloride",
-      "Mint Oil",
-      "Xylitol",
-      "Purified Water"
-    ],
-    "productDynamicFields": {
-      "form": "Liquid",
-      "alcoholContent": "0%",
-      "shelfLife": "24 months",
-      "countryOfOrigin": "India",
-      "suitableFor": "All age groups above 6 years",
-      "storage": "Store at room temperature"
-    },
-    "productSizes": [
-      "250ml",
-      "500ml",
-      "1L"
-    ],
-    "id": 13,
+    "productStatus": "Available",
+    "mainImageUrl": "https://images.unsplash.com/photo-1627483262268-9c2b5b2834b5?w=400&h=400&fit=crop",
+    "description": "Alcohol-free mouthwash for fresh breath and complete oral protection. Gentle on gums.",
     "category": "oral",
-    "image": "https://images.unsplash.com/photo-1627483262268-9c2b5b2834b5?w=400&h=400&fit=crop"
+    "brand": "Zandu",
+    "inStock": true,
+    "id": 13
   },
   {
     "sku": "WMENCUP001",
-    "productName": "Reusable Menstrual Cup Large",
-    "productCategory": "Wellness & Healthcare",
-    "productSubCategory": "Menstrual Care",
+    "title": "Reusable Menstrual Cup Large",
     "productPrice": 499,
     "productOldPrice": 649,
-    "productStatus": "Available",
-    "productDescription": "Medical grade silicone menstrual cup for eco-friendly period protection. Reusable for years.",
-    "productQuantity": 15,
-    "productUnit": "1 Cup with pouch",
-    "productMRP": 750,
+    "discount": 23,
     "productRating": 4.6,
-    "prescriptionRequired": false,
-    "brandName": "Sirona",
-    "mfgDate": "2024-01-15",
-    "expDate": "2029-01-15",
-    "batchNo": "BATCH-CUP-014",
-    "benefitsList": [
-      "Eco-friendly and reusable",
-      "Holds more than 3 tampons",
-      "Medical grade silicone",
-      "Can be worn for up to 12 hours"
-    ],
-    "directionsList": [
-      "Fold cup and insert into vagina",
-      "Rotate to ensure seal",
-      "Empty every 8-12 hours",
-      "Sterilize between cycles"
-    ],
-    "ingredientsList": [
-      "Medical Grade Silicone"
-    ],
-    "productDynamicFields": {
-      "size": "Large (For women who have given birth)",
-      "capacity": "30ml",
-      "material": "Medical Grade Silicone",
-      "lifespan": "5-10 years",
-      "countryOfOrigin": "India",
-      "suitableFor": "Women above 18 years",
-      "sterilization": "Boil for 5-10 minutes"
-    },
-    "productSizes": [
-      "Small",
-      "Medium",
-      "Large"
-    ],
-    "id": 14,
+    "productStatus": "Available",
+    "mainImageUrl": "https://images.unsplash.com/photo-1584017911766-d451b3d0e843?w=400&h=400&fit=crop",
+    "description": "Medical grade silicone menstrual cup for eco-friendly period protection. Reusable for years.",
     "category": "menstrual",
-    "image": "https://images.unsplash.com/photo-1584017911766-d451b3d0e843?w=400&h=400&fit=crop"
+    "brand": "Sirona",
+    "inStock": true,
+    "id": 14
   },
   {
     "sku": "WMULTIVIT001",
-    "productName": "Multivitamin for Men",
-    "productCategory": "Wellness & Healthcare",
-    "productSubCategory": "Vitamins & Supplements",
+    "title": "Multivitamin for Men",
     "productPrice": 599,
     "productOldPrice": 799,
-    "productStatus": "Available",
-    "productDescription": "Comprehensive multivitamin formulated specifically for men's health and wellness.",
-    "productQuantity": 30,
-    "productUnit": "Bottle of 60 tablets",
-    "productMRP": 900,
+    "discount": 25,
     "productRating": 4.4,
-    "prescriptionRequired": false,
-    "brandName": "Charak",
-    "mfgDate": "2024-03-20",
-    "expDate": "2026-03-20",
-    "batchNo": "BATCH-MVIT-015",
-    "benefitsList": [
-      "Supports energy production",
-      "Boosts immunity",
-      "Enhances muscle function",
-      "Promotes overall wellness"
-    ],
-    "directionsList": [
-      "Take 1 tablet daily",
-      "Take with food",
-      "Best taken in morning",
-      "Do not exceed recommended dose"
-    ],
-    "ingredientsList": [
-      "Vitamin A, C, D, E",
-      "B-Complex Vitamins",
-      "Zinc, Selenium",
-      "Magnesium, Calcium"
-    ],
-    "productDynamicFields": {
-      "form": "Tablet",
-      "dosage": "Oral",
-      "shelfLife": "24 months",
-      "countryOfOrigin": "India",
-      "suitableFor": "Men above 18 years",
-      "storage": "Store in cool dry place"
-    },
-    "productSizes": [
-      "30 tablets",
-      "60 tablets",
-      "90 tablets"
-    ],
-    "id": 15,
+    "productStatus": "Available",
+    "mainImageUrl": "https://images.unsplash.com/photo-1584017911766-d451b3d0e843?w=400&h=400&fit=crop",
+    "description": "Comprehensive multivitamin formulated specifically for men's health and wellness.",
     "category": "vitamins",
-    "image": "https://images.unsplash.com/photo-1584017911766-d451b3d0e843?w=400&h=400&fit=crop"
+    "brand": "Charak",
+    "inStock": true,
+    "id": 15
   },
   {
     "sku": "WSUNSCREEN001",
-    "productName": "Sunscreen SPF 50 PA++++",
-    "productCategory": "Wellness & Healthcare",
-    "productSubCategory": "Hair & Skin Care",
+    "title": "Sunscreen SPF 50 PA++++",
     "productPrice": 549,
     "productOldPrice": 699,
-    "productStatus": "Out of Stock",
-    "productDescription": "Broad spectrum sunscreen with SPF 50 and PA++++ rating for maximum UV protection.",
-    "productQuantity": 0,
-    "productUnit": "50g Tube",
-    "productMRP": 800,
+    "discount": 21,
     "productRating": 4.7,
-    "prescriptionRequired": false,
-    "brandName": "Charak",
-    "mfgDate": "2024-01-30",
-    "expDate": "2026-01-30",
-    "batchNo": "BATCH-SUN-016",
-    "benefitsList": [
-      "Broad spectrum UVA/UVB protection",
-      "Water resistant for 80 minutes",
-      "Non-greasy formula",
-      "Suitable for sensitive skin"
-    ],
-    "directionsList": [
-      "Apply generously 15 minutes before sun exposure",
-      "Reapply every 2 hours",
-      "Use daily even on cloudy days",
-      "Apply to face, neck and exposed areas"
-    ],
-    "ingredientsList": [
-      "Zinc Oxide",
-      "Titanium Dioxide",
-      "Vitamin E",
-      "Aloe Vera"
-    ],
-    "productDynamicFields": {
-      "spf": "50",
-      "paRating": "++++",
-      "form": "Cream",
-      "waterResistance": "80 minutes",
-      "countryOfOrigin": "India",
-      "suitableFor": "All skin types",
-      "storage": "Store in cool place"
-    },
-    "productSizes": [
-      "30g",
-      "50g",
-      "100g"
-    ],
-    "id": 16,
+    "productStatus": "Out of Stock",
+    "mainImageUrl": "https://images.unsplash.com/photo-1596462502278-27bfdc403348?w=400&h=400&fit=crop",
+    "description": "Broad spectrum sunscreen with SPF 50 and PA++++ rating for maximum UV protection.",
     "category": "hairskin",
-    "image": "https://images.unsplash.com/photo-1596462502278-27bfdc403348?w=400&h=400&fit=crop"
+    "brand": "Charak",
+    "inStock": false,
+    "id": 16
   }
 ];
 
-let products = [...wellnessProducts];
-let filteredProducts = [...wellnessProducts];
-let productGrid, sortSelect, showMoreBtn;
+// Map category codes to display names
+const categoryNames = {
+  'all': {
+    title: 'All Wellness Products',
+    pageTitle: 'Wellness Essentials',
+    description: 'Complete range of health and wellness products'
+  },
+  'vitamins': {
+    title: 'Vitamins & Supplements',
+    pageTitle: 'Vitamins & Supplements',
+    description: 'Essential vitamins and supplements for daily health'
+  },
+  'hairskin': {
+    title: 'Hair & Skin Care',
+    pageTitle: 'Hair & Skin Care Essentials',
+    description: 'Natural products for beautiful hair and glowing skin'
+  },
+  'fitness': {
+    title: 'Fitness & Weight Management',
+    pageTitle: 'Fitness & Weight Products',
+    description: 'Supplements and gear for your fitness journey'
+  },
+  'immunity': {
+    title: 'Immunity Boosters',
+    pageTitle: 'Immunity Boosters',
+    description: 'Strengthen your natural defenses'
+  },
+  'senior': {
+    title: 'Senior Care Products',
+    pageTitle: 'Senior Care Essentials',
+    description: 'Specialized products for elderly wellness'
+  },
+  'oral': {
+    title: 'Oral Care Essentials',
+    pageTitle: 'Oral Care Products',
+    description: 'For a healthy and bright smile'
+  },
+  'menstrual': {
+    title: 'Menstrual Care Products',
+    pageTitle: 'Menstrual Care Essentials',
+    description: 'Comfort and care during menstrual cycle'
+  }
+};
 
-let currentFilters = {
+// Global State
+let filteredProducts = [...allProducts];
+let wishlist = JSON.parse(localStorage.getItem("wishlist") || "[]");
+let cart = JSON.parse(localStorage.getItem("cart") || "[]");
+let currentPage = 1;
+const pageSize = 12;
+
+// Persistent Filter State
+let filterState = {
   category: 'all',
   brand: 'all',
-  discount: 'all',
+  discount: 0,
   minPrice: 0,
-  maxPrice: 5000
+  maxPrice: 5000,
+  sort: 'default'
 };
 
-let visibleProductsCount = 8;
-let allFilteredProducts = [];
-
-// ======================================================
-document.addEventListener('DOMContentLoaded', () => {
-  productGrid = document.getElementById('productGrid');
-  sortSelect = document.getElementById('sortSelect');
-  showMoreBtn = document.getElementById('showMoreBtn');
-
-  sessionStorage.setItem('currentPageProducts', JSON.stringify(wellnessProducts));
-
-  renderInitialProducts();
-  updateResultsCount();
-  initSlider();
-  initSorting();
-  initMobileSheets();
-  initFilters();
-  initShowMore();
-
-  productGrid.addEventListener('click', (e) => {
-    const btn = e.target.closest('.wishlist-btn');
-    if (!btn) return;
-
-    e.preventDefault();
-    e.stopPropagation();
-
-    const productId = Number(btn.dataset.id);
-    toggleWishlist(productId, btn);
-  });
-});
-
-// =============== CARD CREATION ===============
-function createCard(p) {
-  const div = document.createElement('div');
-  
-  const isOutOfStock = p.productQuantity <= 0;
-  const stockStatus = p.productStatus === 'Available' ? 'In Stock' : 'Out of Stock';
-  const stockClass = isOutOfStock ? 'out-of-stock' : 'in-stock';
-  const cardClass = isOutOfStock ? 'out-of-stock-card' : '';
-  
-  const discount = Math.round(((p.productOldPrice - p.productPrice) / p.productOldPrice) * 100);
-  
-  const priceLine = p.productOldPrice > p.productPrice
-    ? `₹${p.productPrice} <s class="text-gray-400 text-sm">₹${p.productOldPrice}</s> <span class="text-green-600 text-sm font-bold">${discount}% off</span>`
-    : `₹${p.productPrice}`;
-
-  const wishlist = JSON.parse(localStorage.getItem('wishlist') || '[]');
-  const isWishlisted = wishlist.some(item => item.id === p.id);
-
-  div.className = `bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition cursor-pointer relative ${cardClass}`;
-  
-  div.innerHTML = `
-    <div class="relative">
-      <img src="${p.image}" alt="${p.productName}" class="w-full h-48 object-cover">
-      
-      <!-- Stock Status Badge -->
-      <div class="stock-badge ${stockClass}">${stockStatus}</div>
-      
-      <!-- Wishlist button -->
-      <button class="wishlist-btn ${isWishlisted ? 'active' : ''}" data-id="${p.id}">
-        <i class="fa-${isWishlisted ? 'solid' : 'regular'} fa-heart"></i>
-      </button>
-    </div>
-    <div class="p-4">
-      <h3 class="font-semibold text-sm mb-1">${p.productName}</h3>
-      <p class="text-xs text-gray-500 mb-2">${p.brandName}</p>
-     
-      <div class="mt-2 font-bold text-lg text-green-600">${priceLine}</div>
-      <div class="flex items-center mt-2">
-        
-       
-      </div>
-      <button onclick="${isOutOfStock ? 'void(0)' : `navigateToProductDetails(${p.id})`}" 
-              class="mt-4 w-full ${isOutOfStock ? 'out-of-stock-btn bg-gray-400' : 'bg-[#4A70A9] hover:bg-[#16476A]'} text-white py-2 rounded-lg font-bold transition"
-              ${isOutOfStock ? 'disabled' : ''}>
-        ${isOutOfStock ? 'Out of Stock' : 'View Details'}
-      </button>
-    </div>
-  `;
-  return div;
+// Helper: Safe text update
+function setText(id, text) {
+  const el = document.getElementById(id);
+  if (el) el.textContent = text;
 }
 
-// =============== RENDER INITIAL PRODUCTS (8 products) ===============
-function renderInitialProducts() {
-  productGrid.innerHTML = '';
-  
-  if (allFilteredProducts.length === 0) {
-    productGrid.innerHTML = '<div class="col-span-full text-center py-20 text-gray-500 text-xl">No products found</div>';
-    showMoreBtn.classList.add('hidden');
-    return;
-  }
-  
-  const productsToShow = allFilteredProducts.slice(0, visibleProductsCount);
-  
-  productsToShow.forEach(p => productGrid.appendChild(createCard(p)));
-  
-  if (allFilteredProducts.length > visibleProductsCount) {
-    showMoreBtn.classList.remove('hidden');
-  } else {
-    showMoreBtn.classList.add('hidden');
-  }
-}
-
-// =============== SHOW MORE FUNCTIONALITY ===============
-function initShowMore() {
-  showMoreBtn.addEventListener('click', () => {
-    visibleProductsCount += 8;
-    
-    productGrid.innerHTML = '';
-    const productsToShow = allFilteredProducts.slice(0, visibleProductsCount);
-    
-    productsToShow.forEach(p => productGrid.appendChild(createCard(p)));
-    
-    if (visibleProductsCount >= allFilteredProducts.length) {
-      showMoreBtn.classList.add('hidden');
+// ==================== UPDATE HEADER COUNTS ====================
+function updateHeaderCounts() {
+  const updateBadge = (id, count) => {
+    const el = document.getElementById(id);
+    if (el) {
+      el.textContent = count;
+      el.classList.toggle("hidden", count === 0);
     }
-    
-    updateResultsCount();
-  });
-}
-
-// =============== WISHLIST TOGGLE ===============
-// =============== WISHLIST TOGGLE ===============
-function toggleWishlist(productId, buttonElement) {
-  let wishlist = JSON.parse(localStorage.getItem('wishlist') || '[]');
-  const product = products.find(p => p.id === productId);
-
-  const index = wishlist.findIndex(item => item.id === productId);
-
-  if (index === -1) {
-    // Create a simplified product object for wishlist
-    const wishlistProduct = {
-      id: product.id,
-      productName: product.name,
-      productPrice: product.productPrice,
-      productOldPrice: product.productOldPrice || product.productPrice,
-      brandName: product.brandName,
-      image: product.image,
-      productStatus: product.productStatus,
-      productQuantity: product.productQuantity,
-      category: product.category || 'wellness', // Add default category
-      sku: product.sku,
-      productRating: product.productRating || 4.0,
-      productUnit: product.productUnit,
-      sourcePage: 'Fertility Essentials' // or 'Wellness Essentials' depending on page
-    };
-    
-    wishlist.push(wishlistProduct);
-    buttonElement.classList.add('active');
-    buttonElement.innerHTML = '<i class="fa-solid fa-heart"></i>';
-    
-    // Show toast notification
-    showToast('Added to wishlist', 'success');
-  } else {
-    wishlist.splice(index, 1);
-    buttonElement.classList.remove('active');
-    buttonElement.innerHTML = '<i class="fa-regular fa-heart"></i>';
-    
-    // Show toast notification
-    showToast('Removed from wishlist', 'info');
-  }
-
-  localStorage.setItem('wishlist', JSON.stringify(wishlist));
-  window.dispatchEvent(new CustomEvent('wishlistUpdated'));
-}
-
-// Add toast notification function
-function showToast(message, type = 'success') {
-  // Remove existing toast if any
-  const existingToast = document.querySelector('.custom-toast');
-  if (existingToast) existingToast.remove();
-  
-  const toast = document.createElement('div');
-  toast.className = `custom-toast fixed top-4 right-4 z-50 px-6 py-3 rounded-lg shadow-xl text-white font-medium flex items-center gap-3 transform transition-all duration-300 translate-x-full ${
-    type === 'success' ? 'bg-green-500' : 
-    type === 'error' ? 'bg-red-500' : 
-    'bg-blue-500'
-  }`;
-  
-  const icon = type === 'success' ? '✓' : type === 'error' ? '✗' : 'ℹ';
-  toast.innerHTML = `
-    <span class="text-xl">${icon}</span>
-    <span>${message}</span>
-  `;
-  
-  document.body.appendChild(toast);
-  
-  // Animate in
-  setTimeout(() => {
-    toast.style.transform = 'translateX(0)';
-  }, 10);
-  
-  // Remove after 3 seconds
-  setTimeout(() => {
-    toast.style.transform = 'translateX(100%)';
-    setTimeout(() => toast.remove(), 300);
-  }, 3000);
-}
-
-function updateResultsCount() {
-  const countEl = document.getElementById('resultsCount');
-  if (countEl) {
-    const showingCount = Math.min(visibleProductsCount, allFilteredProducts.length);
-    countEl.textContent = `Showing ${showingCount} of ${allFilteredProducts.length} products`;
-  }
-  updateTitle();
-}
-
-function updateTitle() {
-  const titleEl = document.querySelector('h2.text-3xl');
-  if (!titleEl) return;
-
-  const categoryNames = {
-    'all': 'Wellness Essentials',
-    'vitamins': 'Vitamins & Supplements',
-    'hairskin': 'Hair & Skin Care',
-    'fitness': 'Fitness & Weight Management',
-    'immunity': 'Immunity Boosters',
-    'senior': 'Senior Care Products',
-    'oral': 'Oral Care Essentials',
-    'menstrual': 'Menstrual Care Products'
   };
+  const cartTotal = cart.reduce((sum, item) => sum + (item.quantity || 1), 0);
+  updateBadge("cartCount", cartTotal);
+  updateBadge("wishlistCount", wishlist.length);
+}
 
-  let title = categoryNames[currentFilters.category] || 'Wellness Products';
+// ==================== WISHLIST FUNCTION ====================
+function toggleWishlist(id) {
+  const product = allProducts.find(p => p.id === id);
+  if (!product) return;
 
-  if (currentFilters.brand !== 'all') {
-    title += ` - ${currentFilters.brand}`;
+  const index = wishlist.findIndex(item => item.id === id);
+
+  if (index > -1) {
+    // Remove from wishlist
+    wishlist.splice(index, 1);
+    showToast("Removed from wishlist ♥");
+  } else {
+    // Add with CORRECT format for wishlist page
+    const wishlistItem = {
+      id: product.id,
+      name: product.title.split(' (')[0].trim(),
+      price: product.productPrice,
+      originalPrice: product.productOldPrice || null,
+      image: product.mainImageUrl
+    };
+    wishlist.push(wishlistItem);
+    showToast("Added to wishlist ♥");
   }
 
-  titleEl.textContent = title;
+  localStorage.setItem("wishlist", JSON.stringify(wishlist));
+  updateHeaderCounts();
+  renderProducts(); // Update heart icon
 }
 
-// Apply Filters Function
+// Auto-fix old broken wishlist items (run once on load)
+function fixOldWishlistItems() {
+  let updated = false;
+  wishlist = wishlist.map(item => {
+    if (!item.name && item.title) {
+      item.name = item.title.split(' (')[0].trim();
+      updated = true;
+    }
+    if (!item.image && item.mainImageUrl) {
+      item.image = item.mainImageUrl;
+      updated = true;
+    }
+    if (!item.price && item.price !== 0) {
+      const orig = allProducts.find(p => p.id === item.id);
+      if (orig) item.price = orig.productPrice;
+      updated = true;
+    }
+    return item;
+  }).filter(item => item.id && item.name && item.image);
+
+  if (updated) {
+    localStorage.setItem("wishlist", JSON.stringify(wishlist));
+  }
+}
+
+function showToast(msg) {
+  const toast = document.createElement("div");
+  toast.textContent = msg;
+  toast.className = "fixed bottom-20 left-1/2 -translate-x-1/2 bg-black text-white px-6 py-3 rounded-full z-50 shadow-lg";
+  document.body.appendChild(toast);
+  setTimeout(() => toast.remove(), 2000);
+}
+
+// ==================== PRODUCT CARD ====================
+function createProductCard(p) {
+  const inWishlist = wishlist.some(x => x.id === p.id);
+  const isOutOfStock = !p.inStock;
+  const categoryData = categoryNames[p.category] || categoryNames['all'];
+
+  return `
+    <div class="group relative bg-white rounded-lg overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 border border-gray-100
+                ${isOutOfStock ? 'opacity-60 grayscale cursor-not-allowed' : ''}"
+         ${!isOutOfStock ? `onclick="event.stopPropagation(); viewProductDetails(${p.id})"` : ''}
+         style="${isOutOfStock ? 'pointer-events: none;' : ''}">
+
+      <div class="relative bg-gray-50 cursor-pointer aspect-[6/4] overflow-hidden">
+        <img src="${p.mainImageUrl}" alt="${p.title}"
+             class="w-full h-full object-contain p-5 transition-transform duration-500 ${!isOutOfStock ? 'group-hover:scale-110' : ''}">
+
+        <div class="absolute top-2 left-2 text-white text-xs font-bold px-3 py-1.5 rounded-full shadow-md z-10
+                    ${isOutOfStock ? 'bg-red-600' : 'bg-green-600'}">
+          ${isOutOfStock ? 'Out of Stock' : 'In Stock'}
+        </div>
+
+        <button onclick="event.stopPropagation(); toggleWishlist(${p.id})"
+                class="absolute top-2 right-2 w-9 h-9 bg-white rounded-full shadow-lg flex items-center justify-center 
+                       ${isOutOfStock ? 'opacity-50' : 'opacity-0 group-hover:opacity-100'} transition-opacity z-10">
+          <i class="${inWishlist ? 'fas fa-heart text-red-600' : 'far fa-heart text-gray-600'} text-lg"></i>
+        </button>
+      </div>
+
+      <div class="p-3">
+        <div class="flex justify-between items-start">
+          <p class="text-xs text-gray-500 uppercase font-medium truncate">${p.brand || 'Brand'}</p>
+          <span class="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded-full">${categoryData.title.split(' ')[0]}</span>
+        </div>
+        <h3 class="text-sm font-medium text-gray-800 line-clamp-2 mt-1">${p.title}</h3>
+
+        <div class="mt-2 flex items-center gap-2">
+          <span class="text-lg font-bold text-green-600">₹${p.productPrice.toLocaleString()}</span>
+          ${p.productOldPrice > p.productPrice ? `
+            <span class="text-sm text-gray-500 line-through">₹${p.productOldPrice.toLocaleString()}</span>
+          ` : ''}
+          <span class="text-sm font-medium text-red-500">${p.discount}% OFF</span>
+        </div>
+
+        <div class="flex items-center mt-2">
+          <div class="flex text-amber-400">
+            ${'★'.repeat(Math.floor(p.productRating || 4))}${'☆'.repeat(5 - Math.floor(p.productRating || 4))}
+          </div>
+          <span class="text-sm text-gray-500 ml-2">(${p.productRating || 4.0})</span>
+        </div>
+
+        <button onclick="event.stopPropagation(); viewProductDetails(${p.id})"
+                class="mt-3 w-full font-medium text-sm py-2.5 rounded-lg transition
+                        ${isOutOfStock 
+                          ? 'bg-gray-300 text-gray-600 cursor-not-allowed' 
+                          : 'bg-[#36C2CE] hover:bg-[#2aa8b3] text-white'}">
+          ${isOutOfStock ? 'Out of Stock' : 'View Details'}
+        </button>
+      </div>
+    </div>
+  `;
+}
+
+// ==================== RENDERING ====================
+function renderProducts() {
+  const start = (currentPage - 1) * pageSize;
+  const paginated = filteredProducts.slice(start, start + pageSize);
+  const grid = document.getElementById("productsGrid");
+
+  if (grid) {
+    grid.innerHTML = paginated.length 
+      ? paginated.map(createProductCard).join("")
+      : `<p class="col-span-full text-center text-gray-500 py-10">No products found</p>`;
+  }
+
+  const currentCategory = filterState.category || 'all';
+  const categoryData = categoryNames[currentCategory] || categoryNames['all'];
+  setText("resultsCount", `Showing ${filteredProducts.length} products in ${categoryData.title}`);
+  setText("categoryTitle", categoryData.title);
+  
+  // Update page title if it exists
+  const pageTitleEl = document.getElementById("pageTitle");
+  if (pageTitleEl && currentCategory !== 'all') {
+    pageTitleEl.textContent = categoryData.pageTitle;
+  }
+  
+  renderPagination();
+}
+
+function renderPagination() {
+  const container = document.getElementById("pagination");
+  if (!container) return;
+  const totalPages = Math.ceil(filteredProducts.length / pageSize);
+  container.innerHTML = "";
+  for (let i = 1; i <= totalPages; i++) {
+    const btn = document.createElement("button");
+    btn.textContent = i;
+    btn.className = `px-4 py-2 rounded border mx-1 ${i === currentPage ? 'bg-[#36C2CE] text-white' : 'bg-white text-[#36C2CE] border-[#36C2CE]'}`;
+    btn.onclick = () => { currentPage = i; renderProducts(); };
+    container.appendChild(btn);
+  }
+}
+
+// ==================== FILTER & SORT ====================
 function applyFilters() {
-  allFilteredProducts = products.filter(product => {
-    if (currentFilters.category !== 'all' && product.category !== currentFilters.category) {
-      return false;
-    }
-
-    if (currentFilters.brand !== 'all' && product.brandName !== currentFilters.brand) {
-      return false;
-    }
-
-    if (product.productPrice < currentFilters.minPrice || product.productPrice > currentFilters.maxPrice) {
-      return false;
-    }
-
-    if (currentFilters.discount !== 'all') {
-      const requiredDiscount = parseInt(currentFilters.discount);
-      const discount = Math.round(((product.productOldPrice - product.productPrice) / product.productOldPrice) * 100);
-      if (discount < requiredDiscount) {
-        return false;
-      }
-    }
-
-    return true;
+  filteredProducts = allProducts.filter(p => {
+    const catMatch = filterState.category === 'all' || p.category === filterState.category;
+    const brandMatch = filterState.brand === 'all' || p.brand === filterState.brand;
+    const discMatch = p.discount >= filterState.discount;
+    const priceMatch = p.productPrice >= filterState.minPrice && p.productPrice <= filterState.maxPrice;
+    return catMatch && brandMatch && discMatch && priceMatch;
   });
 
-  visibleProductsCount = 8;
-  applySorting();
-  renderInitialProducts();
-  updateResultsCount();
+  sortProducts(filterState.sort);
+  currentPage = 1;
+  renderProducts();
+  updateCategoryCardsUI();
+  saveFiltersToStorage();
 }
 
-// Apply Sorting Function
-function applySorting() {
-  const val = sortSelect.value;
-  if (val === 'price-low') allFilteredProducts.sort((a,b) => a.productPrice - b.productPrice);
-  if (val === 'price-high') allFilteredProducts.sort((a,b) => b.productPrice - a.productPrice);
-  if (val === 'rating') allFilteredProducts.sort((a,b) => (b.productRating || 0) - (a.productRating || 0));
-  if (val === 'newest') allFilteredProducts.sort((a,b) => b.id - a.id);
+function sortProducts(type) {
+  switch (type) {
+    case 'price-low': filteredProducts.sort((a, b) => a.productPrice - b.productPrice); break;
+    case 'price-high': filteredProducts.sort((a, b) => b.productPrice - a.productPrice); break;
+    case 'rating': filteredProducts.sort((a, b) => b.productRating - a.productRating); break;
+    case 'newest': filteredProducts.sort((a, b) => b.id - a.id); break;
+    default: break;
+  }
 }
 
-// Initialize Desktop Filters
-function initFilters() {
-  const desktopForm = document.getElementById('filterForm');
-  if (desktopForm) {
-    desktopForm.addEventListener('submit', (e) => {
-      e.preventDefault();
+function loadFiltersFromStorage() {
+  try {
+    const saved = localStorage.getItem('wellnessFilters');
+    if (saved) filterState = { ...filterState, ...JSON.parse(saved) };
+  } catch (e) { console.error("Failed to load filters", e); }
+}
+
+function saveFiltersToStorage() {
+  localStorage.setItem('wellnessFilters', JSON.stringify(filterState));
+}
+
+// ==================== UPDATE CATEGORY CARDS UI ====================
+function updateCategoryCardsUI() {
+  const categoryCards = document.querySelectorAll('.category-card');
+  categoryCards.forEach(card => {
+    if (card.dataset.category === filterState.category) {
+      card.classList.add('active');
+    } else {
+      card.classList.remove('active');
+    }
+  });
+}
+
+// ==================== INITIALIZE CATEGORY CARDS ====================
+function initCategoryCards() {
+  const categoryCards = document.querySelectorAll('.category-card');
+  
+  categoryCards.forEach(card => {
+    card.addEventListener('click', function() {
+      // Remove active class from all cards
+      categoryCards.forEach(c => c.classList.remove('active'));
       
-      currentFilters.category = document.querySelector('input[name="category"]:checked')?.value || 'all';
-      currentFilters.brand = document.querySelector('input[name="brand"]:checked')?.value || 'all';
-      currentFilters.discount = document.querySelector('input[name="discount"]:checked')?.value || 'all';
+      // Add active class to clicked card
+      this.classList.add('active');
       
+      // Get category from data attribute
+      const category = this.dataset.category;
+      
+      // Update category in filters
+      filterState.category = category;
+      
+      // Update radio buttons in desktop and mobile filters
+      updateRadioButtons('category', category);
+      updateRadioButtons('mobileCategory', category);
+      
+      // Update page title and category title
+      updateTitles(category);
+      
+      // Apply filters
       applyFilters();
     });
+  });
+}
 
-    desktopForm.querySelectorAll('input[type="radio"]').forEach(radio => {
-      radio.addEventListener('change', () => {
-        currentFilters.category = document.querySelector('input[name="category"]:checked')?.value || 'all';
-        currentFilters.brand = document.querySelector('input[name="brand"]:checked')?.value || 'all';
-        currentFilters.discount = document.querySelector('input[name="discount"]:checked')?.value || 'all';
+// ==================== UPDATE RADIO BUTTONS ====================
+function updateRadioButtons(name, value) {
+  const radios = document.querySelectorAll(`input[name="${name}"]`);
+  radios.forEach(radio => {
+    radio.checked = (radio.value === value);
+  });
+}
+
+// ==================== UPDATE TITLES ====================
+function updateTitles(category) {
+  const categoryData = categoryNames[category] || categoryNames['all'];
+  
+  // Update category title
+  const categoryTitleEl = document.getElementById('categoryTitle');
+  if (categoryTitleEl) {
+    categoryTitleEl.textContent = categoryData.title;
+  }
+  
+  // Update page title
+  const pageTitleEl = document.getElementById('pageTitle');
+  if (pageTitleEl) {
+    pageTitleEl.textContent = categoryData.pageTitle;
+  }
+  
+  // Update browser tab title
+  document.title = `${categoryData.pageTitle} – Wellness Essentials`;
+}
+
+// ==================== PRICE SLIDERS ====================
+function initPriceSliders() {
+  const sliders = document.querySelectorAll(".price-slider-container");
+  const maxRange = 5000;
+
+  sliders.forEach(container => {
+    const minThumb = container.querySelector('input[type="range"]:first-of-type');
+    const maxThumb = container.querySelector('input[type="range"]:last-of-type');
+    const fill = container.querySelector(".slider-fill") || container.querySelector("#desktopFill") || container.querySelector("#mobileFill");
+    const minVal = container.querySelector("#minValue") || container.querySelector("#mobileMinValue") || container.querySelector(".price-values span:first-child");
+    const maxVal = container.querySelector("#maxValue") || container.querySelector("#mobileMaxValue") || container.querySelector(".price-values span:last-child");
+
+    const update = (minP, maxP) => {
+      const minPct = (minP / maxRange) * 100;
+      const maxPct = (maxP / maxRange) * 100;
+      if (fill) {
+        fill.style.left = minPct + "%";
+        fill.style.width = (maxPct - minPct) + "%";
+      }
+      if (minVal) minVal.textContent = `₹${minP.toLocaleString()}`;
+      if (maxVal) maxVal.textContent = `₹${maxP.toLocaleString()}`;
+      filterState.minPrice = minP;
+      filterState.maxPrice = maxP;
+    };
+
+    if (minThumb && maxThumb) {
+      minThumb.addEventListener("input", () => {
+        let val = parseInt(minThumb.value);
+        if (val > parseInt(maxThumb.value)) val = parseInt(maxThumb.value);
+        update(val, parseInt(maxThumb.value));
         applyFilters();
       });
-    });
-  }
 
-  const applyMobileBtn = document.getElementById('applyMobileFilters');
-  if (applyMobileBtn) {
-    applyMobileBtn.addEventListener('click', () => {
-      currentFilters.category = document.querySelector('input[name="mobileCategory"]:checked')?.value || 'all';
-      currentFilters.brand = document.querySelector('input[name="mobileBrand"]:checked')?.value || 'all';
-      currentFilters.discount = document.querySelector('input[name="mobileDiscount"]:checked')?.value || 'all';
-      
-      applyFilters();
-      closeFilterSheet();
-    });
-  }
-
-  const clearMobileBtn = document.getElementById('clearMobileFilters');
-  if (clearMobileBtn) {
-    clearMobileBtn.addEventListener('click', () => {
-      document.querySelectorAll('input[name="mobileCategory"], input[name="mobileBrand"], input[name="mobileDiscount"]').forEach(radio => {
-        if (radio.value === 'all') radio.checked = true;
-      });
-      
-      document.querySelectorAll('input[name="category"], input[name="brand"], input[name="discount"]').forEach(radio => {
-        if (radio.value === 'all') radio.checked = true;
+      maxThumb.addEventListener("input", () => {
+        let val = parseInt(maxThumb.value);
+        if (val < parseInt(minThumb.value)) val = parseInt(minThumb.value);
+        update(parseInt(minThumb.value), val);
+        applyFilters();
       });
 
-      currentFilters = {
-        category: 'all',
-        brand: 'all',
-        discount: 'all',
-        minPrice: 0,
-        maxPrice: 5000
-      };
-
-      document.getElementById('minThumb').value = 0;
-      document.getElementById('maxThumb').value = 5000;
-      document.getElementById('mobileMinThumb').value = 0;
-      document.getElementById('mobileMaxThumb').value = 5000;
-      updateDesktopSlider();
-      updateMobileSlider();
-
-      applyFilters();
-    });
-  }
+      update(filterState.minPrice, filterState.maxPrice);
+    }
+  });
 }
 
-// Navigate to Product Details Page with full product data
-window.navigateToProductDetails = function(id) {
-  const product = wellnessProducts.find(p => p.id === id);
-  if (!product) {
-    console.error('Product not found with id:', id);
-    return;
+// ==================== FILTER INITIALIZATION ====================
+function initFiltersAndUI() {
+  loadFiltersFromStorage();
+
+  // Initialize category cards
+  initCategoryCards();
+
+  // Set initial radio buttons
+  document.querySelectorAll('input[name="category"], input[name="brand"], input[name="discount"]').forEach(input => {
+    if ((input.name === "category" && input.value === filterState.category) ||
+        (input.name === "brand" && input.value === filterState.brand) ||
+        (input.name === "discount" && parseInt(input.value) === filterState.discount)) {
+      input.checked = true;
+    }
+
+    input.addEventListener('change', () => {
+      if (input.name === "category") {
+        filterState.category = input.value;
+        updateCategoryCardsUI();
+        updateTitles(input.value);
+      }
+      if (input.name === "brand") filterState.brand = input.value;
+      if (input.name === "discount") filterState.discount = parseInt(input.value);
+      applyFilters();
+    });
+  });
+
+  // Set mobile filter radio buttons
+  document.querySelectorAll('input[name="mobileCategory"], input[name="mobileBrand"], input[name="mobileDiscount"]').forEach(input => {
+    if ((input.name === "mobileCategory" && input.value === filterState.category) ||
+        (input.name === "mobileBrand" && input.value === filterState.brand) ||
+        (input.name === "mobileDiscount" && parseInt(input.value) === filterState.discount)) {
+      input.checked = true;
+    }
+
+    input.addEventListener('change', () => {
+      if (input.name === "mobileCategory") {
+        filterState.category = input.value;
+        updateCategoryCardsUI();
+        updateTitles(input.value);
+      }
+      if (input.name === "mobileBrand") filterState.brand = input.value;
+      if (input.name === "mobileDiscount") filterState.discount = parseInt(input.value);
+    });
+  });
+
+  const sortSelect = document.getElementById("sortSelect");
+  if (sortSelect) {
+    sortSelect.value = filterState.sort;
+    sortSelect.addEventListener("change", (e) => {
+      filterState.sort = e.target.value;
+      sortProducts(filterState.sort);
+      renderProducts();
+      saveFiltersToStorage();
+    });
   }
 
-  const currentPageName = 'Wellness Essentials';
-  
-  sessionStorage.setItem('selectedProduct', JSON.stringify(product));
-  sessionStorage.setItem('currentPageProducts', JSON.stringify(products));
-  sessionStorage.setItem('currentPageName', currentPageName);
-
-  const params = new URLSearchParams({
-    id: product.id,
-    sku: product.sku,
-    name: encodeURIComponent(product.productName),
-    brand: encodeURIComponent(product.brandName),
-    price: product.productPrice,
-    originalPrice: product.productOldPrice || '',
-    discount: Math.round(((product.productOldPrice - product.productPrice) / product.productOldPrice) * 100),
-    image: encodeURIComponent(product.image),
-    description: encodeURIComponent(product.productDescription),
-    prescription: product.prescriptionRequired,
-    category: product.category || '',
-    sourcePage: currentPageName,
-    quantity: product.productQuantity || 0,
-    mrp: product.productMRP || '',
-    rating: product.productRating || 4.0,
-    unit: product.productUnit || '',
-    benefits: encodeURIComponent(JSON.stringify(product.benefitsList || [])),
-    ingredients: encodeURIComponent(JSON.stringify(product.ingredientsList || [])),
-    directions: encodeURIComponent(JSON.stringify(product.directionsList || [])),
-    dynamicFields: encodeURIComponent(JSON.stringify(product.productDynamicFields || {})),
-    mfgDate: product.mfgDate || '',
-    expDate: product.expDate || '',
-    batchNo: product.batchNo || '',
-    sizes: encodeURIComponent(JSON.stringify(product.productSizes || []))
+  // Desktop apply filters button
+  document.getElementById("applyDesktopFilters")?.addEventListener("click", () => {
+    applyFilters();
   });
 
-  window.location.href = `../../productdetails.html?${params.toString()}`;
-};
-
-function initSorting() {
-  sortSelect.addEventListener('change', () => {
-    applySorting();
-    visibleProductsCount = 8;
-    renderInitialProducts();
-    updateResultsCount();
+  // Mobile apply filters button
+  document.getElementById("applyMobileFilters")?.addEventListener("click", () => {
+    const cat = document.querySelector('#filterSheet input[name="mobileCategory"]:checked')?.value || 'all';
+    const brd = document.querySelector('#filterSheet input[name="mobileBrand"]:checked')?.value || 'all';
+    const disc = parseInt(document.querySelector('#filterSheet input[name="mobileDiscount"]:checked')?.value || 0);
+    filterState.category = cat;
+    filterState.brand = brd;
+    filterState.discount = disc;
+    
+    updateCategoryCardsUI();
+    updateTitles(cat);
+    applyFilters();
+    
+    document.getElementById("filterSheet").classList.add("translate-y-full");
+    document.getElementById("mobileSheetBackdrop").classList.add("hidden");
   });
 
-  const applySortBtn = document.getElementById('applySortBtn');
+  // Clear filters button
+  document.getElementById("clearMobileFilters")?.addEventListener("click", () => {
+    filterState = { category: 'all', brand: 'all', discount: 0, minPrice: 0, maxPrice: 5000, sort: 'default' };
+    localStorage.removeItem("wellnessFilters");
+    
+    // Reset all radio buttons
+    document.querySelectorAll('input[type="radio"]').forEach(r => {
+      if (r.name === "category" || r.name === "mobileCategory" || r.name === "brand" || r.name === "mobileBrand") {
+        r.checked = (r.value === 'all');
+      }
+      if (r.name === "discount" || r.name === "mobileDiscount") {
+        r.checked = (r.value === '0');
+      }
+    });
+    
+    if (sortSelect) sortSelect.value = 'default';
+    
+    // Update category cards
+    updateCategoryCardsUI();
+    updateTitles('all');
+    
+    initPriceSliders();
+    applyFilters();
+  });
+
+  // Apply sort button
+  const applySortBtn = document.getElementById("applySortBtn");
   if (applySortBtn) {
-    applySortBtn.addEventListener('click', () => {
+    applySortBtn.addEventListener("click", () => {
       const selectedSort = document.querySelector('input[name="mobileSort"]:checked')?.value || 'default';
-      sortSelect.value = selectedSort;
-      sortSelect.dispatchEvent(new Event('change'));
-      closeSortSheet();
+      if (sortSelect) {
+        sortSelect.value = selectedSort;
+        filterState.sort = selectedSort;
+        sortProducts(filterState.sort);
+        renderProducts();
+        saveFiltersToStorage();
+      }
+      document.getElementById("sortSheet").classList.add("translate-y-full");
+      document.getElementById("mobileSheetBackdrop").classList.add("hidden");
     });
   }
+
+  // Initial render
+  applyFilters();
 }
 
-// Desktop Price Slider
-function initSlider() {
-  const minThumb = document.getElementById('minThumb');
-  const maxThumb = document.getElementById('maxThumb');
-  const mobileMinThumb = document.getElementById('mobileMinThumb');
-  const mobileMaxThumb = document.getElementById('mobileMaxThumb');
+// ==================== VIEW PRODUCT DETAILS ====================
+function viewProductDetails(id) {
+  const product = allProducts.find(p => p.id === id);
+  if (!product) return;
 
-  const updateDesktopSlider = () => {
-    const minVal = parseInt(minThumb.value);
-    const maxVal = parseInt(maxThumb.value);
-    
-    if (minVal > maxVal - 100) {
-      minThumb.value = maxVal - 100;
-    }
-    
-    const fill = document.getElementById('desktopFill');
-    if (fill) {
-      fill.style.left = (minVal / 5000) * 100 + '%';
-      fill.style.width = ((maxVal - minVal) / 5000) * 100 + '%';
-    }
-    
-    const minValue = document.getElementById('minValue');
-    const maxValue = document.getElementById('maxValue');
-    if (minValue) minValue.textContent = '₹' + minVal;
-    if (maxValue) maxValue.textContent = '₹' + maxVal;
-    
-    currentFilters.minPrice = minVal;
-    currentFilters.maxPrice = maxVal;
-  };
-
-  const updateMobileSlider = () => {
-    const minVal = parseInt(mobileMinThumb.value);
-    const maxVal = parseInt(mobileMaxThumb.value);
-    
-    if (minVal > maxVal - 100) {
-      mobileMinThumb.value = maxVal - 100;
-    }
-    
-    const fill = document.getElementById('mobileFill');
-    if (fill) {
-      fill.style.left = (minVal / 5000) * 100 + '%';
-      fill.style.width = ((maxVal - minVal) / 5000) * 100 + '%';
-    }
-    
-    const minValue = document.getElementById('mobileMinValue');
-    const maxValue = document.getElementById('mobileMaxValue');
-    if (minValue) minValue.textContent = '₹' + minVal;
-    if (maxValue) maxValue.textContent = '₹' + maxVal;
-    
-    currentFilters.minPrice = minVal;
-    currentFilters.maxPrice = maxVal;
-  };
-
-  if (minThumb && maxThumb) {
-    minThumb.oninput = () => {
-      updateDesktopSlider();
-      applyFilters();
-    };
-    maxThumb.oninput = () => {
-      updateDesktopSlider();
-      applyFilters();
-    };
-    updateDesktopSlider();
-  }
-
-  if (mobileMinThumb && mobileMaxThumb) {
-    mobileMinThumb.oninput = updateMobileSlider;
-    mobileMaxThumb.oninput = updateMobileSlider;
-    updateMobileSlider();
-  }
-
-  window.updateDesktopSlider = updateDesktopSlider;
-  window.updateMobileSlider = updateMobileSlider;
-}
-
-// Mobile Sheets
-function initMobileSheets() {
-  const backdrop = document.getElementById('mobileSheetBackdrop');
-  const filterSheet = document.getElementById('filterSheet');
-  const sortSheet = document.getElementById('sortSheet');
+  // Store product in sessionStorage for details page
+  sessionStorage.setItem("selectedProduct", JSON.stringify(product));
+  sessionStorage.setItem("allProducts", JSON.stringify(allProducts));
+  sessionStorage.setItem("currentPageName", "Wellness Essentials");
   
-  document.getElementById('openFilterSheet')?.addEventListener('click', () => {
-    backdrop.classList.remove('hidden');
-    filterSheet.classList.remove('translate-y-full');
-  });
+  // Navigate to product details page
+  window.location.href = "../../productdetails.html?id=" + id;
+}
 
-  const closeFilterSheet = () => {
-    backdrop.classList.add('hidden');
-    filterSheet.classList.add('translate-y-full');
+// ==================== BANNER & MOBILE SHEETS ====================
+function initBanner() {
+  const slides = document.querySelectorAll('.banner-slide');
+  const dots = document.querySelectorAll('.banner-dot');
+  if (slides.length === 0 || dots.length === 0) return;
+  
+  let i = 0;
+  const go = (n) => {
+    slides.forEach(s => s.classList.remove('active'));
+    dots.forEach(d => d.classList.remove('active'));
+    i = (n + slides.length) % slides.length;
+    slides[i].classList.add('active');
+    dots[i].classList.add('active');
   };
+  dots.forEach((d, idx) => d.onclick = () => go(idx));
+  setInterval(() => go(i + 1), 5000);
+}
 
-  document.getElementById('closeFilterSheet')?.addEventListener('click', closeFilterSheet);
-  window.closeFilterSheet = closeFilterSheet;
-
-  document.getElementById('openSortSheet')?.addEventListener('click', () => {
-    backdrop.classList.remove('hidden');
-    sortSheet.classList.remove('translate-y-full');
+function initMobileSheets() {
+  const backdrop = document.getElementById("mobileSheetBackdrop");
+  
+  // Open filter sheet
+  document.getElementById("openFilterSheet")?.addEventListener("click", () => {
+    document.getElementById("filterSheet").classList.remove("translate-y-full");
+    backdrop.classList.remove("hidden");
   });
-
-  const closeSortSheet = () => {
-    backdrop.classList.add('hidden');
-    sortSheet.classList.add('translate-y-full');
-  };
-
-  document.getElementById('closeSortSheet')?.addEventListener('click', closeSortSheet);
-  window.closeSortSheet = closeSortSheet;
-
-  backdrop.addEventListener('click', () => {
-    closeFilterSheet();
-    closeSortSheet();
+  
+  // Open sort sheet
+  document.getElementById("openSortSheet")?.addEventListener("click", () => {
+    document.getElementById("sortSheet").classList.remove("translate-y-full");
+    backdrop.classList.remove("hidden");
+  });
+  
+  // Close buttons
+  document.getElementById("closeFilterSheet")?.addEventListener("click", () => {
+    document.getElementById("filterSheet").classList.add("translate-y-full");
+    backdrop.classList.add("hidden");
+  });
+  
+  document.getElementById("closeSortSheet")?.addEventListener("click", () => {
+    document.getElementById("sortSheet").classList.add("translate-y-full");
+    backdrop.classList.add("hidden");
+  });
+  
+  // Backdrop click
+  backdrop?.addEventListener("click", () => {
+    document.getElementById("filterSheet").classList.add("translate-y-full");
+    document.getElementById("sortSheet").classList.add("translate-y-full");
+    backdrop.classList.add("hidden");
   });
 }
 
-window.sortProducts = function(type) {
-  sortSelect.value = type;
-  sortSelect.dispatchEvent(new Event('change'));
-  document.getElementById('mobileSheetBackdrop')?.click();
-};
+// ==================== ON LOAD ====================
+document.addEventListener("DOMContentLoaded", () => {
+  // Fix old wishlist items first
+  fixOldWishlistItems();
 
-// Initial render
-allFilteredProducts = [...products];
-applySorting();
-renderInitialProducts();
-updateResultsCount();
+  initBanner();
+  initMobileSheets();
+  initPriceSliders();
+  initFiltersAndUI();
+  renderProducts();
+  updateHeaderCounts();
+  
+  // Update category cards UI
+  updateCategoryCardsUI();
+});
