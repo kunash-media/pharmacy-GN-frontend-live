@@ -394,25 +394,67 @@
 
   <script>
     function loadHeader() {
+        // Assuming your HTML file is in DEVICES/MONITORING DEVICES/
+        // and Header is at ../../Header (two levels up)
         fetch('../../Header/header.html')
-            .then(r => { if (!r.ok) throw r; return r.text(); })
+            .then(r => { 
+                if (!r.ok) {
+                    console.error(`Failed to load header. Status: ${r.status}`);
+                    // Try alternative path
+                    return fetch('../Header/header.html');
+                }
+                return r.text(); 
+            })
             .then(html => {
+                if (!html) throw new Error('Empty response');
                 document.getElementById('header-placeholder').innerHTML = html;
                 const script = document.createElement('script');
                 script.src = '../../Header/header.js';
                 script.onload = () => console.log('Header JS loaded');
+                script.onerror = () => {
+                    console.log('Trying alternative header.js path');
+                    const altScript = document.createElement('script');
+                    altScript.src = '../Header/header.js';
+                    document.body.appendChild(altScript);
+                };
                 document.body.appendChild(script);
             })
-            .catch(err => console.error('Header load failed:', err));
+            .catch(err => {
+                console.error('Header load failed:', err);
+                // Fallback: Show simple header
+                document.getElementById('header-placeholder').innerHTML = `
+                    <nav class="bg-blue-600 text-white p-4">
+                        <div class="max-w-7xl mx-auto">Health Monitoring Devices</div>
+                    </nav>
+                `;
+            });
     }
 
     function loadFooter() {
+        // Corrected path from your file structure
         fetch('../../Footer/footer.html')
-            .then(r => { if (!r.ok) throw r; return r.text(); })
+            .then(r => { 
+                if (!r.ok) {
+                    console.error(`Failed to load footer. Status: ${r.status}`);
+                    return fetch('../Footer/footer.html');
+                }
+                return r.text(); 
+            })
             .then(html => {
+                if (!html) throw new Error('Empty response');
                 document.getElementById('footer-placeholder').innerHTML = html;
             })
-            .catch(err => console.error('Footer load failed:', err));
+            .catch(err => {
+                console.error('Footer load failed:', err);
+                // Fallback: Show simple footer
+                document.getElementById('footer-placeholder').innerHTML = `
+                    <footer class="bg-gray-800 text-white p-6 mt-12">
+                        <div class="max-w-7xl mx-auto text-center">
+                            <p>© 2024 Health Monitoring Devices. All rights reserved.</p>
+                        </div>
+                    </footer>
+                `;
+            });
     }
 
     document.addEventListener('DOMContentLoaded', () => {
@@ -422,8 +464,9 @@
     });
   </script>
 
-  <script src="../../cart-wishlist-system.js" defer></script>
-  <script src="./monitor.js" defer></script>
+  <!-- Corrected paths for JS files based on your structure -->
+  <script src="../../cart-wishlist-system.js"></script>
+  <script src="monitor.js"></script>
   
 </body>
 </html>

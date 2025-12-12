@@ -1,4 +1,4 @@
-  function getCart() {
+function getCart() {
         return JSON.parse(localStorage.getItem('medcare_cart') || '[]');
     }
     function saveCart(data) {
@@ -33,10 +33,10 @@
         }
     }
 
-    function updateCartUI() {
+        function updateCartUI() {
         if (!cartItemsContainer) return;
 
-        const cart = getCart();
+        const cart = cartManager.getCart();
         const totalItems = cart.reduce((sum, item) => sum + (item.quantity || 1), 0);
 
         // Update item count headers
@@ -56,25 +56,25 @@
             if (mrpTotalEl) mrpTotalEl.textContent = '₹0';
             if (discountAmountEl) discountAmountEl.textContent = '-₹0';
             if (totalEl) totalEl.textContent = '₹0';
-            updateCartCount();
+            cartManager.updateCartCount(cart);
             return;
         }
 
         emptyCartScreen?.classList.add('hidden');
         cartWithItems?.classList.remove('hidden');
 
-        // Calculate prices (Myntra style with MRP and discount)
+        // Calculate prices
         let totalMRP = 0;
         let totalPrice = 0;
 
         cartItemsContainer.innerHTML = cart.map((item, index) => {
-            const itemMRP = Number(item.mrp || item.price * 1.2); // Assume 20% markup if no MRP
-            const itemPrice = Number(item.price);
-            const itemDiscount = itemMRP - itemPrice;
-            const discountPercent = Math.round((itemDiscount / itemMRP) * 100);
+            const itemPrice = Number(item.price || 0);
+            const itemMRP = Number(item.mrp || item.originalPrice || item.price * 1.2 || 0);
+            const itemDiscount = Math.max(0, itemMRP - itemPrice);
+            const discountPercent = itemMRP > 0 ? Math.round((itemDiscount / itemMRP) * 100) : 0;
 
-            totalMRP += itemMRP * item.quantity;
-            totalPrice += itemPrice * item.quantity;
+            totalMRP += itemMRP * (item.quantity || 1);
+            totalPrice += itemPrice * (item.quantity || 1);
 
             return `
             <div class="cart-item bg-white border-b p-5 flex gap-4 items-start">
@@ -108,8 +108,6 @@
                             <i class="far fa-trash-alt text-xl"></i>
                         </button>
                     </div>
-
-                   
                 </div>
             </div>
             `;
@@ -138,47 +136,44 @@
             }
         }
 
-        updateCartCount();
+        cartManager.updateCartCount(cart);
     }
 
     window.updateQty = function(index, newQty) {
-        const cart = getCart();
-        if (newQty < 1) {
-            removeItem(index);
-            return;
-        }
-        cart[index].quantity = newQty;
-        saveCart(cart);
+        cartManager.updateQuantity(index, newQty);
         updateCartUI();
     };
 
     window.removeItem = function(index) {
         if (confirm('Remove this item from cart?')) {
-            const cart = getCart();
-            cart.splice(index, 1);
-            saveCart(cart);
+            cartManager.removeFromCart(index);
             updateCartUI();
         }
     };
 
     window.proceedToCheckout = function() {
-        if (getCart().length === 0) {
+        const cart = cartManager.getCart();
+        if (cart.length === 0) {
             alert('Your cart is empty!');
             return;
         }
         location.href = 'checkout.html';
     };
 
+    // Listen for cart changes from other tabs/pages
+    window.addEventListener('cartChanged', () => {
+        updateCartUI();
+    });
+
     document.addEventListener('DOMContentLoaded', () => {
         updateCartUI();
-        updateCartCount();
+        cartManager.updateCartCount();
     });
 
+    // Also listen for storage events
     window.addEventListener('storage', (e) => {
-        if (e.key === 'medcare_cart') {
+        if (e.key === 'cart') {
             updateCartUI();
-            updateCartCount();
+            cartManager.updateCartCount();
         }
     });
-
-    updateCartCount();

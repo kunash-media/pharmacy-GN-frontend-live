@@ -12,6 +12,7 @@ function removeSkeleton() {
 // Global variables
 let cart = JSON.parse(localStorage.getItem('cart') || '[]');
 let currentProduct = null;
+let quantity = 1;
 
 // Initialize Tabs
 function initTabs() {

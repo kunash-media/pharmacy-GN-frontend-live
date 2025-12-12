@@ -27,7 +27,7 @@
       <i class="fas fa-heart text-red-500 mr-3"></i> My Wishlist
     </h1>
 
-    <div id="wishlistContainer" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-6 h-80">
+    <div id="wishlistContainer" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
       <!-- Items will be injected here -->
     </div>
 
@@ -35,7 +35,7 @@
       <i class="fas fa-heart-broken text-8xl text-gray-300 mb-6"></i>
       <h2 class="text-2xl font-bold text-gray-600 mb-3">Your wishlist is empty</h2>
       <p class="text-gray-500 mb-8">Add products you love and they'll appear here!</p>
-      <a href="/home.html" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 px-12 px-10 rounded-xl transition">
+      <a href="../home.html" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-xl transition">
         Continue Shopping
       </a>
     </div>
@@ -51,7 +51,8 @@
           const script = document.createElement('script');
           script.src = '../Header/header.js';
           document.body.appendChild(script);
-        });
+        })
+        .catch(err => console.error('Header load failed:', err));
     }
 
     function loadFooter() {
@@ -59,17 +60,24 @@
         .then(r => r.text())
         .then(html => {
           document.getElementById('footer-placeholder').innerHTML = html;
-        });
+        })
+        .catch(err => console.error('Footer load failed:', err));
     }
+    
     // Load header/footer and render wishlist
     document.addEventListener('DOMContentLoaded', () => {
       loadHeader();
       loadFooter();
-      renderWishlist();
+      
+      // Small delay to ensure everything is loaded
+      setTimeout(() => {
+        if (typeof renderWishlist === 'function') {
+          renderWishlist();
+        }
+      }, 100);
     });
   </script>
 
- 
   <script src="../Wishlist/wishlist.js"></script>
  
 </body>

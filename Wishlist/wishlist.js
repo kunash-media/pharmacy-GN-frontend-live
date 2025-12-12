@@ -1,4 +1,4 @@
-// ==================== WISHLIST JS - UPDATED ====================
+// ==================== WISHLIST JS - FIXED STOCK STATUS ====================
 
 // Helper function to calculate discount percentage
 function calculateDiscountPercentage(originalPrice, currentPrice) {
@@ -15,8 +15,6 @@ function calculateDiscountPercentage(originalPrice, currentPrice) {
     return Math.round(discount);
 }
 
-
-
 // Get wishlist from localStorage
 function getWishlist() {
     try {
@@ -31,6 +29,15 @@ function getWishlist() {
         console.error('Error reading wishlist:', e);
         localStorage.removeItem('wishlist');
         return [];
+    }
+}
+
+// Save wishlist to localStorage
+function saveWishlist(wishlist) {
+    try {
+        localStorage.setItem('wishlist', JSON.stringify(wishlist));
+    } catch (e) {
+        console.error('Error saving wishlist:', e);
     }
 }
 
@@ -54,6 +61,44 @@ function updateWishlistCount() {
     });
 }
 
+// Add item to wishlist - FIXED to include stock status
+function addToWishlist(product) {
+    let wishlist = getWishlist();
+    
+    // Check if product already exists
+    const exists = wishlist.some(item => String(item.id) === String(product.id));
+    
+    if (!exists) {
+        // Normalize product data with proper stock status
+        const normalizedProduct = normalizeProductData(product);
+        wishlist.push(normalizedProduct);
+        saveWishlist(wishlist);
+        
+        // Show notification if available
+        if (typeof showToast === 'function') {
+            showToast('Item added to wishlist!', 'success');
+        } else {
+            // Fallback alert
+            alert('Item added to wishlist!');
+        }
+        
+        updateWishlistCount();
+        
+        // Trigger event for other tabs
+        window.dispatchEvent(new CustomEvent('wishlistUpdated', { 
+            detail: { count: wishlist.length } 
+        }));
+        
+        return true;
+    } else {
+        // Show already in wishlist message
+        if (typeof showToast === 'function') {
+            showToast('Item already in wishlist', 'info');
+        }
+        return false;
+    }
+}
+
 // Remove item from wishlist
 function removeFromWishlist(productId) {
     let wishlist = getWishlist();
@@ -62,7 +107,7 @@ function removeFromWishlist(productId) {
     wishlist = wishlist.filter(item => String(item.id) !== String(productId));
     
     if (wishlist.length < initialLength) {
-        localStorage.setItem('wishlist', JSON.stringify(wishlist));
+        saveWishlist(wishlist);
         
         // Show notification if available
         if (typeof showToast === 'function') {
@@ -92,6 +137,18 @@ function moveToCart(productId) {
         return;
     }
     
+    // Check stock status before adding to cart
+    const isOutOfStock = checkOutOfStock(product);
+    
+    if (isOutOfStock) {
+        if (typeof showToast === 'function') {
+            showToast('Product is out of stock!', 'error');
+        } else {
+            alert('This product is currently out of stock.');
+        }
+        return;
+    }
+    
     // Add to cart
     let cart = [];
     try {
@@ -115,7 +172,9 @@ function moveToCart(productId) {
             originalPrice: Number(product.originalPrice) || Number(product.price) || 0,
             image: product.image,
             brand: product.brand,
-            quantity: 1
+            quantity: 1,
+            stock: product.stock || product.productQuantity || 0,
+            inStock: !isOutOfStock
         });
     }
     
@@ -141,6 +200,26 @@ function moveToCart(productId) {
     }
 }
 
+// Check if product is out of stock - FIXED LOGIC
+function checkOutOfStock(product) {
+    // Try multiple property names for stock quantity
+    const stockQuantity = product.stock || product.quantity || product.productQuantity || product.inventory || 10;
+    
+    // Check for explicit out of stock status
+    if (product.status === 'Out of Stock' || product.productStatus === 'Out of Stock') {
+        return true;
+    }
+    
+    // Check if stock quantity is 0 or negative
+    const stockNumber = Number(stockQuantity);
+    if (!isNaN(stockNumber) && stockNumber <= 0) {
+        return true;
+    }
+    
+    // Default to in stock
+    return false;
+}
+
 // Navigate to product details
 function goToProduct(id) {
     const wishlist = getWishlist();
@@ -163,12 +242,12 @@ function goToProduct(id) {
             description: encodeURIComponent(product.description || product.name),
             category: product.category,
             sourcePage: 'Wishlist',
-            quantity: product.productQuantity || 0,
+            quantity: product.stock || product.productQuantity || 10,
             mrp: product.originalPrice || product.price,
             rating: product.productRating || 4.0,
             unit: product.productUnit || 'piece',
-            stock: product.productQuantity || 0,
-            status: product.productStatus || 'Available'
+            stock: product.stock || product.productQuantity || 10,
+            status: product.status || 'Available'
         });
         
         window.location.href = `../productdetails.html?${params.toString()}`;
@@ -178,8 +257,7 @@ function goToProduct(id) {
     }
 }
 
-// Main render function
-// In the renderWishlist() function, update the product name display:
+// Main render function - FIXED STOCK STATUS DISPLAY
 function renderWishlist() {
     const container = document.getElementById('wishlistContainer');
     const emptyState = document.getElementById('emptyState');
@@ -210,54 +288,60 @@ function renderWishlist() {
         const discountPercentage = calculateDiscountPercentage(originalPrice, currentPrice);
         const hasDiscount = originalPrice > currentPrice && discountPercentage > 0;
 
-        // FIXED: Get product name from all possible property names
+        // Get product name from all possible property names
         const productName = product.name || product.productName || product.title || 'Unnamed Product';
         
-        // FIXED: Get brand from all possible property names
+        // Get brand from all possible property names
         const brand = product.brand || product.brandName || 'Generic';
+        
+        // FIXED: Check stock status properly
+        const isOutOfStock = checkOutOfStock(product);
+        
+        console.log(`Product ${product.id} - isOutOfStock: ${isOutOfStock}`, product);
 
         const div = document.createElement('div');
-        div.className = 'wishlist-item bg-white rounded-xl shadow-lg overflow-hidden';
+        div.className = 'wishlist-item bg-white rounded-lg shadow-md overflow-hidden';
 
         const priceLine = hasDiscount ? 
-            `<div class="text-lg font-bold text-green-600">
+            `<div class="text-sm font-bold text-green-600">
                 ₹${currentPrice.toFixed(0)} 
-                <s class="text-gray-400 text-sm">₹${originalPrice.toFixed(0)}</s> 
-                <span class="text-sm font-bold">${discountPercentage}% off</span>
+                <s class="text-gray-400 text-xs ml-1">₹${originalPrice.toFixed(0)}</s> 
+                <span class="text-xs font-bold text-red-500 ml-1">${discountPercentage}% off</span>
             </div>` :
-            `<div class="text-lg font-bold text-green-600">₹${currentPrice.toFixed(0)}</div>`;
+            `<div class="text-sm font-bold text-green-600">₹${currentPrice.toFixed(0)}</div>`;
 
-        // Check stock status
-        const isOutOfStock = product.productQuantity <= 0;
+        // Stock badge - FIXED: Only show if out of stock
         const stockBadge = isOutOfStock ? 
-            `<div class="absolute top-2 left-2 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded">Out of Stock</div>` : 
-            `<div class="absolute top-2 left-2 bg-green-500 text-white text-xs font-bold px-2 py-1 rounded">In Stock</div>`;
+            `<div class="absolute top-2 left-2 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full z-10">Out of Stock</div>` : 
+            '';
 
         div.innerHTML = `
-            <div class="relative group">
-                <img src="${product.image}" 
-                     alt="${productName}" 
-                     class="w-full h-40 object-cover ${isOutOfStock ? 'opacity-70' : ''}">
-                ${stockBadge}
-                <button onclick="removeFromWishlist(${product.id})" 
-                        class="absolute top-2 right-2 bg-white/90 hover:bg-red-500 text-red-600 hover:text-white w-10 h-10 rounded-full shadow-lg flex items-center justify-center transition">
-                    <i class="fas fa-trash-alt"></i>
-                </button>
-            </div>
-            <div class="p-4">
-                <h3 class="font-semibold text-sm line-clamp-2 h-6 mb-1">${productName}</h3>
-                ${brand ? `<p class="text-xs text-gray-500 mb-2">${brand}</p>` : ''}
-                ${priceLine}
-                <div class="mt-4 flex gap-2">
-                    <button onclick="moveToCart(${product.id})" 
-                            class="flex-1 ${isOutOfStock ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-700'} text-white py-2 rounded-lg font-bold text-sm transition"
-                            ${isOutOfStock ? 'disabled' : ''}>
-                        ${isOutOfStock ? 'Out of Stock' : 'Add to Cart'}
+            <div class="relative group h-full">
+                <div class="relative h-32 overflow-hidden bg-gray-100">
+                    <img src="${product.image}" 
+                         alt="${productName}" 
+                         class="w-full h-full object-contain p-1 ${isOutOfStock ? 'opacity-70 grayscale' : ''}">
+                    ${stockBadge}
+                    <button onclick="removeFromWishlist(${product.id})" 
+                            class="absolute top-2 right-2 bg-white/90 hover:bg-red-500 text-red-600 hover:text-white w-8 h-8 rounded-full shadow flex items-center justify-center transition text-sm">
+                        <i class="fas fa-trash-alt"></i>
                     </button>
-                    <button onclick="goToProduct(${product.id})" 
-                            class="bg-gray-200 hover:bg-gray-300 text-gray-800 py-2 px-3 rounded-lg font-bold text-sm transition">
-                        <i class="fas fa-eye"></i>
-                    </button>
+                </div>
+                <div class="p-2">
+                    <h3 class="font-semibold text-xs line-clamp-2 h-8 mb-1 text-gray-800">${productName}</h3>
+                    ${brand ? `<p class="text-xs text-gray-500 mb-1 truncate">${brand}</p>` : ''}
+                    ${priceLine}
+                    <div class="mt-2 flex gap-1">
+                        <button onclick="moveToCart(${product.id})" 
+                                class="flex-1 ${isOutOfStock ? 'bg-gray-300 text-gray-500 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-700 text-white'} py-1 rounded text-xs font-bold transition"
+                                ${isOutOfStock ? 'disabled' : ''}>
+                            ${isOutOfStock ? 'Out of Stock' : 'Add to Cart'}
+                        </button>
+                        <button onclick="goToProduct(${product.id})" 
+                                class="bg-gray-100 hover:bg-gray-200 text-gray-800 py-1 px-2 rounded text-xs font-bold transition">
+                            <i class="fas fa-eye text-xs"></i>
+                        </button>
+                    </div>
                 </div>
             </div>
         `;
@@ -265,9 +349,8 @@ function renderWishlist() {
     });
 }
 
-// Also update the normalizeProductData function to be more thorough:
+// Improved normalizeProductData function with better stock handling
 function normalizeProductData(product) {
-    // Debug: Log what we're receiving
     console.log('Normalizing product data:', product);
     
     // Extract name from all possible property names
@@ -285,6 +368,20 @@ function normalizeProductData(product) {
     else if (product.manufacturer) brand = product.manufacturer;
     else brand = 'Generic';
     
+    // Extract stock quantity - check multiple property names
+    let stock = 0;
+    if (product.stock !== undefined) stock = product.stock;
+    else if (product.quantity !== undefined) stock = product.quantity;
+    else if (product.productQuantity !== undefined) stock = product.productQuantity;
+    else if (product.inventory !== undefined) stock = product.inventory;
+    else stock = 10; // Default stock
+    
+    // Extract stock status
+    let status = 'Available';
+    if (product.status) status = product.status;
+    else if (product.productStatus) status = product.productStatus;
+    else if (stock <= 0) status = 'Out of Stock';
+    
     return {
         id: product.id || product.productId || Date.now(),
         name: name,
@@ -296,8 +393,11 @@ function normalizeProductData(product) {
         image: product.image || product.productImage || product.img || product.thumbnail || 'https://via.placeholder.com/300',
         description: product.description || product.productDescription || name,
         category: product.category || product.productCategory || product.subCategory || 'general',
-        productStatus: product.productStatus || product.status || 'Available',
-        productQuantity: product.productQuantity || product.quantity || product.stock || 0,
+        status: status,
+        productStatus: status,
+        stock: Number(stock),
+        productQuantity: Number(stock),
+        quantity: Number(stock),
         productRating: product.productRating || product.rating || 4.0,
         productUnit: product.productUnit || product.unit || 'piece',
         sku: product.sku || product.productSku || `SKU-${product.id || Date.now()}`
@@ -309,25 +409,50 @@ function debugWishlist() {
     const wishlist = getWishlist();
     console.log('=== WISHLIST DEBUG ===');
     console.log('Number of items:', wishlist.length);
-    console.log('Items:', wishlist);
+    console.log('Items with stock info:');
+    wishlist.forEach(item => {
+        console.log(`ID: ${item.id}, Name: ${item.name}, Stock: ${item.stock}, Status: ${item.status}, isOutOfStock: ${checkOutOfStock(item)}`);
+    });
     console.log('Raw localStorage:', localStorage.getItem('wishlist'));
     console.log('=====================');
+}
+
+// Check if product is in wishlist
+function isInWishlist(productId) {
+    const wishlist = getWishlist();
+    return wishlist.some(item => String(item.id) === String(productId));
+}
+
+// Toggle wishlist status
+function toggleWishlist(product) {
+    const productId = product.id || product.productId;
+    
+    if (isInWishlist(productId)) {
+        removeFromWishlist(productId);
+        return false;
+    } else {
+        return addToWishlist(product);
+    }
 }
 
 // Initialize on page load
 document.addEventListener('DOMContentLoaded', () => {
     console.log('Wishlist page initialized');
-    debugWishlist(); // Debug output
+    debugWishlist();
     
     // Small delay to ensure everything is loaded
     setTimeout(() => {
-        renderWishlist();
+        if (typeof renderWishlist === 'function') {
+            renderWishlist();
+        }
         updateWishlistCount();
         
         // Listen for wishlist updates from other tabs/pages
         window.addEventListener('wishlistUpdated', () => {
             console.log('Wishlist update event received');
-            renderWishlist();
+            if (typeof renderWishlist === 'function') {
+                renderWishlist();
+            }
             updateWishlistCount();
         });
         
@@ -335,7 +460,9 @@ document.addEventListener('DOMContentLoaded', () => {
         window.addEventListener('storage', (e) => {
             if (e.key === 'wishlist') {
                 console.log('Wishlist updated from another tab');
-                renderWishlist();
+                if (typeof renderWishlist === 'function') {
+                    renderWishlist();
+                }
                 updateWishlistCount();
             }
         });
@@ -349,3 +476,7 @@ window.goToProduct = goToProduct;
 window.renderWishlist = renderWishlist;
 window.updateWishlistCount = updateWishlistCount;
 window.debugWishlist = debugWishlist;
+window.addToWishlist = addToWishlist;
+window.isInWishlist = isInWishlist;
+window.toggleWishlist = toggleWishlist;
+window.getWishlist = getWishlist;

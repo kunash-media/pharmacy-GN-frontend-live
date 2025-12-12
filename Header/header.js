@@ -426,8 +426,9 @@ function initializeHeader() {
 }
 
 // EVENT LISTENERS
-document.addEventListener('DOMContentLoaded', initializeHeader);
+document.addEventListener('DOMContentLoaded', initializeHeader)
 if (document.readyState !== 'loading') initializeHeader();
+
 
 
 // Close modals on escape key
@@ -437,3 +438,19 @@ document.addEventListener('keydown', function(e) {
     closeLanguageModal();
   }
 });
+// Initialize cart count
+    if (typeof cartManager !== 'undefined') {
+        cartManager.updateCartCount();
+    } else {
+        // Fallback if cartManager not loaded
+        const cart = JSON.parse(localStorage.getItem('cart')) || [];
+        const totalItems = cart.reduce((sum, item) => sum + (item.quantity || 1), 0);
+        
+        document.querySelectorAll('#desktop-cart-count, #mobile-cart-count, #cart-count, #cartItemsCount, .cart-count').forEach(el => {
+            if (el) {
+                el.textContent = totalItems;
+                el.style.display = totalItems > 0 ? 'inline-flex' : 'none';
+            }
+        });
+    }
+  

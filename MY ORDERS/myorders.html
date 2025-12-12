@@ -93,16 +93,16 @@
 </head>
 <body class="bg-white">
     <div id="header-placeholder"></div>
-  <div class="max-w-4xl mx-auto px-4">
+  <div class="max-w-4xl mx-auto px-4 mt-56">
 
     <!-- Header -->
-    <div class="order-card mb-6">
+    <div class="order-card mb-6 py-2">
       <div class="flex items-center justify-between">
         <button onclick="window.history.back()" class="p-2 rounded-lg bg-neutral hover:bg-gray-100">
           <i class="fas fa-arrow-left text-primary text-lg"></i>
         </button>
         <div class="text-center flex-1">
-          <h1 class="text-2xl font-bold text-primary">My Orders</h1>
+          <h1 class="text-xl font-bold text-primary">My Orders</h1>
           
         </div>
         <div class="w-10"></div>
@@ -267,45 +267,73 @@
     }
 
     function fetchOrders() {
-      const loading = document.getElementById('loadingOverlay');
-      const container = document.getElementById('ordersList');
-      loading.classList.remove('hidden');
+    const loading = document.getElementById('loadingOverlay');
+    const container = document.getElementById('ordersList');
+    loading.classList.remove('hidden');
 
-      const raw = JSON.parse(localStorage.getItem('sweetOrders') || '[]');
+    // Get orders from localStorage
+    const raw = JSON.parse(localStorage.getItem('sweetOrders') || '[]');
 
-      const filteredRaw = raw.filter(order => {
+    // Filter orders (you can remove this filter if not needed)
+    const filteredRaw = raw.filter(order => {
         return !order.items.some(item => item.name.toLowerCase().includes('chocolate cake'));
-      });
+    });
 
-      orders = filteredRaw.map(o => {
+    orders = filteredRaw.map(o => {
         const items = o.items || [];
-        const statusKey = (o.status || 'Placed').toLowerCase();
+        const statusKey = (o.status || 'placed').toLowerCase();
         const status = statusMap[statusKey] || { display: statusKey, class: 'bg-gray-100 text-gray-800' };
         const canCancel = statusKey === 'placed' && isWithinCancellationWindow(o.placedOn);
 
-        return {
-          id: o.id,
-          date: new Date(o.placedOn).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
-          status: status.display,
-          statusClass: status.class,
-          canCancel,
-          items: items.map(item => ({
-            name: item.name || 'Unknown',
-            qty: item.qty || 1,
-            weight: item.weight || '',
-            price: (item.price || 0).toFixed(2),
-            image: item.img || 'https://via.placeholder.com/120?text=No+Image',
-          })),
-          total: o.total.toFixed(2),
-          warning: getWarning(o.placedOn),
-          api: o
-        };
-      }).sort((a, b) => b.id - a.id);
+        // Calculate order age
+        const orderDate = new Date(o.timestamp || o.placedOn);
+        const now = new Date();
+        const diffMinutes = Math.floor((now - orderDate) / (1000 * 60));
+        
+        // Determine delivery time (25 minutes from order)
+        const deliveryMinutes = 25;
+        const remainingMinutes = Math.max(0, deliveryMinutes - diffMinutes);
+        const deliveryText = remainingMinutes > 0 ? `Delivery within ${remainingMinutes} mins` : 'Delivered';
 
-      updateTabCounts();
-      renderOrders();
-      loading.classList.add('hidden');
-    }
+        return {
+            id: o.id,
+            date: new Date(o.timestamp || o.placedOn).toLocaleDateString('en-US', { 
+                month: 'short', 
+                day: 'numeric', 
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            }),
+            status: status.display,
+            statusClass: status.class,
+            canCancel,
+            items: items.map(item => ({
+                name: item.name || 'Unknown',
+                qty: item.qty || 1,
+                weight: item.weight || '',
+                price: (item.price || 0).toFixed(2),
+                image: item.img || 'https://via.placeholder.com/120?text=No+Image',
+            })),
+            total: o.total ? o.total.toFixed(2) : items.reduce((sum, item) => sum + (item.price * item.qty), 0).toFixed(2),
+            warning: getWarning(o.placedOn),
+            api: o,
+            paymentMethod: o.paymentMethod || 'Unknown',
+            address: o.address || {},
+            deliveryText: deliveryText,
+            orderAge: diffMinutes,
+            itemCount: items.reduce((sum, item) => sum + (item.qty || 1), 0)
+        };
+    }).sort((a, b) => {
+        // Sort by timestamp (newest first)
+        const timeA = new Date(a.api.timestamp || a.api.placedOn).getTime();
+        const timeB = new Date(b.api.timestamp || b.api.placedOn).getTime();
+        return timeB - timeA;
+    });
+
+    updateTabCounts();
+    renderOrders();
+    loading.classList.add('hidden');
+}
 
     function updateTabCounts() {
       const upcoming = orders.filter(o => o.status.toLowerCase() !== 'cancelled').length;
@@ -316,77 +344,96 @@
     }
 
     function renderOrders() {
-      const container = document.getElementById('ordersList');
-      container.innerHTML = '';
+    const container = document.getElementById('ordersList');
+    container.innerHTML = '';
 
-      const filteredOrders = activeTab === 'upcoming'
+    const filteredOrders = activeTab === 'upcoming'
         ? orders.filter(o => o.status.toLowerCase() !== 'cancelled')
         : orders.filter(o => o.status.toLowerCase() === 'cancelled');
 
-      if (!filteredOrders.length) {
+    if (!filteredOrders.length) {
         const emptyMsg = activeTab === 'upcoming' ? 'No active orders' : 'No cancelled orders';
         container.innerHTML = `<div class="text-center py-20 order-card">
           <i class="fas fa-shopping-bag text-7xl text-primary mb-6"></i>
           <h2 class="text-3xl font-bold text-primary mb-4">${emptyMsg}</h2>
-          <a href="/shop" class="btn btn-primary">Shop Now</a>
+          <a href="../home.html" class="btn btn-primary">Shop Now</a>
         </div>`;
         return;
-      }
+    }
 
-      filteredOrders.forEach(order => {
+    filteredOrders.forEach(order => {
         const isCancelled = order.status.toLowerCase() === 'cancelled';
         const cancelBtn = !isCancelled && order.canCancel
-          ? `<button class="btn btn-danger cancel-btn" data-id="${order.id}">Cancel Order</button>`
-          : `<button class="btn btn-outline opacity-50 cursor-not-allowed" disabled>Cancel Order</button>`;
+            ? `<button class="btn btn-danger cancel-btn" data-id="${order.id}">Cancel Order</button>`
+            : `<button class="btn btn-outline opacity-50 cursor-not-allowed" disabled>Cancel Order</button>`;
 
         const viewBtn = `<button class="btn btn-primary view-btn" data-id="${order.id}">Order Details</button>`;
 
-        // Items List (same for both tabs)
+        // Items List (limited to first 2 items for preview)
         let itemsHtml = '';
-        order.items.forEach((item, idx) => {
-          itemsHtml += `
-            <div class="flex gap-3 items-center ${idx > 0 ? 'mt-3' : ''}">
-              <img src="${item.image}" alt="${item.name}" class="w-12 h-12 rounded-lg object-cover shadow-sm">
-              <div class="flex-1">
-                <p class="font-medium text-primary text-sm">${item.name}</p>
-                <p class="text-xs text-dark">Qty: ${item.qty} × ${item.weight}</p>
-              </div>
-              <p class="text-sm font-medium text-primary">EGP ${item.price}</p>
-            </div>
-          `;
+        const previewItems = order.items.slice(0, 2);
+        previewItems.forEach((item, idx) => {
+            itemsHtml += `
+                <div class="flex gap-3 items-center ${idx > 0 ? 'mt-3' : ''}">
+                    <img src="${item.image}" alt="${item.name}" class="w-12 h-12 rounded-lg object-cover shadow-sm">
+                    <div class="flex-1">
+                        <p class="font-medium text-primary text-sm">${item.name}</p>
+                        <p class="text-xs text-dark">Qty: ${item.qty} ${item.weight ? '× ' + item.weight : ''}</p>
+                    </div>
+                    <p class="text-sm font-medium text-primary">₹${item.price}</p>
+                </div>
+            `;
         });
 
+        // Show more items indicator if there are more than 2 items
+        const moreItemsCount = order.items.length - 2;
+        const moreItemsHtml = moreItemsCount > 0 
+            ? `<div class="text-center mt-2">
+                  <p class="text-xs text-gray-500">+ ${moreItemsCount} more item${moreItemsCount > 1 ? 's' : ''}</p>
+               </div>`
+            : '';
+
         container.innerHTML += `
-          <div class="order-card">
-            <div class="flex justify-between items-center mb-3">
-              <div>
-                <h3 class="text-lg font-bold text-primary">Order #${order.id}</h3>
-                <p class="text-sm text-dark">EGP ${order.total}</p>
-              </div>
-              <div class="flex gap-2">
-                ${viewBtn}
-                ${isCancelled ? '' : cancelBtn}
-              </div>
-            </div>
+            <div class="order-card">
+                <div class="flex justify-between items-center mb-3">
+                    <div>
+                        <h3 class="text-lg font-bold text-primary">Order #${order.id}</h3>
+                        <p class="text-sm text-dark">₹${order.total}</p>
+                    </div>
+                    <div class="flex gap-2">
+                        ${viewBtn}
+                        ${isCancelled ? '' : cancelBtn}
+                    </div>
+                </div>
 
-            <!-- Items List -->
-            <div class="mb-4">
-              ${itemsHtml}
-            </div>
+                <!-- Status Badge -->
+                <div class="mb-4">
+                    <span class="status-badge ${order.statusClass}">${order.status}</span>
+                </div>
 
-            <!-- Cancelled Message (only for cancelled tab) -->
-            ${isCancelled ? `<p class="text-sm font-medium text-red-600 mb-3">This order was cancelled.</p>` : ''}
+                <!-- Items List Preview -->
+                <div class="mb-4">
+                    ${itemsHtml}
+                    ${moreItemsHtml}
+                </div>
 
-            <!-- Footer Info -->
-            <div class="text-xs text-gray-600">
-              <p>2 Items • Cash on Delivery • Ordered 2 mins ago • Delivery within 25 mins</p>
+                <!-- Payment Method -->
+                <div class="mb-3">
+                    <p class="text-sm text-dark">Payment: <span class="font-medium">${order.paymentMethod}</span></p>
+                </div>
+
+                <!-- Cancelled Message (only for cancelled tab) -->
+                ${isCancelled ? `<p class="text-sm font-medium text-red-600 mb-3">This order was cancelled.</p>` : ''}
+
+                <!-- Footer Info -->
+                <div class="text-xs text-gray-600">
+                    <p>${order.itemCount} Items • ${order.paymentMethod} • Ordered ${order.orderAge} mins ago • ${order.deliveryText}</p>
+                </div>
             </div>
-          </div>
         `;
-      });
-      attachButtons();
-    }
-
+    });
+    attachButtons();
+}
     function attachButtons() {
       document.querySelectorAll('.cancel-btn').forEach(btn => {
         btn.onclick = () => handleCancel(btn.dataset.id);
@@ -423,41 +470,62 @@
     }
 
     function handleView(id) {
-      const order = orders.find(o => o.id == id);
-      if (!order) return;
+    const order = orders.find(o => o.id == id);
+    if (!order) return;
 
-      const items = order.items;
-      let itemsHtml = '';
-      items.forEach(item => {
+    const items = order.items;
+    let itemsHtml = '';
+    items.forEach(item => {
         itemsHtml += `
-          <div class="flex gap-4 items-start pb-3 border-b border-gray-100 last:border-0">
-            <img src="${item.image}" alt="${item.name}" class="w-16 h-16 rounded-lg object-cover shadow-sm">
-            <div class="flex-1">
-              <p class="font-medium text-primary">${item.name}</p>
-              <p class="text-xs text-dark">Qty: ${item.qty} × ${item.weight}</p>
+            <div class="flex gap-4 items-start pb-3 border-b border-gray-100 last:border-0">
+                <img src="${item.image}" alt="${item.name}" class="w-16 h-16 rounded-lg object-cover shadow-sm">
+                <div class="flex-1">
+                    <p class="font-medium text-primary">${item.name}</p>
+                    <p class="text-xs text-dark">Qty: ${item.qty} ${item.weight ? '× ' + item.weight : ''}</p>
+                </div>
+                <p class="text-sm font-medium text-primary">₹${item.price}</p>
             </div>
-            <p class="text-sm font-medium text-primary">EGP ${item.price}</p>
-          </div>
         `;
-      });
+    });
 
-      document.getElementById('viewContent').innerHTML = `
+    // Address information
+    let addressHtml = '';
+    if (order.address && order.address.fullName) {
+        addressHtml = `
+            <div class="mt-4 p-3 bg-gray-50 rounded-lg">
+                <p class="font-medium text-primary text-sm mb-2">Delivery Address:</p>
+                <p class="text-sm text-dark">${order.address.fullName}</p>
+                <p class="text-sm text-dark">${order.address.mobile}</p>
+                <p class="text-sm text-dark">${order.address.flat}, ${order.address.area}</p>
+                <p class="text-sm text-dark">${order.address.city}, ${order.address.state} - ${order.address.pincode}</p>
+            </div>
+        `;
+    }
+
+    document.getElementById('viewContent').innerHTML = `
         <div class="space-y-4">
-          ${itemsHtml}
+            ${itemsHtml}
         </div>
         <div class="mt-4 space-y-2 text-sm pt-3 border-t border-gray-200">
-          <div class="flex justify-between font-bold text-base">
-            <span class="text-primary">Total</span>
-            <span class="text-primary">EGP ${order.total}</span>
-          </div>
+            <div class="flex justify-between font-bold text-base">
+                <span class="text-primary">Total</span>
+                <span class="text-primary">₹${order.total}</span>
+            </div>
+            <div class="flex justify-between">
+                <span class="text-dark">Payment Method</span>
+                <span class="font-medium text-primary">${order.paymentMethod}</span>
+            </div>
         </div>
         <div class="mt-5 pt-4 border-t border-gray-200 space-y-2 text-sm">
-          <div class="flex justify-between"><span class="text-dark">Status</span><span class="${order.status.toLowerCase() === 'cancelled' ? 'text-red-600' : 'text-green-600'} font-medium">${order.status}</span></div>
-          <div class="flex justify-between"><span class="text-dark">Placed</span><span>${order.date}</span></div>
+            <div class="flex justify-between"><span class="text-dark">Status</span><span class="${order.status.toLowerCase() === 'cancelled' ? 'text-red-600' : 'text-green-600'} font-medium">${order.status}</span></div>
+            <div class="flex justify-between"><span class="text-dark">Order ID</span><span class="font-mono">#${order.id}</span></div>
+            <div class="flex justify-between"><span class="text-dark">Placed On</span><span>${order.date}</span></div>
+            <div class="flex justify-between"><span class="text-dark">Items</span><span>${order.itemCount} items</span></div>
         </div>
-      `;
-      showModal('viewModal');
-    }
+        ${addressHtml}
+    `;
+    showModal('viewModal');
+}
 
     function toast(message, type = 'info') {
       Toastify({
@@ -473,11 +541,5 @@
       fetchOrders();
     });
   </script>
-
-          <!-- Placeholder for Footer -->
-  
-
-    
-
 </body>
 </html>
