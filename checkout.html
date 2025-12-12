@@ -10,10 +10,56 @@
   <link rel="stylesheet" href="../Footer/footer.css">
   <style>
     body { font-family: 'Inter', sans-serif; background: #f8fafc; }
-    #address-modal { display: none; }
+
     #order-success-modal { display: none; }
-    #address-modal.show { display: flex !important; }
+  
     #order-success-modal.show { display: flex !important; }
+
+    #address-modal {
+  display: none;
+  position: fixed;
+  margin-top: 14px;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.6);
+  z-index: 9999;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+
+#address-modal.show {
+  display: flex !important;
+  animation: fadeIn 0.3s ease;
+}
+
+#address-modal .bg-gray-100 {
+  width: 100%;
+  max-width: 500px;
+  max-height: 90vh;
+  overflow-y: auto;
+  border-radius: 1rem;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+  animation: slideUp 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { 
+    transform: translateY(30px);
+    opacity: 0;
+  }
+  to { 
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
     
     /* Custom scrollbar for items container */
     #order-items-container {
@@ -526,7 +572,7 @@
   <!-- Order Success Modal -->
   <div id="order-success-modal" class="fixed items-center justify-center inset-0 bg-black bg-opacity-70 z-[10000] p-4">
     <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full overflow-hidden transform transition-all">
-      <div class="p-8 text-center">
+      <div class="p-10 text-center">
         <!-- Success Animation -->
         <div class="success-checkmark mb-6">
           <div class="check-icon">
@@ -537,17 +583,19 @@
           </div>
         </div>
         
-        <h2 class="text-3xl font-bold text-gray-800 mb-2" id="success-title">Yay! Order Placed Successfully!</h2>
+        <h2 class="text-xl font-bold text-gray-800 mb-2" id="success-title">Yay! Order Placed Successfully!</h2>
             <p class="text-gray-600 mb-4" id="success-message">Your order will be delivered soon.</p>
             <p class="text-sm text-gray-500 mb-6" id="success-order-id">Order ID: #</p>
             
-            <div class="space-y-4">
-                <button id="success-ok-btn" class="w-full bg-gradient-to-r from-green-500 to-emerald-600 text-white font-bold py-4 rounded-lg text-lg hover:from-green-600 hover:to-emerald-700 transition-all">
+            <div class="space-y-2">
+              <a href="./home.html" class="w-full block">
+                <button id="success-ok-btn" class="w-full bg-[#E06B80] text-white font-semibold py-2 rounded-lg text-lg hover:bg-[#] transition-all">
                     <i class="fas fa-home mr-2"></i> Back to Home
                 </button>
+                </a>
           
           <a href="./MY ORDERS/myorders.html" class="w-full block">
-                    <button class="w-full bg-gradient-to-r from-blue-500 to-blue-600 text-white font-bold py-4 rounded-lg text-lg hover:from-blue-600 hover:to-blue-700 transition-all">
+                    <button class="w-full bg-[#0046FF] text-white font-semibold py-2 rounded-lg text-lg hover:bg-[#] transition-all">
                         <i class="fas fa-shopping-bag mr-2"></i> View My Orders
                     </button>
                 </a>
@@ -979,7 +1027,7 @@
           // localStorage.removeItem(STORAGE.SELECTED);
           
           // Redirect to home page
-          window.location.href = '../home.html';
+          window.location.href = './home.html';
         });
 
         // Quantity and delete buttons event delegation

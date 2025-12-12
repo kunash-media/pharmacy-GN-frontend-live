@@ -121,7 +121,7 @@
   </div>
 
   <!-- View Modal -->
-  <div id="viewModal" class="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4 hidden">
+  <div id="viewModal" class="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4 mt-8 hidden">
     <div class="bg-white rounded-xl max-w-md w-full max-h-[90vh] flex flex-col order-card modal-card">
       <div class="flex justify-between items-center p-5 border-b border-gray-200">
         <h2 class="text-lg font-bold text-primary">Order Details</h2>
@@ -178,7 +178,7 @@
             .then(html => {
                 document.getElementById('header-placeholder').innerHTML = html;
                 const script = document.createElement('script');
-                script.src = '../Header/header.js';
+                script.src = '../../Header/header.js';
                 script.onload = () => console.log('Header JS loaded');
                 document.body.appendChild(script);
             })
