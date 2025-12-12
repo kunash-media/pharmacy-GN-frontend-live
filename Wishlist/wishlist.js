@@ -237,7 +237,7 @@ function renderWishlist() {
             <div class="relative group">
                 <img src="${product.image}" 
                      alt="${productName}" 
-                     class="w-full h-48 object-cover ${isOutOfStock ? 'opacity-70' : ''}">
+                     class="w-full h-40 object-cover ${isOutOfStock ? 'opacity-70' : ''}">
                 ${stockBadge}
                 <button onclick="removeFromWishlist(${product.id})" 
                         class="absolute top-2 right-2 bg-white/90 hover:bg-red-500 text-red-600 hover:text-white w-10 h-10 rounded-full shadow-lg flex items-center justify-center transition">
